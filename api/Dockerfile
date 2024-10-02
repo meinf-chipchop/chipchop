@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /api
 
 # Add the current directory files (on your machine) to the container
-# ADD . /api/
+ADD . /api/
 
 ADD requirements.txt ./requirements.txt
 
@@ -17,8 +17,5 @@ ADD requirements.txt ./requirements.txt
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Expose the port server is running on
-EXPOSE 8000
-
 # Start the server
-CMD ["python", "runserver", "0.0.0.0:8000"]
+CMD ["bash", "start.sh"]
