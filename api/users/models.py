@@ -1,8 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from enum import Enum
-
 
 class Address(models.Model):
     street = models.CharField()
@@ -24,6 +22,7 @@ class CCUser(AbstractUser):
 
 
 class CCCook(models.Model):
+    user = models.OneToOneField(CCUser, primary_key=True, on_delete=models.CASCADE)
     public_name = models.CharField()
 
     class Meta:
@@ -37,6 +36,7 @@ class CCDelivery(models.Model):
         BYCICLE = ("B", "Bycicle")
         SCOOTER = ("S", "Scooter")
 
+    user = models.OneToOneField(CCUser, primary_key=True, on_delete=models.CASCADE)
     transport = models.CharField(choices=TransportType.choices, default="W")
 
     class Meta:

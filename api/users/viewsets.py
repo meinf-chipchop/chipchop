@@ -3,8 +3,9 @@ from django.contrib.auth import get_user_model
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
+from rest_framework.permissions import AllowAny
 
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from . import serializers
 
 # Create your views here.
@@ -16,10 +17,11 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.UserSerializer
 
 
+
 class TokenViewSet(viewsets.ViewSet):
     serializer_class = AuthTokenSerializer
 
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AllowAny]
 
     def create(self, request):
         response = obtain_auth_token(request._request)
