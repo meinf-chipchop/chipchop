@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /api
 
 # Add the current directory files (on your machine) to the container
-ADD . /api/
+ADD . .
 
 ADD requirements.txt ./requirements.txt
 
