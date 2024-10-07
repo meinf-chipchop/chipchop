@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Set the working directory in the container to /app
-WORKDIR /api
+WORKDIR /app
 
 # Add the current directory files (on your machine) to the container
 ADD . .
