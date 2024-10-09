@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'petitions',
     'users',
     'api',
+    'cooks',
 ]
 
 MIDDLEWARE = [
