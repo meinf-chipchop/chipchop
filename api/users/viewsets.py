@@ -16,8 +16,6 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
 
-
-
 class TokenViewSet(viewsets.ViewSet):
     serializer_class = AuthTokenSerializer
 
