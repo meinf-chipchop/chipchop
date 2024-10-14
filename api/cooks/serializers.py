@@ -3,6 +3,7 @@ from rest_framework import serializers
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 from rest_framework_nested.relations import NestedHyperlinkedIdentityField
 
+from petitions.models import AccountUpgradePetition
 from users.serializers import UserSerializer
 from users.models import CCCook, CCUser
 
@@ -27,17 +28,20 @@ class CCCookDetailSerializer(serializers.ModelSerializer):
         user = CCUser.objects.create(**user_data)
         user.set_password(new_password)
         cook = CCCook.objects.create(user=user, **validated_data)
+
+        # Create user petition
+        AccountUpgradePetition.objects.create(user=user) 
+        
         return cook
     
 
 class CCCookListSerializer(serializers.ModelSerializer):
 
     url = serializers.HyperlinkedIdentityField(view_name="cook-detail", lookup_field="pk")
-    cook = CCCookDetailSerializer(read_only=True)
 
     class Meta:
         model = CCCook
-        fields = ["url", "name"]
+        fields = ["url"]
 
 
 class DishListSerializer(NestedHyperlinkedModelSerializer):
