@@ -25,6 +25,10 @@ class DishViewSet(viewsets.ModelViewSet):
   queryset = models.Dish.objects.all()
   serializer_class = serializers.DishDetailSerializer
 
+  def get_queryset(self):
+    user = self.kwargs["cook_pk"]
+    return models.Dish.objects.filter(user=user)
+
 
   def get_serializer_class(self):
     if self.action == 'list':
