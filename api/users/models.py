@@ -2,13 +2,19 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-
-
 class CCUser(AbstractUser):
     username = models.CharField(max_length=150, blank=True, null=True)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=15)
     age = models.SmallIntegerField()
+    
+    class UserRoles(models.TextChoices):
+        USER = ("U", "User")
+        COOK = ("C", "Cook")
+        DELIVERY = ("D", "Delivery")
+
+    role = models.CharField(choices=UserRoles.choices, default=UserRoles.USER, max_length=1)
+
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ["age", "password"]

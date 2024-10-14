@@ -10,6 +10,11 @@ from users.models import CCCook, CCUser
 from . import models
 
 
+class CCCookSimpleSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = CCCook
+            exclude = ["user"]
+
 class CCCookDetailSerializer(serializers.ModelSerializer):
 
     user = UserSerializer()
@@ -25,7 +30,7 @@ class CCCookDetailSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user_data = validated_data.pop('user')
         new_password = validated_data.pop('password')
-        user = CCUser.objects.create(**user_data)
+        user = CCUser.objects.create(**user_data, role=CCUser.COOK)
         user.set_password(new_password)
         cook = CCCook.objects.create(user=user, **validated_data)
 
