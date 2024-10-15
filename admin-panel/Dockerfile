@@ -2,7 +2,7 @@ FROM oven/bun:latest
 
 ARG RUN_BUILD
 
-WORKDIR /admin-panel
+WORKDIR /app
 COPY . .
 
 RUN bun install

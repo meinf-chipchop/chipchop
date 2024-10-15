@@ -17,7 +17,7 @@ class Command(BaseCommand):
         
         try:
             admin = User.objects.create_superuser(
-                username=env("ADMIN_USERNAME"),
+                username=env("ADMIN_EMAIL"),
                 password=env("ADMIN_PASSWORD"),
                 email=env("ADMIN_EMAIL"),
                 age=0,
