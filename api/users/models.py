@@ -11,7 +11,7 @@ class CCUser(AbstractUser):
     class UserRoles(models.TextChoices):
         USER = ("U", "User")
         COOK = ("C", "Cook")
-        DELIVERY = ("D", "Delivery")
+        DELIVERER = ("D", "Deliverer")
 
     username = models.CharField(max_length=150, blank=True, null=True)
     email = models.EmailField(unique=True)

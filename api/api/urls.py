@@ -1,9 +1,11 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-import users.viewsets
+
 import cooks.viewsets
+import deliverers.viewsets
 import petitions.viewsets
+import users.viewsets
 
 # Initialize the main router
 router = DefaultRouter()
@@ -12,6 +14,12 @@ router.register(
     r"cooks",
     cooks.viewsets.CCCookViewSet,
     basename="cook",
+)
+
+router.register(
+    r"deliverers",
+    deliverers.viewsets.CCDelivererViewSet,
+    basename="deliverer",
 )
 
 router.register(
@@ -35,4 +43,5 @@ router.register(
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("", include("cooks.urls")),
 ]

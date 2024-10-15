@@ -12,9 +12,17 @@ class CCDeliverer(models.Model):
 
     class TransportType(models.TextChoices):
         CAR = ("C", "Car")
-        BYCICLE = ("B", "Bycicle")
+        BICYCLE = ("B", "Bicycle")
         SCOOTER = ("S", "Scooter")
 
-    user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User,
+        primary_key=True,
+        on_delete=models.CASCADE,
+    )
 
-    transport = models.CharField(choices=TransportType.choices, default="W")
+    transport = models.CharField(
+        choices=TransportType.choices,
+        default=TransportType.CAR,
+        max_length=1,
+    )
