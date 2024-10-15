@@ -10,6 +10,13 @@ from . import models
 User = get_user_model()
 
 
+class CCDelivererSimpleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.CCDeliverer
+        exclude = ["user"]
+
+
 class CCDelivererDetailSerializer(serializers.ModelSerializer):
 
     user = UserSerializer()
