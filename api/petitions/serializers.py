@@ -3,6 +3,9 @@ from rest_framework import serializers
 from cooks.serializers import CCCookSimpleSerializer
 from cooks.models import CCCook
 
+from deliverers.serializers import CCDelivererSimpleSerializer
+from deliverers.models import CCDeliverer
+
 from users.serializers import UserSerializer
 
 from . import models
@@ -21,9 +24,11 @@ class AccountUpgradePetitionSerializer(serializers.ModelSerializer):
             cook = CCCook.objects.get(user=obj.user)
             return CCCookSimpleSerializer(cook).data
 
-        # TODO: Add delivery
+        if CCDeliverer.objects.filter(user=obj.user).exists():
+            deliverer = CCDeliverer.objects.get(user=obj.user)
+            return CCDelivererSimpleSerializer(deliverer).data
 
-        return
+        return {}
 
 
 class AccountUpgradePetitionListSerializer(serializers.ModelSerializer):
