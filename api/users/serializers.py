@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, Serializer, EmailField, CharField
 
 
 User = get_user_model()
@@ -14,3 +14,6 @@ class UserSerializer(ModelSerializer):
         
         
 
+class LoginSerializer(Serializer):
+    email = EmailField()
+    password = CharField(write_only=True)
