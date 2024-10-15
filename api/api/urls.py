@@ -1,6 +1,5 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from rest_framework_nested.routers import NestedDefaultRouter
 
 import users.viewsets
 import cooks.viewsets
@@ -33,12 +32,7 @@ router.register(
     basename="account-approval",
 )
 
-# Initialize the nested router
-cooks_router = NestedDefaultRouter(router, r"cooks", lookup="cook")
-cooks_router.register(r"dishes", cooks.viewsets.DishViewSet, basename="dish")
 
-# Include the routers in the URL patterns
 urlpatterns = [
     path("", include(router.urls)),
-    path("", include(cooks_router.urls)),
 ]
