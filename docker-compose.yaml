@@ -33,6 +33,10 @@ services:
       - admin-panel
 
   admin-panel:
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./admin-panel/:/app/:cached
     env_file:
       - ./.env
     build:

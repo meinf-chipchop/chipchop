@@ -1,11 +1,10 @@
-FROM oven/bun:latest
+FROM node:lts-slim
 
 ARG RUN_BUILD
 
-WORKDIR /app
-COPY . .
+WORKDIR /app/
 
-RUN bun install
-RUN if [ "$RUN_BUILD" = 1 ]; then bun run build; fi
+RUN npm install
+# RUN if [ "$RUN_BUILD" = 1 ]; then bun run build; fi
 
-CMD ["bun", "run", "start"]
+CMD ["npm", "run", "dev"]

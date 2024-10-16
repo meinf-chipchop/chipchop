@@ -4,19 +4,21 @@ import React, { useState } from 'react';
 import { LockIcon, Mail, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 
+import * as dotenv from 'dotenv'
+
+dotenv.config();
+
 interface FormData {
   email: string;
   password: string;
 }
 
+// asdsasd
+
 export default function LoginForm() {
   const [formData, setFormData] = useState<FormData>({ email: '', password: '' });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [loginError, setLoginError] = useState<string | null>(null);
-
-  const generateToken = () => {
-    return Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
-  };
 
   const validateForm = (): boolean => {
     const newErrors: Partial<FormData> = {};
@@ -27,8 +29,6 @@ export default function LoginForm() {
     }
     if (!formData.password) {
       newErrors.password = "Don't forget your secret code! Please enter your password.";
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Your password should be at least 6 characters long. A bit more security, please!';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -43,11 +43,34 @@ export default function LoginForm() {
     e.preventDefault();
     if (validateForm()) {
       try {
-        console.log('Login attempt with:', formData);
-        // Implement your login logic here
-        const token = generateToken();
-        console.log('Generated token:', token);
-        // If login is successful, you might want to store the token and redirect
+        const url = process.env.NEXT_PUBLIC_API_URL + '/api/login/';
+
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+          credentials: "include",
+        });
+
+
+        const data = await response.json();
+
+        const res = await fetch(process.env.NEXT_PUBLIC_API_URL + '/api/users/',
+        )
+        console.log(await res.json());
+
+        if (response.ok) {
+          // Login successful
+          console.log('Login successful:', data);
+          // Redirect to dashboard or home page
+          // router.push('/dashboard');
+        } else {
+          // Login failed
+          setLoginError(data.message || 'An error occurred during login. Please try again.');
+        }
+
       } catch (error) {
         console.error('Login error:', error);
         setLoginError('Oops! Something went wrong during login. Please try again.');
