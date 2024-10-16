@@ -1,0 +1,25 @@
+name: Deploy Production
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.IPPROD }}
+          username: ${{ secrets.USERNAMEPROD }}
+          password: ${{ secrets.PASSWORDPROD }}
+          command_timeout: 30m
+          port: 22
+          script: |
+            cd chipchop
+            git pull origin main
+            docker compose down
+            docker compose build
+            docker compose up -d
