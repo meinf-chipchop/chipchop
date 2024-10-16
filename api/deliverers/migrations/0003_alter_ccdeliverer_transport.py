@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('deliverers', '0002_alter_ccdeliverer_transport'),
+        ("deliverers", "0002_alter_ccdeliverer_transport"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='ccdeliverer',
-            name='transport',
-            field=models.CharField(choices=[('C', 'Car'), ('B', 'Bicycle'), ('S', 'Scooter')], default='C', max_length=1),
+            model_name="ccdeliverer",
+            name="transport",
+            field=models.CharField(
+                choices=[("C", "Car"), ("B", "Bicycle"), ("S", "Scooter")],
+                default="C",
+                max_length=1,
+            ),
         ),
     ]
