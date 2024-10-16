@@ -6,7 +6,6 @@ from rest_framework.serializers import ModelSerializer, Serializer, EmailField, 
 User = get_user_model()
 
 
-
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
@@ -17,3 +16,6 @@ class UserSerializer(ModelSerializer):
 class LoginSerializer(Serializer):
     email = EmailField()
     password = CharField(write_only=True)
+
+        fields = ["first_name", "last_name", "email", "phone", "age"]
+
