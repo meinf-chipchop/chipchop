@@ -17,5 +17,5 @@ class LoginSerializer(Serializer):
     email = EmailField()
     password = CharField(write_only=True)
 
-        fields = ["first_name", "last_name", "email", "phone", "age"]
+    fields = ["first_name", "last_name", "email", "phone", "age"]
 
