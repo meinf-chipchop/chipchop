@@ -31,6 +31,8 @@ services:
       - admin-panel
 
   admin-panel:
+    env_file:
+      - ./.env
     build:
       context: ./admin-panel
       args:
