@@ -5,7 +5,8 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
 from rest_framework import status
 
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.decorators import action
 
 from rest_framework import viewsets
 from . import serializers
@@ -18,6 +19,10 @@ User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
+
+    @action(detail=False, methods=["get"])
+    def me(self, request):
+        return Response(self.serializer_class(request.user).data)
 
 
 class TokenViewSet(viewsets.ViewSet):
@@ -53,12 +58,16 @@ class LoginViewSet(viewsets.ViewSet):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 class LogoutViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
     def create(self, request):
         logout(request)
-        response = Response({"Message": "Successfully logged out."}, status=status.HTTP_200_OK)
-        response.delete_cookie("Token")
+        response = Response(
+            {"Message": "Successfully logged out."}, status=status.HTTP_200_OK
+        )
+        response.delete_cookie("csrftoken")
+        response.delete_cookie("sessionid")
         return response
