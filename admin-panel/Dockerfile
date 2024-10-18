@@ -1,11 +1,12 @@
 FROM node:lts-slim
 
-WORKDIR /app
+ARG RUN_BUILD
 
-COPY ./package*.json .
+WORKDIR /app/
+
+ADD . .
 
 RUN npm install
+# RUN if [ "$RUN_BUILD" = 1 ]; then bun run build; fi
 
-EXPOSE 3000
-
-CMD [ "npm", "run", "dev"]
+CMD ["npm", "run", "dev"]
