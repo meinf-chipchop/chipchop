@@ -27,9 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
-ALLOWED_HOSTS = ["localhost", "0.0.0.0"]
+DEBUG = True
 
 
 # Application definition
@@ -49,11 +47,13 @@ INSTALLED_APPS = [
     "api",
     "cooks",
     "deliverers",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -62,6 +62,29 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "app.urls"
+
+# CSRF / CORS / Cookies
+ALLOWED_HOSTS = ["*"]
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    "http://194.164.171.6",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://194.164.171.6",
+]
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_HTTPONLY = False  # Not accessible by client (not important)
+CSRF_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
+CSRF_COOKIE_SECURE = False  # Only HTTPS
+
+SESSION_COOKIE_HTTPONLY = False  # Not accessible by client
+SESSION_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
+SESSION_COOKIE_SECURE = False  # Only HTTPS
 
 TEMPLATES = [
     {
