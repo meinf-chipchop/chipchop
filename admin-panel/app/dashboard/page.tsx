@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 
+import * as dotenv from "dotenv";
+
 import React, { useState, useEffect } from "react";
 import {
   HomeIcon,
@@ -20,6 +22,8 @@ import {
   ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
+
+dotenv.config();
 
 interface User {
   id: number;
@@ -132,6 +136,42 @@ interface MenuItemProps {
   isExpanded?: boolean;
 }
 
+function useOwnEmail() {
+  const [email, setEmail] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchEmail() {
+      const url = process.env.NEXT_PUBLIC_API_URL + '/api/users/me/';
+
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          const res = await response.json();
+          setEmail(res.email);
+        } else {
+          console.error('Error fetching user data:', response);
+          setError('Error fetching user data');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setError('Error fetching user data');
+      }
+    }
+
+    fetchEmail();
+  }, []);
+
+  return { email, error };
+}
+
 const MenuItem: React.FC<MenuItemProps> = ({
   icon: Icon,
   text,
@@ -177,6 +217,12 @@ export default function AdminDashboard() {
     useState<Permissions>(initialPermissions);
   const [visibleUsers, setVisibleUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const { email, error: emailError } = useOwnEmail();
+
+  if (emailError) {
+    router.push("/login");
+  }
+
   const usersPerPage = 11;
 
   const menuItems = [
@@ -340,6 +386,17 @@ export default function AdminDashboard() {
         <div className="p-4">
           <h1 className="text-2xl font-bold">Admin Panel</h1>
         </div>
+        <div className="flex flex-col p-4">
+          <div className="mb-4">
+            <p>Welcome,</p>
+            <p className="font-semibold italic text-blue-500"> {email}</p>
+          </div>
+          <button className="flex items-center space-x-2 text-red-300 hover:text-red" onClick={() => router.push("/logout")}>
+            <LogOutIcon className="h-5 w-5" />
+            <p>Log out</p>
+          </button>
+        </div>
+        <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
         <nav className="flex-1">
           <ul className="space-y-2 py-4">
             {menuItems.map((item) => (
@@ -367,14 +424,8 @@ export default function AdminDashboard() {
             ))}
           </ul>
         </nav>
-        <div className="p-4">
-          <button className="flex items-center space-x-2 text-red-300 hover:text-red" onClick={() => router.push("/logout")}>
-            <LogOutIcon className="h-5 w-5" />
-            <p>Log out</p>
-          </button>
-        </div>
-      </aside>
 
+      </aside>
       {/* Mobile Menu Button */}
       <button
         className="md:hidden fixed top-4 left-4 z-20 p-2 rounded-md bg-gray-800 text-gray-300"
