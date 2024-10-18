@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { use, useState, useEffect } from 'react';
 import { LockIcon, Mail, AlertCircle } from 'lucide-react';
-import Link from 'next/link';
+
+import { useRouter } from 'next/navigation';
 
 import * as dotenv from 'dotenv'
 
@@ -13,9 +14,9 @@ interface FormData {
   password: string;
 }
 
-// asdsasd
-
 export default function LoginForm() {
+  const router = useRouter();
+
   const [formData, setFormData] = useState<FormData>({ email: '', password: '' });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [loginError, setLoginError] = useState<string | null>(null);
@@ -45,27 +46,25 @@ export default function LoginForm() {
       try {
         const url = process.env.NEXT_PUBLIC_API_URL + '/api/login/';
 
+        const sentData = JSON.stringify(formData);
+        console.log(sentData);
+
         const response = await fetch(url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(formData),
-          credentials: "include",
+          body: sentData,
+          credentials: 'omit'
         });
 
-
         const data = await response.json();
-
-        const res = await fetch(process.env.NEXT_PUBLIC_API_URL + '/api/users/',
-        )
-        console.log(await res.json());
 
         if (response.ok) {
           // Login successful
           console.log('Login successful:', data);
           // Redirect to dashboard or home page
-          // router.push('/dashboard');
+          router.push('/dashboard');
         } else {
           // Login failed
           setLoginError(data.message || 'An error occurred during login. Please try again.');
@@ -86,7 +85,7 @@ export default function LoginForm() {
             <LockIcon className="h-12 w-12 text-blue-400" />
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-            Sign in to your account
+            Log into your account
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -147,26 +146,6 @@ export default function LoginForm() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-700 rounded bg-gray-700"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-300">
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <Link href="/password-recovery" className="font-medium text-blue-400 hover:text-blue-300">
-                Forgot your password?
-              </Link>
-            </div>
-          </div>
-
           <div>
             <button
               type="submit"
@@ -183,15 +162,6 @@ export default function LoginForm() {
             {loginError}
           </p>
         )}
-
-        <div className="text-center">
-          <p className="text-sm text-gray-400">
-            Don't have an account?{' '}
-            <Link href="/signup" className="font-medium text-blue-400 hover:text-blue-300">
-              Sign up
-            </Link>
-          </p>
-        </div>
       </div>
     </div>
   );
