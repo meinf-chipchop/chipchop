@@ -30,8 +30,6 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = True
 
 
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,7 +47,7 @@ INSTALLED_APPS = [
     "api",
     "cooks",
     "deliverers",
-    "corsheaders"
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -65,11 +63,28 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "app.urls"
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
-CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SAMESITE = 'None'
+# CSRF / CORS / Cookies
 ALLOWED_HOSTS = ["*"]
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    "http://194.164.171.6",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://194.164.171.6",
+]
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_HTTPONLY = False  # Not accessible by client (not important)
+CSRF_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
+CSRF_COOKIE_SECURE = False  # Only HTTPS
+
+SESSION_COOKIE_HTTPONLY = False  # Not accessible by client
+SESSION_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
+SESSION_COOKIE_SECURE = False  # Only HTTPS
 
 TEMPLATES = [
     {
