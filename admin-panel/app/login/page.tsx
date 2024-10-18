@@ -55,7 +55,7 @@ export default function LoginForm() {
             'Content-Type': 'application/json',
           },
           body: sentData,
-          credentials: 'omit'
+          credentials: 'include'
         });
 
         const data = await response.json();

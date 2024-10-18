@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import React, { useState, useEffect } from "react";
 import {
   HomeIcon,
@@ -140,9 +142,8 @@ const MenuItem: React.FC<MenuItemProps> = ({
 }) => (
   <li>
     <div
-      className={`flex items-center justify-between px-4 py-2 rounded-lg cursor-pointer ${
-        isActive ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
-      }`}
+      className={`flex items-center justify-between px-4 py-2 rounded-lg cursor-pointer ${isActive ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
+        }`}
       onClick={onClick}
     >
       <div className="flex items-center space-x-2">
@@ -167,6 +168,8 @@ const MenuItem: React.FC<MenuItemProps> = ({
 );
 
 export default function AdminDashboard() {
+  const router = useRouter();
+
   const [activeItem, setActiveItem] = useState("Dashboard");
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -264,13 +267,12 @@ export default function AdminDashboard() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        user.status === "approved"
-                          ? "bg-green-200 text-green-900"
-                          : user.status === "denied"
+                      className={`px-2 py-1 rounded-full text-xs ${user.status === "approved"
+                        ? "bg-green-200 text-green-900"
+                        : user.status === "denied"
                           ? "bg-red-200 text-red-900"
                           : "bg-yellow-200 text-yellow-900"
-                      }`}
+                        }`}
                     >
                       {user.status}
                     </span>
@@ -366,9 +368,9 @@ export default function AdminDashboard() {
           </ul>
         </nav>
         <div className="p-4">
-          <button className="flex items-center space-x-2 text-gray-300 hover:text-white">
+          <button className="flex items-center space-x-2 text-red-300 hover:text-red" onClick={() => router.push("/logout")}>
             <LogOutIcon className="h-5 w-5" />
-            <Link href="/">Logout</Link>
+            <p>Log out</p>
           </button>
         </div>
       </aside>
