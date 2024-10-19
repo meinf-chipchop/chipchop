@@ -1,8 +1,3 @@
-import * as dotenv from 'dotenv';
-
-dotenv.config();
-
-
 export async function logout() {
     const url = process.env.NEXT_PUBLIC_API_URL + '/api/logout/';
 

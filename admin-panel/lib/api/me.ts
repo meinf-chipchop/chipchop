@@ -1,5 +1,3 @@
-
-
 export async function me(): Promise<any> {
     const url = process.env.NEXT_PUBLIC_API_URL + '/api/users/me/';
 

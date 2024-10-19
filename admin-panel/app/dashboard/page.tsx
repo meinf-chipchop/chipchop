@@ -23,109 +23,25 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { me } from "@/lib/api/me";
+import { getAccountApprovals } from "@/lib/api/account-approvals";
+import { mapState } from "@/lib/api/state-mapper";
 
 dotenv.config();
 
 interface User {
   id: number;
   name: string;
-  status: "pending" | "approved" | "denied";
+  status: "pending" | "approved" | "rejected";
 }
 
-interface Permissions {
+interface Approvals {
   deliverers: User[];
   cooks: User[];
 }
 
-const initialPermissions: Permissions = {
-  deliverers: [
-    { id: 1, name: "John Doe", status: "pending" },
-    { id: 2, name: "Jane Smith", status: "approved" },
-    { id: 3, name: "Mike Johnson", status: "pending" },
-    { id: 4, name: "Emily Brown", status: "denied" },
-    { id: 5, name: "David Lee", status: "approved" },
-    { id: 6, name: "Sarah Parker", status: "pending" },
-    { id: 7, name: "Chris Evans", status: "approved" },
-    { id: 8, name: "Olivia Johnson", status: "denied" },
-    { id: 9, name: "Robert Smith", status: "pending" },
-    { id: 10, name: "Sophia Garcia", status: "approved" },
-    { id: 11, name: "James Williams", status: "pending" },
-    { id: 12, name: "Isabella Brown", status: "approved" },
-    { id: 13, name: "Liam Jones", status: "denied" },
-    { id: 14, name: "Mia Davis", status: "pending" },
-    { id: 15, name: "Noah Miller", status: "approved" },
-    { id: 16, name: "Ava Wilson", status: "pending" },
-    { id: 17, name: "Elijah Moore", status: "denied" },
-    { id: 18, name: "Charlotte Taylor", status: "approved" },
-    { id: 19, name: "William Anderson", status: "pending" },
-    { id: 20, name: "Amelia Thomas", status: "approved" },
-    { id: 21, name: "Ethan Jackson", status: "pending" },
-    { id: 22, name: "Harper White", status: "approved" },
-    { id: 23, name: "Lucas Harris", status: "denied" },
-    { id: 24, name: "Ella Martin", status: "pending" },
-    { id: 25, name: "Mason Thompson", status: "approved" },
-    { id: 26, name: "Aiden Garcia", status: "pending" },
-    { id: 27, name: "Scarlett Martinez", status: "approved" },
-    { id: 28, name: "Jacob Robinson", status: "denied" },
-    { id: 29, name: "Sofia Clark", status: "pending" },
-    { id: 30, name: "Michael Rodriguez", status: "approved" },
-    { id: 31, name: "Benjamin Lewis", status: "pending" },
-    { id: 32, name: "Aria Lee", status: "approved" },
-    { id: 33, name: "Jackson Walker", status: "denied" },
-    { id: 34, name: "Chloe Hall", status: "pending" },
-    { id: 35, name: "James Young", status: "approved" },
-    { id: 36, name: "Grace King", status: "pending" },
-    { id: 37, name: "Daniel Wright", status: "approved" },
-    { id: 38, name: "Lily Scott", status: "denied" },
-    { id: 39, name: "Samuel Green", status: "pending" },
-    { id: 40, name: "Victoria Adams", status: "approved" },
-    { id: 41, name: "Henry Baker", status: "pending" },
-    { id: 42, name: "Samantha Nelson", status: "approved" },
-  ],
-  cooks: [
-    { id: 1, name: "Alice Brown", status: "pending" },
-    { id: 2, name: "Bob Wilson", status: "denied" },
-    { id: 3, name: "Carol Davis", status: "approved" },
-    { id: 4, name: "Eva Martinez", status: "pending" },
-    { id: 5, name: "Frank Thomas", status: "approved" },
-    { id: 6, name: "Megan White", status: "pending" },
-    { id: 7, name: "Oliver Harris", status: "approved" },
-    { id: 8, name: "Sophia Clark", status: "denied" },
-    { id: 9, name: "David Lewis", status: "pending" },
-    { id: 10, name: "Chloe King", status: "approved" },
-    { id: 11, name: "Lucas Scott", status: "pending" },
-    { id: 12, name: "Ella Adams", status: "approved" },
-    { id: 13, name: "Noah Baker", status: "denied" },
-    { id: 14, name: "Liam Young", status: "pending" },
-    { id: 15, name: "Amelia Thompson", status: "approved" },
-    { id: 16, name: "Aiden Roberts", status: "pending" },
-    { id: 17, name: "Emma Turner", status: "denied" },
-    { id: 18, name: "Mason Rodriguez", status: "approved" },
-    { id: 19, name: "Aria Edwards", status: "pending" },
-    { id: 20, name: "Ethan Walker", status: "approved" },
-    { id: 21, name: "Scarlett Hall", status: "pending" },
-    { id: 22, name: "Oliver Lewis", status: "approved" },
-    { id: 23, name: "Jack Wilson", status: "denied" },
-    { id: 24, name: "Lily Johnson", status: "pending" },
-    { id: 25, name: "Samuel Brown", status: "approved" },
-    { id: 26, name: "Chloe Martin", status: "pending" },
-    { id: 27, name: "Grace Garcia", status: "approved" },
-    { id: 28, name: "Henry Thompson", status: "denied" },
-    { id: 29, name: "Ava Martinez", status: "pending" },
-    { id: 30, name: "Daniel Hall", status: "approved" },
-    { id: 31, name: "Ella Johnson", status: "pending" },
-    { id: 32, name: "James Wilson", status: "approved" },
-    { id: 33, name: "Sofia Davis", status: "denied" },
-    { id: 34, name: "Liam Robinson", status: "pending" },
-    { id: 35, name: "Emily Lee", status: "approved" },
-    { id: 36, name: "Lucas Martinez", status: "pending" },
-    { id: 37, name: "Mia Young", status: "approved" },
-    { id: 38, name: "Jack White", status: "denied" },
-    { id: 39, name: "Oliver King", status: "pending" },
-    { id: 40, name: "Aiden Baker", status: "approved" },
-    { id: 41, name: "Harper Scott", status: "pending" },
-    { id: 42, name: "Sophia Clark", status: "approved" },
-  ],
+const initialApprovals: Approvals = {
+  deliverers: [],
+  cooks: [],
 };
 
 interface MenuItemProps {
@@ -157,6 +73,48 @@ function useOwnEmail() {
   }, []);
 
   return { email, error };
+}
+
+function useApprovals(pageNumber: number, pageSize: number): [Approvals, React.Dispatch<React.SetStateAction<Approvals>>] {
+  const [approvals, setApprovals] = useState<Approvals>(initialApprovals);
+
+  useEffect(() => {
+    async function fetchApprovals() {
+      try {
+        let allData: Approvals = { deliverers: [], cooks: [] };
+        let currentPage = 1;
+        let hasMoreData = true;
+
+        while (hasMoreData) {
+          const data = await getAccountApprovals(currentPage, pageSize);
+
+          data.forEach((approval) => {
+            const lst: User[] = approval.user.role === "C" ? allData.cooks : allData.deliverers;
+
+            lst.push({
+              id: approval.user.id,
+              name: approval.user.email,
+              status: mapState(approval.state),
+            });
+          });
+
+          if (allData.deliverers.length + allData.cooks.length < pageSize) {
+            hasMoreData = false;
+          } else {
+            currentPage++;
+          }
+        }
+
+        setApprovals(allData);
+      } catch (error) {
+        console.error('Error fetching approvals:', error);
+      }
+    }
+
+    fetchApprovals();
+  }, []);
+
+  return [approvals, setApprovals];
 }
 
 const MenuItem: React.FC<MenuItemProps> = ({
@@ -197,20 +155,23 @@ const MenuItem: React.FC<MenuItemProps> = ({
 export default function AdminDashboard() {
   const router = useRouter();
 
+  const usersPerPage = 20;
+
+
   const [activeItem, setActiveItem] = useState("Dashboard");
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [permissions, setPermissions] =
-    useState<Permissions>(initialPermissions);
   const [visibleUsers, setVisibleUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const { email, error: emailError } = useOwnEmail();
+  const [approvals, setApprovals] = useApprovals(1, usersPerPage);
+
 
   if (emailError) {
+    // Go back to the login page if there is an error fetching the user's email
     router.push("/login");
   }
 
-  const usersPerPage = 11;
 
   const menuItems = [
     { icon: HomeIcon, text: "Dashboard" },
@@ -231,9 +192,9 @@ export default function AdminDashboard() {
       const type = activeItem.toLowerCase() as "cooks" | "deliverers";
       const startIndex = (currentPage - 1) * usersPerPage;
       const endIndex = startIndex + usersPerPage;
-      setVisibleUsers(permissions[type].slice(startIndex, endIndex));
+      setVisibleUsers(approvals[type].slice(startIndex, endIndex));
     }
-  }, [activeItem, permissions, currentPage]);
+  }, [activeItem, approvals, currentPage]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -259,7 +220,7 @@ export default function AdminDashboard() {
     id: number,
     status: "approved" | "denied"
   ) => {
-    setPermissions((prev) => {
+    setApprovals((prev) => {
       const updatedUsers = prev[type].map((user) =>
         user.id === id ? { ...user, status } : user
       );
@@ -270,7 +231,7 @@ export default function AdminDashboard() {
   const renderContent = () => {
     if (activeItem === "Cooks" || activeItem === "Deliverers") {
       const type = activeItem.toLowerCase() as "cooks" | "deliverers";
-      const totalPages = Math.ceil(permissions[type].length / usersPerPage);
+      const totalPages = Math.ceil(approvals[type].length / usersPerPage);
 
       return (
         <div className="bg-gray-800 rounded-lg p-6">
@@ -302,7 +263,7 @@ export default function AdminDashboard() {
                     <span
                       className={`px-2 py-1 rounded-full text-xs ${user.status === "approved"
                         ? "bg-green-200 text-green-900"
-                        : user.status === "denied"
+                        : user.status === "rejected"
                           ? "bg-red-200 text-red-900"
                           : "bg-yellow-200 text-yellow-900"
                         }`}
