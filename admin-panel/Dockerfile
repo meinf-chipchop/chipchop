@@ -1,12 +1,11 @@
 FROM node:lts-slim
 
-ARG RUN_BUILD
+ARG DEV_MODE
 
 WORKDIR /app/
 
 ADD . .
 
 RUN npm install
-# RUN if [ "$RUN_BUILD" = 1 ]; then bun run build; fi
-
-CMD ["npm", "run", "dev"]
+RUN if [ $DEV_MODE = FALSE ]; then npm run build; fi
+CMD if [ $DEV_MODE = FALSE ]; then npm run start; else npm run dev; fi

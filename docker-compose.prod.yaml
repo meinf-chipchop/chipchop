@@ -1,10 +1,6 @@
 services:
   backend:
     build: ./api
-    ports:
-      - 8000:8000
-    volumes:
-      - ./api/:/app/:cached
     environment:
       DB_HOST: db
       DB_USER: ${POSTGRES_USERNAME}
@@ -15,7 +11,7 @@ services:
       ADMIN_EMAIL: ${DJANGO_ADMIN_EMAIL}
       ADMIN_USERNAME: ${DJANGO_ADMIN_USERNAME}
       ADMIN_PASSWORD: ${DJANGO_ADMIN_PASSWORD}
-      DEV_MODE: TRUE
+      DEV_MODE: FALSE
     depends_on:
       db:
         condition: service_healthy
@@ -27,23 +23,17 @@ services:
     ports:
       - 443:443
       - 80:80
-      - 8080:8080
     depends_on:
       - backend
       - admin-panel
 
   admin-panel:
-    volumes:
-      - ./admin-panel/:/app/:cached
     env_file:
       - ./.env
-    environment:
-      WATCHPACK_POLLING: true
     build:
       context: ./admin-panel
       args:
-        - DEV_MODE=TRUE
-
+        - DEV_MODE=TRUE #TEMPORAL
   db:
     image: postgres:17.0-alpine3.20
     restart: always
