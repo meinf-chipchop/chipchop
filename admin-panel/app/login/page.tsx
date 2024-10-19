@@ -6,6 +6,7 @@ import { LockIcon, Mail, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import * as dotenv from 'dotenv'
+import { login } from '@/lib/api/login';
 
 dotenv.config();
 
@@ -44,38 +45,14 @@ export default function LoginForm() {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const url = process.env.NEXT_PUBLIC_API_URL + '/api/login/';
-
-        const sentData = JSON.stringify(formData);
-        console.log(sentData);
-
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: sentData,
-          credentials: 'include'
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          // Login successful
-          console.log('Login successful:', data);
-          // Redirect to dashboard or home page
-          router.push('/dashboard');
-        } else {
-          // Login failed
-          setLoginError(data.message || 'An error occurred during login. Please try again.');
-        }
-
+        login(formData);
+        router.push('/dashboard');
       } catch (error) {
         console.error('Login error:', error);
         setLoginError('Oops! Something went wrong during login. Please try again.');
       }
     }
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">

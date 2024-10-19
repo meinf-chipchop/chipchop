@@ -1,40 +1,32 @@
 "use client";
 
 import React, { useState } from 'react';
-import { LockIcon, Mail, AlertCircle } from 'lucide-react';
+import { LockIcon, AlertCircle } from 'lucide-react';
 
 import { useRouter } from 'next/navigation';
 
 import * as dotenv from 'dotenv'
+import { logout } from '@/lib/api/logout';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 dotenv.config();
+
+async function handleLogout(router: AppRouterInstance, e: React.FormEvent, setError: React.Dispatch<React.SetStateAction<string | null>>): Promise<void> {
+    e.preventDefault();
+
+    try {
+        await logout();
+        router.push("login/");
+    } catch (error) {
+        setError('An error occurred while logging out.');
+    }
+}
 
 export default function LoginForm() {
     const router = useRouter();
 
     const [error, setError] = useState<string | null>(null);
 
-    const handleLogout = (e: React.FormEvent) => {
-        e.preventDefault();
-
-        const url = process.env.NEXT_PUBLIC_API_URL + '/api/logout/';
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include'
-        }).then(response => {
-            if (response.ok) {
-                router.push('/login');
-            } else {
-                setError('An error occurred while logging out.');
-            }
-        }).catch(() => {
-            setError('An error occurred while logging out request.');
-        });
-    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
@@ -47,7 +39,7 @@ export default function LoginForm() {
                         Log out
                     </h2>
                 </div>
-                <form className="mt-8 space-y-6" onSubmit={handleLogout}>
+                <form className="mt-8 space-y-6" onSubmit={(e) => handleLogout(router, e, setError)}>
                     <div className="rounded-md shadow-sm space-y-4">
                         <div>
                             <label htmlFor="email-address" className="block text-sm font-medium text-gray-300 mb-1">

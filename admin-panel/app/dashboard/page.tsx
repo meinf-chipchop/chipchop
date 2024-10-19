@@ -22,6 +22,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
+import { me } from "@/lib/api/me";
 
 dotenv.config();
 
@@ -142,24 +143,10 @@ function useOwnEmail() {
 
   useEffect(() => {
     async function fetchEmail() {
-      const url = process.env.NEXT_PUBLIC_API_URL + '/api/users/me/';
-
       try {
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
+        const data = await me();
 
-        if (response.ok) {
-          const res = await response.json();
-          setEmail(res.email);
-        } else {
-          console.error('Error fetching user data:', response);
-          setError('Error fetching user data');
-        }
+        setEmail(data.email);
       } catch (error) {
         console.error('Error fetching user data:', error);
         setError('Error fetching user data');
