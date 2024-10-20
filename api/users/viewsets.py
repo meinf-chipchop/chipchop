@@ -63,7 +63,7 @@ class LoginViewSet(viewsets.ViewSet):
 class LogoutViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
-    def create(self, request):
+    def list(self, request):
         logout(request)
         response = Response(
             {"Message": "Successfully logged out."}, status=status.HTTP_200_OK
