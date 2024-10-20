@@ -20,6 +20,6 @@ jobs:
           script: |
             cd chipchop
             git pull origin main
-            docker compose down
-            docker compose build
-            docker compose up -d
+            docker compose -f docker-compose.prod.yaml down
+            docker compose -f docker-compose.prod.yaml build
+            docker compose -f docker-compose.prod.yaml up -d
