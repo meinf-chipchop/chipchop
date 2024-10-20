@@ -54,7 +54,7 @@ interface MenuItemProps {
 }
 
 function useOwnEmail() {
-  const [email, setEmail] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -64,8 +64,8 @@ function useOwnEmail() {
 
         setEmail(data.email);
       } catch (error) {
-        console.error('Error fetching user data:', error);
-        setError('Error fetching user data');
+        console.error("Error fetching user data:", error);
+        setError("Error fetching user data");
       }
     }
 
@@ -75,13 +75,16 @@ function useOwnEmail() {
   return { email, error };
 }
 
-function useApprovals(pageNumber: number, pageSize: number): [Approvals, React.Dispatch<React.SetStateAction<Approvals>>] {
+function useApprovals(
+  pageNumber: number,
+  pageSize: number
+): [Approvals, React.Dispatch<React.SetStateAction<Approvals>>] {
   const [approvals, setApprovals] = useState<Approvals>(initialApprovals);
 
   useEffect(() => {
     async function fetchApprovals() {
       try {
-        let allData: Approvals = { deliverers: [], cooks: [] };
+        const allData: Approvals = { deliverers: [], cooks: [] };
         let currentPage = 1;
         let hasMoreData = true;
 
@@ -89,7 +92,8 @@ function useApprovals(pageNumber: number, pageSize: number): [Approvals, React.D
           const data = await getAccountApprovals(currentPage, pageSize);
 
           data.forEach((approval) => {
-            const lst: User[] = approval.user.role === "C" ? allData.cooks : allData.deliverers;
+            const lst: User[] =
+              approval.user.role === "C" ? allData.cooks : allData.deliverers;
 
             lst.push({
               id: approval.user.id,
@@ -107,7 +111,7 @@ function useApprovals(pageNumber: number, pageSize: number): [Approvals, React.D
 
         setApprovals(allData);
       } catch (error) {
-        console.error('Error fetching approvals:', error);
+        console.error("Error fetching approvals:", error);
       }
     }
 
@@ -127,8 +131,9 @@ const MenuItem: React.FC<MenuItemProps> = ({
 }) => (
   <li>
     <div
-      className={`flex items-center justify-between px-4 py-2 rounded-lg cursor-pointer ${isActive ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
-        }`}
+      className={`flex items-center justify-between px-4 py-2 rounded-lg cursor-pointer ${
+        isActive ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
+      }`}
       onClick={onClick}
     >
       <div className="flex items-center space-x-2">
@@ -157,7 +162,6 @@ export default function AdminDashboard() {
 
   const usersPerPage = 20;
 
-
   const [activeItem, setActiveItem] = useState("Dashboard");
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -166,25 +170,62 @@ export default function AdminDashboard() {
   const { email, error: emailError } = useOwnEmail();
   const [approvals, setApprovals] = useApprovals(1, usersPerPage);
 
-
   if (emailError) {
     // Go back to the login page if there is an error fetching the user's email
     router.push("/login");
   }
 
-
-  const menuItems = [
-    { icon: HomeIcon, text: "Dashboard" },
+  const menuItems: MenuItemProps[] = [
+    {
+      icon: HomeIcon,
+      text: "Dashboard",
+      isActive: false,
+      onClick: function (): void {
+        throw new Error("Function not implemented.");
+      },
+    },
     {
       icon: UsersIcon,
       text: "User Settings",
       subItems: [
-        { icon: ChefHat, text: "Cooks" },
-        { icon: Truck, text: "Deliverers" },
+        {
+          icon: ChefHat,
+          text: "Cooks",
+          isActive: false,
+          onClick: function (): void {
+            throw new Error("Function not implemented.");
+          },
+        },
+        {
+          icon: Truck,
+          text: "Deliverers",
+          isActive: false,
+          onClick: function (): void {
+            throw new Error("Function not implemented.");
+          },
+        },
       ],
+      isActive: false,
+      onClick: function (): void {
+        throw new Error("Function not implemented.");
+      },
     },
-    { icon: BarChartIcon, text: "Analytics" },
-    { icon: SettingsIcon, text: "Settings" },
+    {
+      icon: BarChartIcon,
+      text: "Analytics",
+      isActive: false,
+      onClick: function (): void {
+        throw new Error("Function not implemented.");
+      },
+    },
+    {
+      icon: SettingsIcon,
+      text: "Settings",
+      isActive: false,
+      onClick: function (): void {
+        throw new Error("Function not implemented.");
+      },
+    },
   ];
 
   useEffect(() => {
@@ -261,12 +302,13 @@ export default function AdminDashboard() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs ${user.status === "approved"
-                        ? "bg-green-200 text-green-900"
-                        : user.status === "rejected"
+                      className={`px-2 py-1 rounded-full text-xs ${
+                        user.status === "approved"
+                          ? "bg-green-200 text-green-900"
+                          : user.status === "rejected"
                           ? "bg-red-200 text-red-900"
                           : "bg-yellow-200 text-yellow-900"
-                        }`}
+                      }`}
                     >
                       {user.status}
                     </span>
@@ -339,7 +381,10 @@ export default function AdminDashboard() {
             <p>Welcome,</p>
             <p className="font-semibold italic text-blue-500"> {email}</p>
           </div>
-          <button className="flex items-center space-x-2 text-red-300 hover:text-red" onClick={() => router.push("/logout")}>
+          <button
+            className="flex items-center space-x-2 text-red-300 hover:text-red"
+            onClick={() => router.push("/logout")}
+          >
             <LogOutIcon className="h-5 w-5" />
             <p>Log out</p>
           </button>
@@ -372,7 +417,6 @@ export default function AdminDashboard() {
             ))}
           </ul>
         </nav>
-
       </aside>
       {/* Mobile Menu Button */}
       <button
