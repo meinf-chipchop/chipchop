@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model, authenticate, login, logout
 
-from rest_framework.authtoken.views import obtain_auth_token
-from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -26,17 +25,24 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class TokenViewSet(viewsets.ViewSet):
-    serializer_class = AuthTokenSerializer
-
+    serializer_class = serializers.LoginSerializer
     permission_classes = [AllowAny]
 
     def create(self, request):
-        response = obtain_auth_token(request._request)
+        serializer = serializers.LoginSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            email = serializer.validated_data.get("email")
+            password = serializer.validated_data.get("password")
 
-        token = response.data["token"]
-
-        response.set_cookie(key="Token", value=token)
-        return response
+            user = authenticate(request=request, email=email, password=password)
+            if user is not None:
+                token, _ = Token.objects.get_or_create(user=user)
+                return Response(token.key)
+            return Response(
+                {"Message": "Invalid Email and Password"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginViewSet(viewsets.ViewSet):

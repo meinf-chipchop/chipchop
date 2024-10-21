@@ -1,11 +1,11 @@
 FROM node:lts-slim
 
-WORKDIR /app
+ARG DEV_MODE
 
-COPY ./package*.json .
+WORKDIR /app/
+
+ADD . .
 
 RUN npm install
-
-EXPOSE 3000
-
-CMD [ "npm", "run", "dev"]
+RUN if [ $DEV_MODE = FALSE ]; then npm run build; fi
+CMD if [ $DEV_MODE = FALSE ]; then npm run start; else npm run dev; fi
