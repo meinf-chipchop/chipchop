@@ -17,4 +17,7 @@ class CCDelivererViewSet(
         if self.action == "list":
             return serializers.CCDelivererListSerializer
 
+        if self.action == "create":
+            return serializers.CCDelivererCreationSerializer
+
         return super().get_serializer_class()

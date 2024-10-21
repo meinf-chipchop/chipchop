@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from users.serializers import UserSerializer
+from users.serializers import UserSerializer, UserCreationSerializer
 from petitions.models import AccountUpgradePetition
 
 from . import models
@@ -17,9 +17,9 @@ class CCDelivererSimpleSerializer(serializers.ModelSerializer):
         exclude = ["user"]
 
 
-class CCDelivererDetailSerializer(serializers.ModelSerializer):
+class CCDelivererCreationSerializer(serializers.ModelSerializer):
 
-    user = UserSerializer()
+    user = UserCreationSerializer()
     password = serializers.CharField(write_only=True)
 
     class Meta:
@@ -38,6 +38,15 @@ class CCDelivererDetailSerializer(serializers.ModelSerializer):
         AccountUpgradePetition.objects.create(user=user)
 
         return cook
+
+
+class CCDelivererDetailSerializer(serializers.ModelSerializer):
+
+    user = UserSerializer()
+
+    class Meta:
+        model = models.CCDeliverer
+        fields = ["user", "password", "transport"]
 
 
 class CCDelivererListSerializer(serializers.ModelSerializer):
