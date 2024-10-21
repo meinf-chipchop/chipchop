@@ -22,11 +22,6 @@ class CCCookSimpleSerializer(serializers.ModelSerializer):
 class CCCookCreationSerializer(serializers.ModelSerializer):
 
     user = UserCreationSerializer()
-    dishes = serializers.HyperlinkedIdentityField(
-        view_name="dish-list",
-        lookup_field="pk",
-        lookup_url_kwarg="cook_pk",
-    )
 
     class Meta:
         model = models.CCCook
@@ -34,14 +29,9 @@ class CCCookCreationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_data = validated_data.pop("user")
-        new_password = user_data.pop("password")
 
-        user = User.objects.create(**user_data, role=User.UserRoles.COOK)
+        user = User.objects.create_user(**user_data, role=User.UserRoles.COOK)
         cook = models.CCCook.objects.create(user=user, **validated_data)
-
-        user.set_password(new_password)
-
-        AccountUpgradePetition.objects.create(user=user)
 
         return cook
 

@@ -30,16 +30,11 @@ class CCDelivererCreationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_data = validated_data.pop("user")
-        new_password = user_data.pop("password")
 
-        user = User.objects.create(**user_data, role=User.UserRoles.DELIVERER)
-        cook = models.CCDeliverer.objects.create(user=user, **validated_data)
+        user = User.objects.create_user(**user_data, role=User.UserRoles.DELIVERER)
+        deliverer = models.CCDeliverer.objects.create(user=user, **validated_data)
 
-        user.set_password(new_password)
-
-        AccountUpgradePetition.objects.create(user=user)
-
-        return cook
+        return deliverer
 
 
 class CCDelivererDetailSerializer(serializers.ModelSerializer):
