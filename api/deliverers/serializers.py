@@ -46,7 +46,7 @@ class CCDelivererDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CCDeliverer
-        fields = ["user", "password", "transport"]
+        fields = ["user", "transport"]
 
 
 class CCDelivererListSerializer(serializers.ModelSerializer):
