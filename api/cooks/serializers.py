@@ -23,7 +23,9 @@ class CCCookCreationSerializer(serializers.ModelSerializer):
 
     user = UserCreationSerializer()
     dishes = serializers.HyperlinkedIdentityField(
-        view_name="dish-list", lookup_field="pk", lookup_url_kwarg="cook_pk"
+        view_name="dish-list",
+        lookup_field="pk",
+        lookup_url_kwarg="cook_pk",
     )
 
     class Meta:
@@ -48,7 +50,9 @@ class CCCookDetailSerializer(serializers.ModelSerializer):
 
     user = UserSerializer()
     dishes = serializers.HyperlinkedIdentityField(
-        view_name="dish-list", lookup_field="pk", lookup_url_kwarg="cook_pk"
+        view_name="dish-list",
+        lookup_field="pk",
+        lookup_url_kwarg="cook_pk",
     )
 
     class Meta:

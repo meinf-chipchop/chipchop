@@ -20,15 +20,17 @@ class CCDelivererSimpleSerializer(serializers.ModelSerializer):
 class CCDelivererCreationSerializer(serializers.ModelSerializer):
 
     user = UserCreationSerializer()
-    password = serializers.CharField(write_only=True)
 
     class Meta:
         model = models.CCDeliverer
-        fields = ["user", "password", "transport"]
+        fields = [
+            "transport",
+            "user",
+        ]
 
     def create(self, validated_data):
         user_data = validated_data.pop("user")
-        new_password = validated_data.pop("password")
+        new_password = user_data.pop("password")
 
         user = User.objects.create(**user_data, role=User.UserRoles.DELIVERER)
         cook = models.CCDeliverer.objects.create(user=user, **validated_data)
