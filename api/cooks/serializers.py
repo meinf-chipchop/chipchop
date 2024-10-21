@@ -32,7 +32,7 @@ class CCCookCreationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_data = validated_data.pop("user")
-        new_password = validated_data.pop("password")
+        new_password = user_data.pop("password")
 
         user = User.objects.create(**user_data, role=User.UserRoles.COOK)
         cook = models.CCCook.objects.create(user=user, **validated_data)
@@ -53,7 +53,7 @@ class CCCookDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CCCook
-        fields = ["public_name", "user", "password", "dishes"]
+        fields = ["public_name", "user", "dishes"]
 
 
 class CCCookListSerializer(serializers.ModelSerializer):
