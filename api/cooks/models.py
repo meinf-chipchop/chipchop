@@ -36,9 +36,9 @@ class Dish(models.Model):
     name = models.CharField(max_length=50, null=False)
     description = models.TextField(null=False)
     category = models.ForeignKey(DishCategory, null=True, on_delete=models.SET_NULL)
-    price = models.DecimalField(null=False, max_digits=4, decimal_places=2)
+    price = models.DecimalField(null=False, max_digits=6, decimal_places=2)
     discount = models.DecimalField(
-        null=False, max_digits=3, decimal_places=2, default=0
+        null=False, max_digits=5, decimal_places=2, default=0
     )
     created_at = models.DateTimeField(editable=False)
     last_update_at = models.DateTimeField(editable=False, null=True)

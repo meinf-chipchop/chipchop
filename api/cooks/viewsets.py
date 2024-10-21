@@ -24,7 +24,6 @@ class CCCookViewSet(
 
 
 class DishViewSet(viewsets.ModelViewSet):
-    queryset = models.Dish.objects.all()
     serializer_class = serializers.DishDetailSerializer
 
     def get_queryset(self):

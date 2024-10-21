@@ -1,10 +1,21 @@
-"use client";
+'use client'
+
 
 import { useRouter } from "next/navigation";
 
 import * as dotenv from "dotenv";
 
-import React, { useState, useEffect } from "react";
+import Link from "next/link"
+
+import { me } from "@/lib/api/me";
+
+import { getAccountApprovals } from "@/lib/api/account-approvals";
+
+import { mapState } from "@/lib/api/state-mapper";
+
+import { Line, Bar } from "react-chartjs-2"
+
+import React, { useState, useEffect } from "react"
 import {
   HomeIcon,
   UsersIcon,
@@ -30,12 +41,36 @@ import {
 } from "@/lib/api/account-approvals";
 import { mapState } from "@/lib/api/state-mapper";
 
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+
+
 dotenv.config();
 
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+)
+
 interface User {
-  id: number;
-  name: string;
-  status: "pending" | "approved" | "rejected";
+  id: number
+  name: string
+  status: "pending" | "approved" | "rejected"
 }
 
 interface Approvals {
@@ -49,13 +84,29 @@ const initialApprovals: Approvals = {
 };
 
 interface MenuItemProps {
-  icon: React.ComponentType<{ className?: string }>;
-  text: string;
-  isActive: boolean;
-  onClick: () => void;
-  subItems?: MenuItemProps[];
-  isExpanded?: boolean;
+  icon: React.ComponentType<{ className?: string }>
+  text: string
+  isActive: boolean
+  onClick: () => void
+  subItems?: MenuItemProps[]
+  isExpanded?: boolean
 }
+
+interface Approvals {
+  deliverers: User[]
+  cooks: User[]
+}
+
+interface MenuItemProps {
+  icon: React.ComponentType<{ className?: string }>
+  text: string
+  isActive: boolean
+  onClick: () => void
+  subItems?: MenuItemProps[]
+  isExpanded?: boolean
+}
+
+
 
 function useOwnEmail() {
   const [email, setEmail] = useState<string>("");
@@ -125,6 +176,39 @@ function useApprovals(
   return [approvals, setApprovals];
 }
 
+
+// Mock data for charts
+const monthlyData = {
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  datasets: [
+    {
+      label: 'New Cooks',
+      data: [10, 15, 8, 12, 20, 18, 25, 30, 28, 35, 40, 45],
+      borderColor: '#b89d6a',
+      backgroundColor: 'rgba(184, 157, 106, 0.5)',
+    },
+    {
+      label: 'New Deliverers',
+      data: [8, 10, 12, 15, 18, 22, 20, 25, 28, 30, 35, 38],
+      borderColor: '#6a9fad',
+      backgroundColor: 'rgba(106, 159, 173, 0.5)',
+    },
+  ],
+}
+
+const orderData = {
+  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  datasets: [
+    {
+      label: 'Orders',
+      data: [65, 59, 80, 81, 56, 55, 40],
+      backgroundColor: 'rgba(184, 157, 106, 0.6)',
+    },
+  ],
+}
+
+
+
 const MenuItem: React.FC<MenuItemProps> = ({
   icon: Icon,
   text,
@@ -135,11 +219,11 @@ const MenuItem: React.FC<MenuItemProps> = ({
 }) => (
   <li>
     <div
-      className={`flex items-center justify-between px-4 py-2 rounded-lg cursor-pointer ${
-        isActive ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
-      }`}
+      className={`flex items-center justify-between px-4 py-2 rounded-lg cursor-pointer ${isActive ? "bg-[#6ca4ac] text-white" : "text-black-300 hover:bg-[#6ca4ac]"
+        }`}
       onClick={onClick}
     >
+
       <div className="flex items-center space-x-2">
         <Icon className="h-5 w-5" />
         <span>{text}</span>
@@ -164,13 +248,15 @@ const MenuItem: React.FC<MenuItemProps> = ({
 export default function AdminDashboard() {
   const router = useRouter();
 
-  const usersPerPage = 20;
+  const usersPerPage = 10;
 
   const [activeItem, setActiveItem] = useState("Dashboard");
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [visibleUsers, setVisibleUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [nameFilter, setNameFilter] = useState("")
+  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "approved" | "denied">("all")
   const { email, error: emailError } = useOwnEmail();
   const [approvals, setApprovals] = useApprovals(1, usersPerPage);
 
@@ -181,16 +267,8 @@ export default function AdminDashboard() {
 
   const menuItems: MenuItemProps[] = [
     {
-      icon: HomeIcon,
-      text: "Dashboard",
-      isActive: false,
-      onClick: function (): void {
-        throw new Error("Function not implemented.");
-      },
-    },
-    {
       icon: UsersIcon,
-      text: "User Settings",
+      text: "User Petitions",
       subItems: [
         {
           icon: ChefHat,
@@ -234,16 +312,22 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (activeItem === "Cooks" || activeItem === "Deliverers") {
-      const type = activeItem.toLowerCase() as "cooks" | "deliverers";
-      const startIndex = (currentPage - 1) * usersPerPage;
-      const endIndex = startIndex + usersPerPage;
-      setVisibleUsers(approvals[type].slice(startIndex, endIndex));
+      const type = activeItem.toLowerCase() as "cooks" | "deliverers"
+
+      const filteredUsers = approvals[type].filter(
+        (user) =>
+          user.name.toLowerCase().includes(nameFilter.toLowerCase()) &&
+          (statusFilter === "all" || user.status === statusFilter)
+      )
+      const startIndex = (currentPage - 1) * usersPerPage
+      const endIndex = startIndex + usersPerPage
+      setVisibleUsers(filteredUsers.slice(startIndex, endIndex))
     }
-  }, [activeItem, approvals, currentPage]);
+  }, [activeItem, approvals, currentPage, nameFilter, statusFilter])
 
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
 
   const handleItemClick = (item: MenuItemProps) => {
     if (item.subItems) {
@@ -251,16 +335,16 @@ export default function AdminDashboard() {
         prev.includes(item.text)
           ? prev.filter((i) => i !== item.text)
           : [...prev, item.text]
-      );
+      )
       if (!expandedItems.includes(item.text)) {
-        setActiveItem(item.subItems[0].text);
+        setActiveItem(item.subItems[0].text)
       }
     } else {
-      setActiveItem(item.text);
+      setActiveItem(item.text)
     }
-  };
+  }
 
-  const handlePermission = (
+  const handleApproval = (
     type: "cooks" | "deliverers",
     id: number,
     status: AccountApprovalState
@@ -277,46 +361,73 @@ export default function AdminDashboard() {
     });
   };
 
+
   const renderContent = () => {
     if (activeItem === "Cooks" || activeItem === "Deliverers") {
-      const type = activeItem.toLowerCase() as "cooks" | "deliverers";
-      const totalPages = Math.ceil(approvals[type].length / usersPerPage);
+      const type = activeItem.toLowerCase() as "cooks" | "deliverers"
+      const filteredUsers = approvals[type].filter(
+        (user) =>
+          user.name.toLowerCase().includes(nameFilter.toLowerCase()) &&
+          (statusFilter === "all" || user.status === statusFilter)
+      )
+      const totalPages = Math.ceil(filteredUsers.length / usersPerPage)
 
       return (
-        <div className="bg-gray-800 rounded-lg p-6">
-          <h3 className="text-xl font-semibold mb-4 text-white">
+        <div className="bg-white rounded-lg p-6 shadow-md">
+          <h3 className="text-xl font-semibold mb-4 text-[#2c3e50]">
             {activeItem} List
           </h3>
-          <table className="min-w-full divide-y divide-gray-700">
+          <div className="mb-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search by name"
+                value={nameFilter}
+                onChange={(e) => setNameFilter(e.target.value)}
+                className="w-full sm:w-64 px-4 py-2 bg-[#f0f0f0] text-[#2c3e50] rounded-md pl-10"
+              />
+              <Search className="absolute left-3 top-2.5 h-5 w-5 text-[#6a9fad]" />
+            </div>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as any)}
+              className="w-full sm:w-auto px-4 py-2 bg-[#f0f0f0] text-[#2c3e50] rounded-md"
+            >
+              <option value="all">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="denied">Denied</option>
+            </select>
+          </div>
+          <table className="min-w-full divide-y divide-[#e0e0e0]">
             <thead>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#2c3e50] uppercase tracking-wider">
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#2c3e50] uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#2c3e50] uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-gray-900 divide-y divide-gray-700">
+            <tbody className="bg-white divide-y divide-[#e0e0e0]">
               {visibleUsers.map((user) => (
                 <tr key={user.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 flex items-center">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2c3e50] flex items-center">
                     <User className="mr-2" size={20} />
                     {user.name}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2c3e50]">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        user.status === "approved"
-                          ? "bg-green-200 text-green-900"
-                          : user.status === "rejected"
+                      className={`px-2 py-1 rounded-full text-xs ${user.status === "approved"
+                        ? "bg-green-200 text-green-900"
+                        : user.status === "rejected"
                           ? "bg-red-200 text-red-900"
                           : "bg-yellow-200 text-yellow-900"
-                      }`}
+                        }`}
                     >
                       {user.status}
                     </span>
@@ -325,11 +436,13 @@ export default function AdminDashboard() {
                     <button
                       className="mr-2 p-1 bg-green-500 text-white rounded hover:bg-green-600"
                       onClick={() =>
-                        handlePermission(
+
+                        handleApproval(
                           type,
                           user.id,
                           AccountApprovalState.APPROVED
                         )
+
                       }
                     >
                       <Check size={16} />
@@ -337,7 +450,7 @@ export default function AdminDashboard() {
                     <button
                       className="p-1 bg-red-500 text-white rounded hover:bg-red-600"
                       onClick={() =>
-                        handlePermission(
+                        handleApproval(
                           type,
                           user.id,
                           AccountApprovalState.REJECTED
@@ -353,17 +466,17 @@ export default function AdminDashboard() {
           </table>
           <div className="mt-4 flex justify-between items-center">
             <button
-              className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+              className="px-4 py-2 bg-[#6a9fad] text-white rounded disabled:opacity-50"
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >
               Previous
             </button>
-            <span className="text-gray-300">
+            <span className="text-[#2c3e50]">
               Page {currentPage} of {totalPages}
             </span>
             <button
-              className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+              className="px-4 py-2 bg-[#6a9fad] text-white rounded disabled:opacity-50"
               onClick={() =>
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
@@ -373,26 +486,81 @@ export default function AdminDashboard() {
             </button>
           </div>
         </div>
-      );
+      )
+    } else if (activeItem === "Analytics") {
+      return (
+        <div className="bg-white rounded-lg p-6 shadow-md">
+          <h3 className="text-xl font-semibold mb-4 text-[#2c3e50]">Analytics</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-[#f0f0f0] p-4 rounded-lg">
+              <h4 className="text-lg font-semibold mb-2 text-[#2c3e50]">New Users (Monthly)</h4>
+              <Line data={monthlyData} options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: 'top' as const,
+                  },
+                  title: {
+                    display: true,
+                    text: 'New Cooks and Deliverers',
+                  },
+                },
+              }} />
+            </div>
+            <div className="bg-[#f0f0f0] p-4 rounded-lg">
+              <h4 className="text-lg font-semibold mb-2 text-[#2c3e50]">Orders (Weekly)</h4>
+              <Bar data={orderData} options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: 'top' as const,
+                  },
+                  title: {
+                    display: true,
+                    text: 'Weekly Order Distribution',
+                  },
+                },
+              }} />
+            </div>
+            <div className="bg-[#f0f0f0] p-4 rounded-lg col-span-1 md:col-span-2">
+              <h4 className="text-lg font-semibold mb-2 text-[#2c3e50]">Key Metrics</h4>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="bg-[#6a9fad] p-4 rounded-lg">
+                  <p className="text-sm text-white">Total Cooks</p>
+                  <p className="text-2xl font-bold text-white">127</p>
+                </div>
+                <div className="bg-[#6a9fad] p-4 rounded-lg">
+                  <p className="text-sm text-white">Total Deliverers</p>
+                  <p className="text-2xl font-bold text-white">95</p>
+                </div>
+                <div className="bg-[#6a9fad] p-4 rounded-lg">
+                  <p className="text-sm text-white">Orders This Month</p>
+                  <p className="text-2xl font-bold text-white">3,567</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     return (
-      <div className="bg-gray-800 rounded-lg p-6">
-        <p className="text-gray-300">
+      <div className="bg-white rounded-lg p-6 shadow-md">
+        <p className="text-[#2c3e50]">
           Welcome to the {activeItem.toLowerCase()} section of your admin panel.
           Here you can manage and view important information related to{" "}
           {activeItem.toLowerCase()}.
         </p>
       </div>
-    );
-  };
+    )
+  }
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white">
+    <div className="flex h-screen bg-[#f0f0f0] text-[#2c3e50]">
       {/* Side Menu - Desktop */}
-      <aside className="hidden md:flex flex-col w-64 bg-gray-800 overflow-y-auto">
+      <aside className="hidden md:flex flex-col w-64 bg-[#d1c4a1] overflow-y-auto">
         <div className="p-4">
-          <h1 className="text-2xl font-bold">Admin Panel</h1>
+          <h1 className="text-2xl font-bold text-[#2c3e50]">Admin Panel</h1>
         </div>
         <div className="flex flex-col p-4">
           <div className="mb-4">
@@ -400,14 +568,14 @@ export default function AdminDashboard() {
             <p className="font-semibold italic text-blue-500"> {email}</p>
           </div>
           <button
-            className="flex items-center space-x-2 text-red-300 hover:text-red"
+            className="flex items-center space-x-2 text-red-600 hover:text-red"
             onClick={() => router.push("/logout")}
           >
             <LogOutIcon className="h-5 w-5" />
             <p>Log out</p>
           </button>
         </div>
-        <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
+        <hr className="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700" />
         <nav className="flex-1">
           <ul className="space-y-2 py-4">
             {menuItems.map((item) => (
@@ -436,9 +604,10 @@ export default function AdminDashboard() {
           </ul>
         </nav>
       </aside>
+
       {/* Mobile Menu Button */}
       <button
-        className="md:hidden fixed top-4 left-4 z-20 p-2 rounded-md bg-gray-800 text-gray-300"
+        className="md:hidden fixed top-4 left-4 z-20 p-2 rounded-md bg-[#d1c4a1] text-[#2c3e50]"
         onClick={toggleMobileMenu}
       >
         {isMobileMenuOpen ? (
@@ -450,9 +619,9 @@ export default function AdminDashboard() {
 
       {/* Side Menu - Mobile */}
       {isMobileMenuOpen && (
-        <aside className="fixed inset-y-0 left-0 z-10 w-64 bg-gray-800 md:hidden overflow-y-auto">
+        <aside className="fixed inset-y-0 left-0 z-10 w-64 bg-[#d1c4a1] md:hidden overflow-y-auto">
           <div className="p-4 mt-14">
-            <h1 className="text-2xl font-bold">Admin Panel</h1>
+            <h1 className="text-2xl font-bold text-[#2c3e50]">Admin Panel</h1>
           </div>
           <nav className="flex-1">
             <ul className="space-y-2 py-4">
@@ -482,7 +651,7 @@ export default function AdminDashboard() {
             </ul>
           </nav>
           <div className="p-4">
-            <button className="flex items-center space-x-2 text-gray-300 hover:text-white">
+            <button className="flex items-center space-x-2 text-[#2c3e50] hover:text-[#6a9fad]">
               <LogOutIcon className="h-5 w-5" />
               <Link href="/">Logout</Link>
             </button>
@@ -492,9 +661,9 @@ export default function AdminDashboard() {
 
       {/* Main Content */}
       <main className="flex-1 p-6 overflow-auto">
-        <h2 className="text-3xl font-semibold mb-4">{activeItem}</h2>
+        <h2 className="text-3xl font-semibold mb-4 text-[#2c3e50]">{activeItem}</h2>
         {renderContent()}
       </main>
     </div>
-  );
-}
+  )
+} 	

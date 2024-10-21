@@ -4,7 +4,6 @@ from rest_framework import serializers
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 from rest_framework_nested.relations import NestedHyperlinkedIdentityField
 
-from petitions.models import AccountUpgradePetition
 from users.serializers import UserSerializer, UserCreationSerializer
 
 from . import models
@@ -81,7 +80,7 @@ class DishListSerializer(NestedHyperlinkedModelSerializer):
         ]
 
 
-class DishDetailSerializer(NestedHyperlinkedModelSerializer):
+class DishDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Dish
@@ -94,3 +93,8 @@ class DishDetailSerializer(NestedHyperlinkedModelSerializer):
             "created_at",
             "last_update_at",
         ]
+        
+    def create(self, validated_data):
+        user_id = self.context['request'].parser_context['kwargs']['cook_pk']
+        user = models.CCCook.objects.get(pk=user_id)
+        return models.Dish.objects.create(user=user, **validated_data)
