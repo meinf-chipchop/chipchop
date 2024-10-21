@@ -17,7 +17,7 @@ class CCUserManager(UserManager):
         if not role_in_kwargs:
             kwargs["role"] = CCUser.UserRoles.USER
 
-        kwargs["username"] = "asd"
+        kwargs["username"] = kwargs["first_name"]
 
         user = super().create_user(**kwargs)
 
