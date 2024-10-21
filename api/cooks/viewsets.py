@@ -17,6 +17,9 @@ class CCCookViewSet(
         if self.action == "list":
             return serializers.CCCookListSerializer
 
+        if self.action == "create":
+            return serializers.CCCookCreationSerializer
+
         return super().get_serializer_class()
 
 

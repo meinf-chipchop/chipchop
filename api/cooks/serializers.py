@@ -5,7 +5,7 @@ from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 from rest_framework_nested.relations import NestedHyperlinkedIdentityField
 
 from petitions.models import AccountUpgradePetition
-from users.serializers import UserSerializer
+from users.serializers import UserSerializer, UserCreationSerializer
 
 from . import models
 
@@ -19,17 +19,16 @@ class CCCookSimpleSerializer(serializers.ModelSerializer):
         exclude = ["user"]
 
 
-class CCCookDetailSerializer(serializers.ModelSerializer):
+class CCCookCreationSerializer(serializers.ModelSerializer):
 
-    user = UserSerializer()
-    password = serializers.CharField(write_only=True)
+    user = UserCreationSerializer()
     dishes = serializers.HyperlinkedIdentityField(
         view_name="dish-list", lookup_field="pk", lookup_url_kwarg="cook_pk"
     )
 
     class Meta:
         model = models.CCCook
-        fields = ["public_name", "user", "password", "dishes"]
+        fields = ["public_name", "user", "dishes"]
 
     def create(self, validated_data):
         user_data = validated_data.pop("user")
@@ -43,6 +42,18 @@ class CCCookDetailSerializer(serializers.ModelSerializer):
         AccountUpgradePetition.objects.create(user=user)
 
         return cook
+
+
+class CCCookDetailSerializer(serializers.ModelSerializer):
+
+    user = UserSerializer()
+    dishes = serializers.HyperlinkedIdentityField(
+        view_name="dish-list", lookup_field="pk", lookup_url_kwarg="cook_pk"
+    )
+
+    class Meta:
+        model = models.CCCook
+        fields = ["public_name", "user", "password", "dishes"]
 
 
 class CCCookListSerializer(serializers.ModelSerializer):
