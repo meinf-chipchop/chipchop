@@ -23,7 +23,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { me } from "@/lib/api/me";
-import { getAccountApprovals } from "@/lib/api/account-approvals";
+import {
+  AccountApprovalState,
+  getAccountApprovals,
+  setStateAccountApproval,
+} from "@/lib/api/account-approvals";
 import { mapState } from "@/lib/api/state-mapper";
 
 dotenv.config();
@@ -259,13 +263,17 @@ export default function AdminDashboard() {
   const handlePermission = (
     type: "cooks" | "deliverers",
     id: number,
-    status: "approved" | "denied"
+    status: AccountApprovalState
   ) => {
-    setApprovals((prev) => {
-      const updatedUsers = prev[type].map((user) =>
-        user.id === id ? { ...user, status } : user
-      );
-      return { ...prev, [type]: updatedUsers };
+    setStateAccountApproval(id, status).then(() => {
+      setApprovals((prev) => {
+        const status_str = status === "A" ? "Approved" : "Rejected";
+
+        const updatedUsers = prev[type].map((user) =>
+          user.id === id ? { ...user, status_str } : user
+        );
+        return { ...prev, [type]: updatedUsers };
+      });
     });
   };
 
@@ -317,14 +325,24 @@ export default function AdminDashboard() {
                     <button
                       className="mr-2 p-1 bg-green-500 text-white rounded hover:bg-green-600"
                       onClick={() =>
-                        handlePermission(type, user.id, "approved")
+                        handlePermission(
+                          type,
+                          user.id,
+                          AccountApprovalState.APPROVED
+                        )
                       }
                     >
                       <Check size={16} />
                     </button>
                     <button
                       className="p-1 bg-red-500 text-white rounded hover:bg-red-600"
-                      onClick={() => handlePermission(type, user.id, "denied")}
+                      onClick={() =>
+                        handlePermission(
+                          type,
+                          user.id,
+                          AccountApprovalState.REJECTED
+                        )
+                      }
                     >
                       <X size={16} />
                     </button>
