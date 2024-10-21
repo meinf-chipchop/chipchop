@@ -25,7 +25,7 @@ class CCCookCreationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CCCook
-        fields = ["public_name", "user", "dishes"]
+        fields = ["public_name", "user"]
 
     def create(self, validated_data):
         user_data = validated_data.pop("user")
