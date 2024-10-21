@@ -11,8 +11,8 @@ export async function login(formData: { email: string, password: string }) {
     }).then(response => {
         if (response.ok) {
             return response.json();
-        } else {
-            throw new Error('An error occurred while logging in.');
         }
-    });
+    }).catch((error) => {
+        console.error("Error:", error);
+    });;
 }
