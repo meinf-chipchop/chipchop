@@ -7,17 +7,10 @@ import * as dotenv from "dotenv";
 
 import Link from "next/link"
 
-import { me } from "@/lib/api/me";
-
-import { getAccountApprovals } from "@/lib/api/account-approvals";
-
-import { mapState } from "@/lib/api/state-mapper";
-
 import { Line, Bar } from "react-chartjs-2"
 
 import React, { useState, useEffect } from "react"
 import {
-  HomeIcon,
   UsersIcon,
   ChefHat,
   Truck,
@@ -28,18 +21,19 @@ import {
   XIcon,
   User,
   Check,
+  Search,
   X,
   ChevronRight,
   ChevronDown,
 } from "lucide-react";
-import Link from "next/link";
-import { me } from "@/lib/api/me";
+
 import {
   AccountApprovalState,
   getAccountApprovals,
   setStateAccountApproval,
 } from "@/lib/api/account-approvals";
 import { mapState } from "@/lib/api/state-mapper";
+import { me } from "@/lib/api/me";
 
 import {
   Chart as ChartJS,
@@ -347,15 +341,16 @@ export default function AdminDashboard() {
   const handleApproval = (
     type: "cooks" | "deliverers",
     id: number,
-    status: AccountApprovalState
+    new_status: AccountApprovalState
   ) => {
-    setStateAccountApproval(id, status).then(() => {
+    setStateAccountApproval(id, new_status).then(() => {
       setApprovals((prev) => {
-        const status_str = status === "A" ? "Approved" : "Rejected";
+        const status_str = new_status === "A" ? "Approved" : "Rejected";
 
         const updatedUsers = prev[type].map((user) =>
-          user.id === id ? { ...user, status_str } : user
+          user.id === id ? { ...user, status: status_str.toLocaleLowerCase() } : user
         );
+
         return { ...prev, [type]: updatedUsers };
       });
     });
