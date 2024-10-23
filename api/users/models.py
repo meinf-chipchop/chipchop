@@ -9,8 +9,6 @@ class CCUserManager(UserManager):
 
     def create_user(self, **kwargs):
 
-        print("CUSTOM CREATE USER WITH KWARGS", kwargs)
-
         from petitions.models import AccountUpgradePetition
 
         role_in_kwargs = "role" in kwargs
