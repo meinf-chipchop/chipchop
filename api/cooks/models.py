@@ -27,7 +27,11 @@ class DishCategory(models.Model):
     class Meta:
         verbose_name_plural = "Dish Categories"
 
-    name = models.CharField(max_length=50, null=False)
+    name = models.CharField(
+        max_length=50,
+        null=False,
+        unique=True,
+    )
 
 
 class Dish(models.Model):
