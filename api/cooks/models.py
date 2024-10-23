@@ -13,7 +13,11 @@ class CCCook(models.Model):
     class Meta:
         verbose_name_plural = "Chip Chop Cooks"
 
-    user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User,
+        primary_key=True,
+        on_delete=models.CASCADE,
+    )
 
     public_name = models.CharField()
 
@@ -31,17 +35,46 @@ class Dish(models.Model):
     class Meta:
         verbose_name_plural = "Dishes"
 
-    user = models.ForeignKey(CCCook, on_delete=models.CASCADE)
-
-    name = models.CharField(max_length=50, null=False)
-    description = models.TextField(null=False)
-    category = models.ForeignKey(DishCategory, null=True, on_delete=models.SET_NULL)
-    price = models.DecimalField(null=False, max_digits=6, decimal_places=2)
-    discount = models.DecimalField(
-        null=False, max_digits=5, decimal_places=2, default=0
+    user = models.ForeignKey(
+        CCCook,
+        on_delete=models.CASCADE,
     )
-    created_at = models.DateTimeField(editable=False)
-    last_update_at = models.DateTimeField(editable=False, null=True)
+
+    name = models.CharField(
+        max_length=50,
+        null=False,
+    )
+    description = models.TextField(
+        null=False,
+    )
+    category = models.ForeignKey(
+        DishCategory,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    price = models.DecimalField(
+        null=False,
+        max_digits=6,
+        decimal_places=2,
+    )
+    discount = models.DecimalField(
+        null=False,
+        max_digits=5,
+        decimal_places=2,
+        default=0,
+    )
+
+    hidden = models.BooleanField(
+        default=False,
+    )
+
+    created_at = models.DateTimeField(
+        editable=False,
+    )
+    last_update_at = models.DateTimeField(
+        editable=False,
+        null=True,
+    )
 
     def save(self, *args, **kwargs):
         if not self.created_at:
