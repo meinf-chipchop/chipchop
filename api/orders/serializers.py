@@ -1,10 +1,39 @@
 from rest_framework import serializers
+from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 
 from . import models
-
 from users.models import Address
-
 from deliverers.models import CCDeliverer
+
+
+class OrderDishDetailSerializer(NestedHyperlinkedModelSerializer):
+
+    class Meta:
+        model = models.OrderDish
+        fields = [
+            "order",
+            "dish",
+            "quantity",
+        ]
+
+
+class OrderDishCreationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.OrderDish
+        fields = "__all__"
+
+
+class OrderDishListSerializer(serializers.HyperlinkedModelSerializer):
+
+    url = serializers.HyperlinkedIdentityField(
+        view_name="order-dish-detail",
+        lookup_field="pk",
+    )
+
+    class Meta:
+        model = models.OrderDish
+        fields = ["url"]
 
 
 class OrderDetailSerializer(serializers.HyperlinkedModelSerializer):
@@ -21,14 +50,21 @@ class OrderDetailSerializer(serializers.HyperlinkedModelSerializer):
         read_only=True,
     )
 
+    dishes = serializers.HyperlinkedIdentityField(
+        view_name="order-dish-list",
+        lookup_field="pk",
+        lookup_url_kwarg="order_pk",
+    )
+
     class Meta:
         model = models.Order
         fields = [
             "user",
             "deliverer",
+            "address",
+            "dishes",
             "order_type",
             "order_status",
-            "address",
             "created_at",
         ]
 
@@ -41,7 +77,7 @@ class OrderDetailSerializer(serializers.HyperlinkedModelSerializer):
             )
 
 
-class OrderListSerializer(serializers.ModelSerializer):
+class OrderListSerializer(serializers.HyperlinkedModelSerializer):
 
     url = serializers.HyperlinkedIdentityField(
         view_name="order-detail",

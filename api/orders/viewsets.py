@@ -1,20 +1,30 @@
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets
 
 from . import models, serializers
 
 
-class OrderViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.CreateModelMixin,
-    viewsets.GenericViewSet,
-):
+class OrderDishesViewSet(viewsets.ModelViewSet):
+    queryset = models.OrderDish.objects.all()
+    serializer_class = serializers.OrderDishDetailSerializer
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return serializers.OrderDishCreationSerializer
+
+        if self.action == "list":
+            return serializers.OrderDishListSerializer
+
+        return super().get_serializer_class()
+
+
+class OrderViewSet(viewsets.ModelViewSet):
     queryset = models.Order.objects.all()
     serializer_class = serializers.OrderDetailSerializer
 
     def get_queryset(self):
-        return models.Order.objects.filter(user=self.request.user)
+        return models.Order.objects.filter(
+            user=self.request.user,
+        )
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -23,4 +33,4 @@ class OrderViewSet(
         if self.action == "create":
             return serializers.OrderCreationSerializer
 
-        return super().get_serializer_class()
+        return super(OrderViewSet, self).get_serializer_class()

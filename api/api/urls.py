@@ -63,4 +63,5 @@ router.register(
 urlpatterns = [
     path("", include(router.urls)),
     path("", include("cooks.urls")),
+    path("", include("orders.urls")),
 ]
