@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from . import models
 
-from users.serializers import AddressListSerializer
 from users.models import Address
 
 from deliverers.models import CCDeliverer
@@ -29,8 +28,17 @@ class OrderDetailSerializer(serializers.HyperlinkedModelSerializer):
             "deliverer",
             "order_type",
             "order_status",
+            "address",
             "created_at",
         ]
+
+    def __init__(self, *args, **kwargs):
+        super(OrderDetailSerializer, self).__init__(*args, **kwargs)
+
+        if self.context["request"].method == "PUT":
+            self.fields["address"] = serializers.PrimaryKeyRelatedField(
+                queryset=Address.objects.filter(user=self.context["request"].user),
+            )
 
 
 class OrderListSerializer(serializers.ModelSerializer):
@@ -49,22 +57,34 @@ class OrderListSerializer(serializers.ModelSerializer):
 
 class OrderCreationSerializer(serializers.ModelSerializer):
 
+    url = serializers.HyperlinkedIdentityField(
+        view_name="order-detail",
+        lookup_field="pk",
+        read_only=True,
+    )
+
     deliverer = serializers.HyperlinkedRelatedField(
         view_name="deliverer-detail",
         lookup_field="pk",
         queryset=CCDeliverer.objects.all(),
     )
 
+    address = serializers.PrimaryKeyRelatedField(queryset=Address.objects.all())
+
     class Meta:
         model = models.Order
         fields = [
+            "url",
             "deliverer",
             "order_type",
             "address",
         ]
 
     def create(self, validated_data):
-        if validated_data.get("order_type") == models.Order.OrderType.DELIVERY:
+
+        order_type = validated_data.get("order_type")
+
+        if order_type == models.Order.OrderType.DELIVERY:
             try:
                 assert (
                     validated_data.get("deliverer") is not None
@@ -75,15 +95,21 @@ class OrderCreationSerializer(serializers.ModelSerializer):
             except Exception as e:
                 raise serializers.ValidationError(e)
 
+        if order_type == models.Order.OrderType.PICKUP:
+            validated_data["deliverer"] = None
+            validated_data["address"] = None
+
         if validated_data.get("address"):
-            address = Address.objects.get(pk=validated_data["address"].pk)
+            address = validated_data["address"]
             if address.user != self.context["request"].user:
                 raise serializers.ValidationError("Address does not belong to user")
 
         validated_data["user"] = self.context["request"].user
         return models.Order.objects.create(**validated_data)
 
-    def get_address(self, obj):
-        return AddressListSerializer(
-            Address.objects.filter(user=self.context["request"].user)
-        ).data
+    def __init__(self, *args, **kwargs):
+        super(OrderCreationSerializer, self).__init__(*args, **kwargs)
+
+        self.fields["address"] = serializers.PrimaryKeyRelatedField(
+            queryset=Address.objects.filter(user=self.context["request"].user),
+        )

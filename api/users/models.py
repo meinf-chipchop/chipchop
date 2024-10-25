@@ -69,3 +69,6 @@ class Address(models.Model):
     zip_code = models.IntegerField()
     city = models.CharField()
     country_iso2 = models.CharField(max_length=2)
+
+    def __str__(self) -> str:
+        return f"{self.street}, {self.zip_code} {self.city}, {self.country_iso2}"
