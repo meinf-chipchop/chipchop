@@ -55,8 +55,6 @@ class OrderCreationSerializer(serializers.ModelSerializer):
         queryset=CCDeliverer.objects.all(),
     )
 
-    address = serializers.HyperlinkedRelatedField()
-
     class Meta:
         model = models.Order
         fields = [
@@ -67,12 +65,20 @@ class OrderCreationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         if validated_data.get("order_type") == models.Order.OrderType.DELIVERY:
-            assert (
-                validated_data.get("deliverer") is not None
-            ), "Deliverer must be provided for delivery orders"
-            assert (
-                validated_data.get("address") is not None
-            ), "Address must be provided for delivery orders"
+            try:
+                assert (
+                    validated_data.get("deliverer") is not None
+                ), "Deliverer must be provided for delivery orders"
+                assert (
+                    validated_data.get("address") is not None
+                ), "Address must be provided for delivery orders"
+            except Exception as e:
+                raise serializers.ValidationError(e)
+
+        if validated_data.get("address"):
+            address = Address.objects.get(pk=validated_data["address"].pk)
+            if address.user != self.context["request"].user:
+                raise serializers.ValidationError("Address does not belong to user")
 
         validated_data["user"] = self.context["request"].user
         return models.Order.objects.create(**validated_data)
