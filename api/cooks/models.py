@@ -19,6 +19,9 @@ class CCCook(models.Model):
 
     public_name = models.CharField()
 
+    def __str__(self) -> str:
+        return str(self.public_name)
+
 
 class DishCategory(models.Model):
 

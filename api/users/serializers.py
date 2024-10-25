@@ -5,8 +5,10 @@ from rest_framework.serializers import (
     Serializer,
     EmailField,
     CharField,
+    HyperlinkedModelSerializer,
 )
 
+from users.models import Address
 
 User = get_user_model()
 
@@ -27,3 +29,17 @@ class UserSerializer(ModelSerializer):
 class LoginSerializer(Serializer):
     email = EmailField()
     password = CharField(write_only=True)
+
+
+class AddressListSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = Address
+        fields = [
+            "url",
+        ]
+
+
+class AddressSerializer(ModelSerializer):
+    class Meta:
+        model = Address
+        fields = "__all__"

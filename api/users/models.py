@@ -48,6 +48,9 @@ class CCUser(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["age", "password"]
 
+    def __str__(self) -> str:
+        return f"{self.first_name} {self.last_name}"
+
 
 User = get_user_model()
 

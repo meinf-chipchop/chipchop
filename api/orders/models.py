@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from deliverers.models import CCDeliverer
 from cooks.models import Dish
+from users.models import Address
 
 
 User = get_user_model()
@@ -34,7 +35,7 @@ class Order(models.Model):
         null=False,
         on_delete=models.CASCADE,
     )
-    # TODO: Make deliver request??
+
     deliverer = models.ForeignKey(
         CCDeliverer,
         null=True,
@@ -46,6 +47,7 @@ class Order(models.Model):
         default=OrderType.PICKUP,
         max_length=1,
     )
+
     order_status = models.CharField(
         choices=OrderStatus.choices,
         default=OrderStatus.PENDING,
@@ -54,6 +56,13 @@ class Order(models.Model):
 
     created_at = models.DateTimeField(
         editable=False,
+    )
+
+    address = models.ForeignKey(
+        Address,
+        on_delete=models.DO_NOTHING,
+        null=True,
+        default=None,
     )
 
     def save(self, *args, **kwargs):
