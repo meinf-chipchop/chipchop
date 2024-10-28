@@ -98,3 +98,10 @@ class DishDetailSerializer(serializers.ModelSerializer):
         user_id = self.context['request'].parser_context['kwargs']['cook_pk']
         user = models.CCCook.objects.get(pk=user_id)
         return models.Dish.objects.create(user=user, **validated_data)
+
+
+class DishCategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.DishCategory
+        fields = "__all__"
