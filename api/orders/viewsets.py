@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 
 from . import models, serializers
 
@@ -21,7 +21,13 @@ class OrderDishesViewSet(viewsets.ModelViewSet):
         return models.OrderDish.objects.filter(order=order)
 
 
-class OrderViewSet(viewsets.ModelViewSet):
+class OrderViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = models.Order.objects.all()
     serializer_class = serializers.OrderDetailSerializer
 

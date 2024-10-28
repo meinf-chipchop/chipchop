@@ -19,6 +19,12 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
 
+    def get_serializer_class(self):
+        if self.action == "list":
+            return serializers.UserListSerializer
+
+        return super().get_serializer_class()
+
     @action(detail=False, methods=["get"])
     def me(self, request):
         return Response(self.serializer_class(request.user).data)

@@ -112,10 +112,11 @@ class OrderDetailSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
-    dishes = serializers.HyperlinkedIdentityField(
+    dishes = serializers.HyperlinkedRelatedField(
         view_name="order-dish-list",
         lookup_field="pk",
         lookup_url_kwarg="order_pk",
+        read_only=True,
     )
 
     address = serializers.HyperlinkedRelatedField(
@@ -150,6 +151,7 @@ class OrderListSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name="order-detail",
         lookup_field="pk",
+        read_only=True,
     )
 
     class Meta:
@@ -163,17 +165,16 @@ class OrderCreationSerializer(serializers.ModelSerializer):
 
     url = serializers.HyperlinkedIdentityField(
         view_name="order-detail",
-        lookup_field="pk",
         read_only=True,
     )
 
     deliverer = serializers.HyperlinkedRelatedField(
         view_name="deliverer-detail",
-        lookup_field="pk",
         queryset=CCDeliverer.objects.all(),
     )
 
-    address = serializers.PrimaryKeyRelatedField(
+    address = serializers.HyperlinkedRelatedField(
+        view_name="address-detail",
         queryset=Address.objects.all(),
     )
 
@@ -205,6 +206,7 @@ class OrderCreationSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super(OrderCreationSerializer, self).__init__(*args, **kwargs)
 
-        self.fields["address"] = serializers.PrimaryKeyRelatedField(
+        self.fields["address"] = serializers.HyperlinkedRelatedField(
+            view_name="address-detail",
             queryset=Address.objects.filter(user=self.context["request"].user),
         )
