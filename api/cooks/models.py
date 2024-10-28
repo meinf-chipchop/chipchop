@@ -23,7 +23,11 @@ class DishCategory(models.Model):
     class Meta:
         verbose_name_plural = "Dish Categories"
 
-    name = models.CharField(max_length=50, null=False)
+    name = models.CharField(max_length=50, null=False, unique=True)
+    image_url = models.URLField(null=True)
+    
+    def __str__(self):
+        return self.name
 
 
 class Dish(models.Model):
@@ -35,7 +39,7 @@ class Dish(models.Model):
 
     name = models.CharField(max_length=50, null=False)
     description = models.TextField(null=False)
-    category = models.ForeignKey(DishCategory, null=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey(DishCategory, null=True, on_delete=models.PROTECT)
     price = models.DecimalField(null=False, max_digits=6, decimal_places=2)
     discount = models.DecimalField(
         null=False, max_digits=5, decimal_places=2, default=0
