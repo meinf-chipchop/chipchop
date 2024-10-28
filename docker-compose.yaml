@@ -21,7 +21,10 @@ services:
         condition: service_healthy
 
   nginx:
-    build: ./nginx
+    build:
+      context: ./nginx
+      args:
+        - DEV_MODE=TRUE
     env_file:
       - ./.env
     ports:
