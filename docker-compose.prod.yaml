@@ -30,7 +30,7 @@ services:
       - backend
       - admin-panel
     volumes:
-      - /etc/letsencrypt/live/chipchop.mooo.com/:/etc/letsencrypt/live/chipchop.mooo.com/
+      - /etc/letsencrypt/live/chipchop.mooo.com/:/tmp/certs/
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://backend:8000/ || exit 1"]
       interval: 30s
