@@ -29,6 +29,13 @@ services:
     depends_on:
       - backend
       - admin-panel
+    volumes:
+      - /etc/letsencrypt/live/chipchop.mooo.com/:/etc/letsencrypt/live/chipchop.mooo.com/
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://backend:8000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   admin-panel:
     env_file:
