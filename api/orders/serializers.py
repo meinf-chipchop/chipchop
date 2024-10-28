@@ -1,42 +1,104 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from rest_framework import serializers
-from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
+from rest_framework_nested.serializers import (
+    NestedHyperlinkedModelSerializer,
+    NestedHyperlinkedIdentityField,
+    NestedHyperlinkedRelatedField,
+)
 
-from . import models
+from . import models, validators
 from users.models import Address
 from deliverers.models import CCDeliverer
 
 
-class OrderDishDetailSerializer(NestedHyperlinkedModelSerializer):
+class OrderDishCreationSerializer(serializers.ModelSerializer):
+
+    dish = serializers.PrimaryKeyRelatedField(
+        queryset=models.Dish.objects.all(),
+    )
+
+    amount = serializers.IntegerField(
+        default=1,
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(1000),
+        ],
+    )
+
+    note = serializers.CharField(
+        allow_blank=True,
+    )
+
+    class Meta:
+        model = models.OrderDish
+        fields = ["dish", "amount", "note"]
+
+    def create(self, validated_data):
+        order_id = self.context["request"].parser_context["kwargs"]["order_pk"]
+
+        validated_data["order"] = models.Order.objects.get(
+            pk=order_id,
+        )
+        validated_data["price"] = (
+            validated_data["dish"].price * validated_data["amount"]
+        )
+
+        order_dish = models.OrderDish.objects.create(**validated_data)
+        return order_dish
+
+
+class OrderDishDetailSerializer(serializers.ModelSerializer):
+
+    order = serializers.HyperlinkedRelatedField(
+        view_name="order-detail",
+        lookup_field="pk",
+        read_only=True,
+    )
+
+    dish = NestedHyperlinkedIdentityField(
+        view_name="dish-detail",
+        parent_lookup_kwargs={
+            "cook_pk": "dish__user__pk",
+            "pk": "dish__pk",
+        },
+        read_only=True,
+    )
+
+    amount = serializers.IntegerField()
+
+    price = serializers.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+    )
+
+    note = serializers.CharField()
 
     class Meta:
         model = models.OrderDish
         fields = [
             "order",
             "dish",
-            "quantity",
+            "amount",
+            "price",
+            "note",
         ]
 
 
-class OrderDishCreationSerializer(serializers.ModelSerializer):
+class OrderDishListSerializer(NestedHyperlinkedModelSerializer):
 
-    class Meta:
-        model = models.OrderDish
-        fields = "__all__"
-
-
-class OrderDishListSerializer(serializers.HyperlinkedModelSerializer):
-
-    url = serializers.HyperlinkedIdentityField(
+    url = NestedHyperlinkedIdentityField(
         view_name="order-dish-detail",
-        lookup_field="pk",
+        parent_lookup_kwargs={"order_pk": "order__pk"},
     )
 
     class Meta:
         model = models.OrderDish
-        fields = ["url"]
+        fields = [
+            "url",
+        ]
 
 
-class OrderDetailSerializer(serializers.HyperlinkedModelSerializer):
+class OrderDetailSerializer(serializers.ModelSerializer):
 
     user = serializers.HyperlinkedRelatedField(
         view_name="user-detail",
@@ -54,6 +116,12 @@ class OrderDetailSerializer(serializers.HyperlinkedModelSerializer):
         view_name="order-dish-list",
         lookup_field="pk",
         lookup_url_kwarg="order_pk",
+    )
+
+    address = serializers.HyperlinkedRelatedField(
+        view_name="address-detail",
+        lookup_field="pk",
+        read_only=True,
     )
 
     class Meta:
@@ -105,7 +173,9 @@ class OrderCreationSerializer(serializers.ModelSerializer):
         queryset=CCDeliverer.objects.all(),
     )
 
-    address = serializers.PrimaryKeyRelatedField(queryset=Address.objects.all())
+    address = serializers.PrimaryKeyRelatedField(
+        queryset=Address.objects.all(),
+    )
 
     class Meta:
         model = models.Order
@@ -115,33 +185,22 @@ class OrderCreationSerializer(serializers.ModelSerializer):
             "order_type",
             "address",
         ]
+        # validators = [validators.OrderCreationValidator]
 
-    def create(self, validated_data):
+    # def validate_deliverer(self, value):
+    #     if self.order_type == models.Order.OrderType.DELIVERY and not value:
+    #         raise serializers.ValidationError(
+    #             "Deliverer must be provided for delivery orders"
+    #         )
+    #     if self.order_type == models.Order.OrderType.PICKUP:
+    #         return None
 
-        order_type = validated_data.get("order_type")
-
-        if order_type == models.Order.OrderType.DELIVERY:
-            try:
-                assert (
-                    validated_data.get("deliverer") is not None
-                ), "Deliverer must be provided for delivery orders"
-                assert (
-                    validated_data.get("address") is not None
-                ), "Address must be provided for delivery orders"
-            except Exception as e:
-                raise serializers.ValidationError(e)
-
-        if order_type == models.Order.OrderType.PICKUP:
-            validated_data["deliverer"] = None
-            validated_data["address"] = None
-
-        if validated_data.get("address"):
-            address = validated_data["address"]
-            if address.user != self.context["request"].user:
-                raise serializers.ValidationError("Address does not belong to user")
-
-        validated_data["user"] = self.context["request"].user
-        return models.Order.objects.create(**validated_data)
+    # def validate_address(self, value):
+    #     value.user = self.context["request"].user
+    #     if value.user != models.Address.objects.get(pk=value.pk).user:
+    #         raise serializers.ValidationError("Address does not belong to user")
+    #     if self.order_type == models.Order.OrderType.PICKUP:
+    #         return None
 
     def __init__(self, *args, **kwargs):
         super(OrderCreationSerializer, self).__init__(*args, **kwargs)

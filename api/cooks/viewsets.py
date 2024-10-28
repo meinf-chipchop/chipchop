@@ -25,6 +25,7 @@ class CCCookViewSet(
 
 class DishViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.DishDetailSerializer
+    lookup_field = "pk"
 
     def get_queryset(self):
         # Get the cook_pk from the URL and only show their dishes

@@ -75,6 +75,12 @@ class OrderDish(models.Model):
 
     class Meta:
         verbose_name_plural = "Order Dishes"
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(amount__gte=1) & models.Q(amount__lt=1000),
+                name="Order Dish amount must be between 1 and 1000",
+            )
+        ]
 
     order = models.ForeignKey(
         Order,

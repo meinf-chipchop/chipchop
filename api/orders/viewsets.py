@@ -16,6 +16,10 @@ class OrderDishesViewSet(viewsets.ModelViewSet):
 
         return super().get_serializer_class()
 
+    def get_queryset(self):
+        order = self.kwargs["order_pk"]
+        return models.OrderDish.objects.filter(order=order)
+
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = models.Order.objects.all()

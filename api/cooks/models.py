@@ -86,3 +86,6 @@ class Dish(models.Model):
             self.created_at = timezone.now()
         self.last_update_at = timezone.now()
         return super(Dish, self).save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return f"{self.user}: {self.name}"
