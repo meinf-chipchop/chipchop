@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Update the db with the models / changes 
+python manage.py makemigrations users
 python manage.py makemigrations
 python manage.py migrate
 
