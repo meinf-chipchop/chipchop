@@ -19,4 +19,13 @@ Some passthrough have been configured like
 - `/` -> Wil redirect to admin-panel
 - `/api/` -> Wil redirect to backend
 
-Production IP: http://194.164.171.6
+## Production IPs:
+
+- http://194.164.171.6
+- https://chipchop.mooo.com _(HTTPS)_
+
+## Default User Admin:
+
+Email: admin@chipchop.es
+
+Passwd: admin
