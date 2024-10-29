@@ -5,8 +5,11 @@ from rest_framework.serializers import (
     Serializer,
     EmailField,
     CharField,
+    HyperlinkedModelSerializer,
+    HyperlinkedIdentityField,
 )
 
+from users.models import Address
 
 User = get_user_model()
 
@@ -18,12 +21,38 @@ class UserCreationSerializer(ModelSerializer):
         extra_kwargs = {"password": {"write_only": True}}
 
 
-class UserSerializer(ModelSerializer):
+class UserListSerializer(HyperlinkedModelSerializer):
+
+    url = HyperlinkedIdentityField(view_name="user-detail")
+
     class Meta:
         model = User
-        fields = ["id", "first_name", "last_name", "email", "role", "phone", "age"]
+        fields = [
+            "url",
+        ]
+
+
+class UserSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "email", "role", "phone", "age"]
 
 
 class LoginSerializer(Serializer):
     email = EmailField()
     password = CharField(write_only=True)
+
+
+class AddressListSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = Address
+        fields = [
+            "url",
+        ]
+
+
+class AddressSerializer(ModelSerializer):
+    class Meta:
+        model = Address
+        fields = "__all__"

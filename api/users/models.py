@@ -9,8 +9,6 @@ class CCUserManager(UserManager):
 
     def create_user(self, **kwargs):
 
-        print("CUSTOM CREATE USER WITH KWARGS", kwargs)
-
         from petitions.models import AccountUpgradePetition
 
         role_in_kwargs = "role" in kwargs
@@ -50,6 +48,9 @@ class CCUser(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["age", "password"]
 
+    def __str__(self) -> str:
+        return f"{self.first_name} {self.last_name}"
+
 
 User = get_user_model()
 
@@ -68,3 +69,6 @@ class Address(models.Model):
     zip_code = models.IntegerField()
     city = models.CharField()
     country_iso2 = models.CharField(max_length=2)
+
+    def __str__(self) -> str:
+        return f"{self.street}, {self.zip_code} {self.city}, {self.country_iso2}"

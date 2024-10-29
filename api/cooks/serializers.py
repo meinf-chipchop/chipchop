@@ -63,7 +63,8 @@ class CCCookListSerializer(serializers.ModelSerializer):
 class DishListSerializer(NestedHyperlinkedModelSerializer):
 
     url = NestedHyperlinkedIdentityField(
-        view_name="dish-detail", parent_lookup_kwargs={"cook_pk": "user__pk"}
+        view_name="dish-detail",
+        parent_lookup_kwargs={"cook_pk": "user__pk"},
     )
 
     class Meta:
@@ -93,9 +94,9 @@ class DishDetailSerializer(serializers.ModelSerializer):
             "created_at",
             "last_update_at",
         ]
-        
+
     def create(self, validated_data):
-        user_id = self.context['request'].parser_context['kwargs']['cook_pk']
+        user_id = self.context["request"].parser_context["kwargs"]["cook_pk"]
         user = models.CCCook.objects.get(pk=user_id)
         return models.Dish.objects.create(user=user, **validated_data)
 

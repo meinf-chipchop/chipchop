@@ -8,7 +8,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 
 from rest_framework import viewsets
-from . import serializers
+from . import serializers, models
 
 # Create your views here.
 
@@ -18,6 +18,12 @@ User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return serializers.UserListSerializer
+
+        return super().get_serializer_class()
 
     @action(detail=False, methods=["get"])
     def me(self, request):
@@ -77,3 +83,21 @@ class LogoutViewSet(viewsets.ViewSet):
         response.delete_cookie("csrftoken")
         response.delete_cookie("sessionid")
         return response
+
+
+class AddressViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.AddressSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = models.Address.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return serializers.AddressListSerializer
+
+        return super().get_serializer_class()
+
+    def get_queryset(self):
+        return models.Address.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
