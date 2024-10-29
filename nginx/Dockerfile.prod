@@ -4,7 +4,8 @@ COPY ./nginx-prod.conf /tmp/nginx.conf
 
 RUN mkdir -p /tmp/certs
 
-COPY /etc/letsencrypt/live/chipchop.mooo.com/* /tmp/certs/
+COPY ./*.pem /tmp/certs/
+
 
 
 
