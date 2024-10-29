@@ -43,6 +43,7 @@ router.register(
     users.viewsets.TokenViewSet,
     basename="token",
 )
+
 router.register(
     r"account-approvals",
     petitions.viewsets.AccountUpgradePetitionViewset,

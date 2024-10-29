@@ -17,7 +17,10 @@ services:
         condition: service_healthy
 
   nginx:
-    build: ./nginx
+    build:
+      context: ./nginx
+      args:
+        - DEV_MODE=FALSE
     env_file:
       - ./.env
     ports:
@@ -26,6 +29,13 @@ services:
     depends_on:
       - backend
       - admin-panel
+    volumes:
+      - /etc/letsencrypt/live/chipchop.mooo.com/:/tmp/certs/
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://backend:8000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   admin-panel:
     env_file:

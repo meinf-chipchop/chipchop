@@ -37,3 +37,8 @@ class DishViewSet(viewsets.ModelViewSet):
             return serializers.DishListSerializer
 
         return super().get_serializer_class()
+
+
+class DishCategoryViewSet(viewsets.ModelViewSet):
+    queryset = models.DishCategory.objects.all()
+    serializer_class = serializers.DishCategorySerializer

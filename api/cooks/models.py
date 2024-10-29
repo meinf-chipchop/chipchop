@@ -33,6 +33,10 @@ class DishCategory(models.Model):
         null=False,
         unique=True,
     )
+    image_url = models.URLField(null=True)
+    
+    def __str__(self):
+        return self.name
 
 
 class Dish(models.Model):
@@ -44,7 +48,7 @@ class Dish(models.Model):
         CCCook,
         on_delete=models.CASCADE,
     )
-
+    
     name = models.CharField(
         max_length=50,
         null=False,
@@ -68,7 +72,6 @@ class Dish(models.Model):
         decimal_places=2,
         default=0,
     )
-
     hidden = models.BooleanField(
         default=False,
     )
