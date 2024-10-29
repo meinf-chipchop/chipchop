@@ -36,7 +36,16 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email", "role", "phone", "age"]
+        fields = ["first_name", "last_name", "email", "role", "phone", "age", "banned"]
+        
+    def create(self, validated_data):
+        validated_data.pop('banned', None)  # Remove banned field if present
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        # Allow updating the banned field
+        instance.banned = validated_data.get('banned', instance.banned)
+        return super().update(instance, validated_data)
 
 
 class LoginSerializer(Serializer):
