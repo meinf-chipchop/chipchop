@@ -39,6 +39,7 @@ class CCUser(AbstractUser):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=15)
     age = models.SmallIntegerField()
+    banned = models.BooleanField(default=False)
     role = models.CharField(
         choices=UserRoles.choices, default=UserRoles.USER, max_length=1
     )
