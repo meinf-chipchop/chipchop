@@ -181,6 +181,14 @@ class OrderUpdateSerializer(serializers.ModelSerializer):
         )
 
     def validate_order_status(self, value):
+        if (
+            value in [c[0] for c in models.Order.DelivererStatus.choices]
+            and self.instance.order_status != models.Order.OrderStatus.COOKED
+        ):
+            raise serializers.ValidationError(
+                "Cannot set deliverer status without order being cooked"
+            )
+
         choices = [c[0] for c in models.Order.OrderStatus.choices]
 
         old_idx = choices.index(self.instance.order_status)
