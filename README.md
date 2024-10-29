@@ -22,7 +22,7 @@ Some passthrough have been configured like
 ## Production IPs:
 
 - http://194.164.171.6
-- https://chipchop.mooo.com/api/ _(HTTPS)_
+- https://chipchop.mooo.com _(HTTPS)_
 
 ## Default User Admin:
 
