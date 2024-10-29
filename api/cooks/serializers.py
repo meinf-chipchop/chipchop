@@ -5,6 +5,7 @@ from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 from rest_framework_nested.relations import NestedHyperlinkedIdentityField
 
 from users.serializers import UserSerializer, UserCreationSerializer
+from users.models import UserRoles
 
 from . import models
 
@@ -29,7 +30,7 @@ class CCCookCreationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user_data = validated_data.pop("user")
 
-        user = User.objects.create_user(**user_data, role=User.UserRoles.COOK)
+        user = User.objects.create_user(**user_data, role=UserRoles.COOK)
         cook = models.CCCook.objects.create(user=user, **validated_data)
 
         return cook

@@ -161,16 +161,44 @@ class OrderListSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
+class OrderUpdateSerializer(serializers.ModelSerializer):
+
+    order_status = serializers.ChoiceField(
+        choices=models.Order.OrderStatus.choices,
+    )
+
+    class Meta:
+        model = models.Order
+        fields = [
+            "order_status",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(OrderUpdateSerializer, self).__init__(*args, **kwargs)
+
+        self.fields["order_status"] = serializers.ChoiceField(
+            choices=models.Order.get_status_choices(self.context["request"].user.role),
+        )
+
+    def validate_order_status(self, value):
+        choices = [c[0] for c in models.Order.OrderStatus.choices]
+
+        old_idx = choices.index(self.instance.order_status)
+        new_idx = choices.index(value)
+
+        if new_idx < old_idx:
+            raise serializers.ValidationError(
+                "Cannot set order status to a previous state"
+            )
+
+        return value
+
+
 class OrderCreationSerializer(serializers.ModelSerializer):
 
     url = serializers.HyperlinkedIdentityField(
         view_name="order-detail",
         read_only=True,
-    )
-
-    deliverer = serializers.HyperlinkedRelatedField(
-        view_name="deliverer-detail",
-        queryset=CCDeliverer.objects.all(),
     )
 
     address = serializers.HyperlinkedRelatedField(
@@ -182,26 +210,9 @@ class OrderCreationSerializer(serializers.ModelSerializer):
         model = models.Order
         fields = [
             "url",
-            "deliverer",
             "order_type",
             "address",
         ]
-        # validators = [validators.OrderCreationValidator]
-
-    # def validate_deliverer(self, value):
-    #     if self.order_type == models.Order.OrderType.DELIVERY and not value:
-    #         raise serializers.ValidationError(
-    #             "Deliverer must be provided for delivery orders"
-    #         )
-    #     if self.order_type == models.Order.OrderType.PICKUP:
-    #         return None
-
-    # def validate_address(self, value):
-    #     value.user = self.context["request"].user
-    #     if value.user != models.Address.objects.get(pk=value.pk).user:
-    #         raise serializers.ValidationError("Address does not belong to user")
-    #     if self.order_type == models.Order.OrderType.PICKUP:
-    #         return None
 
     def __init__(self, *args, **kwargs):
         super(OrderCreationSerializer, self).__init__(*args, **kwargs)
