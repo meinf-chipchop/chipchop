@@ -5,8 +5,9 @@ import InputField from '@/components/InputField'
 import { router } from 'expo-router'
 import { Button, ButtonText } from '@/components/ui/button'
 import { Ionicons } from '@expo/vector-icons'
+import OAuth from '@/components/Auth'
 
-const customerSchema = z.object({
+const signUpValidationSchema = z.object({
   fullName: z.string().min(1, 'Full name is required'),
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
@@ -27,7 +28,7 @@ const CustomerSignUp = () => {
   const validateForm = () => {
     try {
       setErrors({})
-      customerSchema.parse(form)
+      signUpValidationSchema.parse(form)
       return true
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -45,8 +46,6 @@ const CustomerSignUp = () => {
     if (validateForm()) {
       // Proceed with sign up logic
       router.push('/(root)/(tabs)/home' as any)
-    } else {
-      console.log('Form has errors:', errors)
     }
   }
 
@@ -106,6 +105,7 @@ const CustomerSignUp = () => {
         <Button onPress={onSignUpPress} className="rounded-full mt-6">
           <ButtonText>Sign up</ButtonText>
         </Button>
+        <OAuth />
       </View>
     </ScrollView>
   )

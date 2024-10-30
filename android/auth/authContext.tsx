@@ -5,7 +5,7 @@ const AuthContext = createContext<{
   signIn: (
     email: string,
     password: string,
-    action: () => void,
+    action: () => void
   ) => Promise<boolean>
   signUp: (email: string, password: string) => Promise<Boolean>
   signOut: () => void
@@ -39,17 +39,34 @@ export function SessionProvider({ children }: PropsWithChildren) {
   const signIn = async (
     email: string,
     password: string,
-    action: () => void,
+    action: () => void
   ): Promise<boolean> => {
     // Perform sign-in logic here
     return new Promise((resolve, reject) => {
-      try {
-        setSession(email + password)
-        action()
-        resolve(true)
-      } catch (e) {
-        reject(e)
-      }
+      const url = 'https://https://chipchop.mooo.com/api/login/'
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ email: email, password: password }),
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log(response.json())
+            // setSession(email + password)
+
+            action()
+            resolve(true)
+            // return response.json()
+          }
+        })
+        .catch((error) => {
+          console.error("fetcch error " + error)
+          reject(error)
+        })
     })
   }
   return (

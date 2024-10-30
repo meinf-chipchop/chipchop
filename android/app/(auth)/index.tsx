@@ -14,7 +14,7 @@ const AuthForms = () => {
       <View className="flex-1 px-6">
         <View className="relative w-screen flex justify-center items-center">
           <Image
-            style={{ width: 'auto', height: 100 }}
+            style={{ width: 100, height: 100 }}
             contentFit="contain"
             source={Images.auth}
           />
