@@ -74,7 +74,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         if self.action == "update":
             return serializers.OrderUpdateSerializer
 
-        return super(OrderViewSet, self).get_serializer_class()
+        return super().get_serializer_class()
 
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
