@@ -71,16 +71,7 @@ class DishListSerializer(NestedHyperlinkedModelSerializer):
     class Meta:
         model = models.Dish
         fields = [
-            "url",
-            "name",
-            "description",
-            "category",
-            "price",
-            "discount",
-            "image_url",
-            "estimated_time",
-            "created_at",
-            "last_update_at",
+            "url"
         ]
 
 
