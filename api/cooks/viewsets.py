@@ -41,4 +41,10 @@ class DishViewSet(viewsets.ModelViewSet):
 
 class DishCategoryViewSet(viewsets.ModelViewSet):
     queryset = models.DishCategory.objects.all()
-    serializer_class = serializers.DishCategorySerializer
+    serializer_class = serializers.DishCategoryDetailSerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return serializers.DishCategoryListSerializer
+
+        return super().get_serializer_class()
