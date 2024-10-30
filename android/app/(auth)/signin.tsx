@@ -6,6 +6,7 @@ import { Button, ButtonText } from '@/components/ui/button'
 import { z } from 'zod'
 import { useSession } from '@/auth/authContext'
 import OAuth from '@/components/Auth'
+import { router } from 'expo-router'
 
 const signInValidationSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -18,18 +19,19 @@ const SignIn = () => {
   })
   const { signIn } = useSession()
 
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [errors, setErrors] = useState({ email: '', password: '' })
 
   const validateForm = () => {
     try {
-      setErrors({})
+      setErrors({ email: '', password: '' })
       signInValidationSchema.parse(form)
       return true
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const newErrors: Record<string, string> = {}
+        const newErrors = { email: '', password: '' }
         error.errors.forEach((err) => {
-          newErrors[err.path[0]] = err.message
+          if (err.path[0] === 'email') newErrors.email = err.message
+          else if (err.path[0] === 'password') newErrors.password = err.message
         })
         setErrors(newErrors)
       }
@@ -39,8 +41,12 @@ const SignIn = () => {
 
   const onSignInPress = async () => {
     if (validateForm()) {
-      signIn(form.email, form.password, () => {})
+      signIn(form.email, form.password, () => {
+        router.push('/modal')
+      })
       // Proceed with sign up logic
+    } else {
+      console.log(errors)
     }
   }
   return (
@@ -54,7 +60,7 @@ const SignIn = () => {
             textContentType="emailAddress"
             value={form.email}
             onChangeText={(value: any) => setForm({ ...form, email: value })}
-            error={errors.emaiil}
+            error={errors.email}
           />
           <InputField
             containerStyle="bg-background-50"
