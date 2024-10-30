@@ -6,13 +6,13 @@ from cooks.models import CCCook
 from deliverers.serializers import CCDelivererSimpleSerializer
 from deliverers.models import CCDeliverer
 
-from users.serializers import UserSerializer
+from users.serializers import UserDetailSerializer
 
 from . import models
 
 
 class AccountUpgradePetitionSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = UserDetailSerializer(read_only=True)
     info = serializers.SerializerMethodField()
 
     class Meta:

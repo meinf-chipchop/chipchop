@@ -5,6 +5,12 @@ from django.db import models
 from django.contrib.auth.models import UserManager
 
 
+class UserRoles(models.TextChoices):
+    USER = ("U", "User")
+    COOK = ("C", "Cook")
+    DELIVERER = ("D", "Deliverer")
+
+
 class CCUserManager(UserManager):
 
     def create_user(self, **kwargs):
@@ -13,7 +19,7 @@ class CCUserManager(UserManager):
 
         role_in_kwargs = "role" in kwargs
         if not role_in_kwargs:
-            kwargs["role"] = CCUser.UserRoles.USER
+            kwargs["role"] = UserRoles.USER
 
         kwargs["username"] = kwargs["first_name"]
 
@@ -29,11 +35,6 @@ class CCUser(AbstractUser):
 
     class Meta:
         verbose_name_plural = "Chip Chop Users"
-
-    class UserRoles(models.TextChoices):
-        USER = ("U", "User")
-        COOK = ("C", "Cook")
-        DELIVERER = ("D", "Deliverer")
 
     username = models.CharField(max_length=150, blank=True, null=True)
     email = models.EmailField(unique=True)

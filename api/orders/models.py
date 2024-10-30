@@ -4,7 +4,7 @@ from django.utils import timezone
 
 from deliverers.models import CCDeliverer
 from cooks.models import Dish
-from users.models import Address
+from users.models import Address, UserRoles
 
 
 User = get_user_model()
@@ -12,9 +12,31 @@ User = get_user_model()
 
 class Order(models.Model):
 
+    class CookStatus(models.TextChoices):
+        APPROVED = ("A", "Approved")
+        REJECTED = ("R", "Rejected")
+        COOKING = ("C", "Cooking")
+        COOKED = ("K", "Cooked")
+        BURNT_KITCHEN = ("B", "Burnt Kitchen")
+
+    class DelivererStatus(models.TextChoices):
+        DELIVERING = ("D", "Delivering")
+        FINISHED = ("F", "Finished")
+        TRAFFIC_ACCIENT = ("T", "Traffic Accident")
+        SEGARRO_AMIGO = ("S", "Atracao")
+
     class OrderStatus(models.TextChoices):
+        # ORDER STATUS -- STATUS INDEX ORDER IS IMPORTANT, DO NOT CHANGE
         PENDING = ("P", "Pending")
         APPROVED = ("A", "Approved")
+        COOKING = ("C", "Cooking")
+        BURNT_KITCHEN = ("B", "Burnt Kitchen")
+        COOKED = ("K", "Cooked")
+
+        DELIVERING = ("D", "Delivering")
+        TRAFFIC_ACCIENT = ("T", "Traffic Accident")
+        SEGARRO_AMIGO = ("S", "Atracao")
+        FINISHED = ("F", "Finished")
         REJECTED = ("R", "Rejected")
 
     class OrderType(models.TextChoices):
@@ -69,6 +91,16 @@ class Order(models.Model):
         if not self.id:
             self.created_at = timezone.now()
         return super(Order, self).save(*args, **kwargs)
+
+    @classmethod
+    def get_status_choices(cls, role: UserRoles):
+        if role == UserRoles.COOK:
+            return cls.CookStatus.choices
+
+        if role == UserRoles.DELIVERER:
+            return cls.DelivererStatus.choices
+
+        return []
 
 
 class OrderDish(models.Model):
