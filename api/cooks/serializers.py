@@ -76,6 +76,8 @@ class DishListSerializer(NestedHyperlinkedModelSerializer):
             "category",
             "price",
             "discount",
+            "image_url",
+            "estimated_time",
             "created_at",
             "last_update_at",
         ]
@@ -89,10 +91,13 @@ class DishDetailSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "category",
+            "image_url",
+            "estimated_time",
             "price",
             "discount",
             "created_at",
             "last_update_at",
+            
         ]
 
     def create(self, validated_data):
