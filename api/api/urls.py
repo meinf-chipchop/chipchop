@@ -29,6 +29,11 @@ router.register(
     basename="cook",
 )
 router.register(
+    r"dish-categories",
+    cooks.viewsets.DishCategoryViewSet,
+    basename="dish-category",
+)
+router.register(
     r"users",
     users.viewsets.UserViewSet,
     basename="user",
@@ -59,6 +64,7 @@ router.register(
     orders.viewsets.OrderViewSet,
     basename="order",
 )
+
 
 
 urlpatterns = [

@@ -1,10 +1,12 @@
 FROM nginx
 
-COPY ./nginx-prod.conf /tmp/nginx.conf
+COPY ./nginx-prod.conf /etc/nginx/nginx.conf
 
 RUN mkdir -p /tmp/certs
 
 COPY ./*.pem /tmp/certs/
+
+
 
 
 
