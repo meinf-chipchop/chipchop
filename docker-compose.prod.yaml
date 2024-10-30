@@ -1,6 +1,8 @@
 services:
   backend:
     build: ./api
+    volumes:
+      - ./api/:/app/:cached
     environment:
       DB_HOST: db
       DB_USER: ${POSTGRES_USERNAME}
