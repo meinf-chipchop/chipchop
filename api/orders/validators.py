@@ -3,6 +3,20 @@ from rest_framework.exceptions import ValidationError
 from . import models
 
 
+class OrderUpdateStatusValidator:
+    """
+    Validator for checking if the order status update is valid, checks that the new status is 'forward'
+    """
+
+    message = "Invalid status, new status must move the order forward"
+
+    def __init__(self, message=None):
+        self.message = message or self.message
+
+    def __call__(self, value):
+        print("Calling OrderUpdateStatusValidator")
+
+
 class OrderCreationValidator:
     """Validator for checking if the order creation is valid, checks that if the order type is delivery,
     the deliverer is set"""

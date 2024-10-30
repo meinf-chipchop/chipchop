@@ -32,7 +32,7 @@ class UserListSerializer(HyperlinkedModelSerializer):
         ]
 
 
-class UserSerializer(ModelSerializer):
+class UserDetailSerializer(ModelSerializer):
 
     class Meta:
         model = User

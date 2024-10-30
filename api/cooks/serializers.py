@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 from rest_framework_nested.relations import NestedHyperlinkedIdentityField
 
-from users.serializers import UserSerializer, UserCreationSerializer
+from users.serializers import UserDetailSerializer, UserCreationSerializer
 from users.models import UserRoles
 
 from . import models
@@ -38,7 +38,7 @@ class CCCookCreationSerializer(serializers.ModelSerializer):
 
 class CCCookDetailSerializer(serializers.ModelSerializer):
 
-    user = UserSerializer()
+    user = UserDetailSerializer()
     dishes = serializers.HyperlinkedIdentityField(
         view_name="dish-list",
         lookup_field="pk",

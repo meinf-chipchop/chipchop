@@ -17,11 +17,14 @@ User = get_user_model()
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = serializers.UserSerializer
+    serializer_class = serializers.UserDetailSerializer
 
     def get_serializer_class(self):
         if self.action == "list":
             return serializers.UserListSerializer
+
+        if self.action == "create":
+            return serializers.UserCreationSerializer
 
         return super().get_serializer_class()
 
@@ -64,7 +67,7 @@ class LoginViewSet(viewsets.ViewSet):
             user = authenticate(request=request, email=email, password=password)
             if user is not None:
                 login(request, user)
-                return Response(serializers.UserSerializer(user).data)
+                return Response(serializers.UserDetailSerializer(user).data)
             return Response(
                 {"Message": "Invalid Email and Password"},
                 status=status.HTTP_401_UNAUTHORIZED,

@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status, response
 from django.contrib.auth import get_user_model
+from rest_framework.decorators import action
 
 from . import models, serializers
 from users.models import UserRoles
@@ -89,3 +90,20 @@ class OrderViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
             headers=headers,
         )
+
+    @action(detail=True, methods=["get"])
+    def accept(self, request, pk=None):
+        print(request.user.role)
+        if request.user.role != UserRoles.DELIVERER:
+            return response.Response(
+                {"error": "Only deliverers can accept orders"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        order = models.Order.objects.get(pk=pk)
+
+        deliverer = CCDeliverer.objects.get(user=request.user)
+        order.deliverer = deliverer
+        order.save()
+
+        return response.Response(status=status.HTTP_200_OK)

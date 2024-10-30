@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from users.serializers import UserSerializer, UserCreationSerializer
+from users.serializers import UserDetailSerializer, UserCreationSerializer
 from users.models import UserRoles
 
 from . import models
@@ -39,7 +39,7 @@ class CCDelivererCreationSerializer(serializers.ModelSerializer):
 
 class CCDelivererDetailSerializer(serializers.ModelSerializer):
 
-    user = UserSerializer()
+    user = UserDetailSerializer()
 
     class Meta:
         model = models.CCDeliverer

@@ -3,12 +3,11 @@ from rest_framework import serializers
 from rest_framework_nested.serializers import (
     NestedHyperlinkedModelSerializer,
     NestedHyperlinkedIdentityField,
-    NestedHyperlinkedRelatedField,
 )
+from rest_framework.exceptions import ValidationError
 
 from . import models, validators
 from users.models import Address
-from deliverers.models import CCDeliverer
 
 
 class OrderDishCreationSerializer(serializers.ModelSerializer):
@@ -181,23 +180,18 @@ class OrderUpdateSerializer(serializers.ModelSerializer):
         )
 
     def validate_order_status(self, value):
-        if (
-            value in [c[0] for c in models.Order.DelivererStatus.choices]
-            and self.instance.order_status != models.Order.OrderStatus.COOKED
-        ):
-            raise serializers.ValidationError(
+        choices = [c[0] for c in models.Order.OrderStatus.choices]
+        old_idx = choices.index(self.instance.order_status)
+        cooked_idx = choices.index(models.Order.OrderStatus.COOKED)
+
+        if old_idx < cooked_idx:
+            raise ValidationError(
                 "Cannot set deliverer status without order being cooked"
             )
 
-        choices = [c[0] for c in models.Order.OrderStatus.choices]
-
-        old_idx = choices.index(self.instance.order_status)
         new_idx = choices.index(value)
-
-        if new_idx < old_idx:
-            raise serializers.ValidationError(
-                "Cannot set order status to a previous state"
-            )
+        if new_idx <= old_idx:
+            raise ValidationError("New status must move the order forward")
 
         return value
 
