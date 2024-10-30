@@ -29,6 +29,15 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(env("DEV_MODE"))
 
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_HTTPONLY = False  # Not accessible by client (not important)
+CSRF_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
+CSRF_COOKIE_SECURE = False  # Only HTTPS
+
+
 if not bool(env("DEV_MODE")):
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_SSL_REDIRECT = True
@@ -37,6 +46,8 @@ if not bool(env("DEV_MODE")):
     SECURE_HSTS_SECONDS = 3600
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+    USE_X_FORWARDED_HOST = True
+
 
 
 # Application definition
@@ -78,22 +89,15 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
     "http://194.164.171.6",
+    "https://chipchop.mooo.com"
 ]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://194.164.171.6",
+    "https://chipchop.mooo.com"
 ]
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-CSRF_USE_SESSIONS = False
-CSRF_COOKIE_HTTPONLY = False  # Not accessible by client (not important)
-CSRF_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
-CSRF_COOKIE_SECURE = False  # Only HTTPS
 
-SESSION_COOKIE_HTTPONLY = False  # Not accessible by client
-SESSION_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
-SESSION_COOKIE_SECURE = False  # Only HTTPS
 
 TEMPLATES = [
     {
