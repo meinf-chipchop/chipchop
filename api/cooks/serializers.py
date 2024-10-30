@@ -98,7 +98,6 @@ class DishDetailSerializer(serializers.ModelSerializer):
             "discount",
             "created_at",
             "last_update_at",
-            
         ]
 
     def create(self, validated_data):
@@ -107,8 +106,17 @@ class DishDetailSerializer(serializers.ModelSerializer):
         return models.Dish.objects.create(user=user, **validated_data)
 
 
-class DishCategorySerializer(serializers.ModelSerializer):
+class DishCategoryDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.DishCategory
-        fields = "__all__"
+        fields = ["name", "image_url"]
+
+
+class DishCategoryListSerializer(serializers.HyperlinkedModelSerializer):
+
+    url = serializers.HyperlinkedIdentityField(view_name="dish-category-detail")
+
+    class Meta:
+        model = models.DishCategory
+        fields = ["url"]
