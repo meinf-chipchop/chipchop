@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 
+from django.core import validators
+
 
 User = get_user_model()
 
@@ -34,7 +36,7 @@ class DishCategory(models.Model):
         unique=True,
     )
     image_url = models.URLField(null=True)
-    
+
     def __str__(self):
         return self.name
 
@@ -48,7 +50,7 @@ class Dish(models.Model):
         CCCook,
         on_delete=models.CASCADE,
     )
-    
+
     name = models.CharField(
         max_length=50,
         null=False,
@@ -98,3 +100,32 @@ class Dish(models.Model):
 
     def __str__(self) -> str:
         return f"{self.user}: {self.name}"
+
+
+class DishRating(models.Model):
+
+    class Meta:
+        verbose_name_plural = "Dish Ratings"
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=False,
+    )
+    dish = models.ForeignKey(
+        Dish,
+        on_delete=models.CASCADE,
+        null=False,
+    )
+    rating = models.DecimalField(
+        decimal_places=1,
+        max_digits=1,
+        null=False,
+        validators=[
+            validators.MinValueValidator(1),
+            validators.MaxValueValidator(5),
+        ],
+    )
+
+    def __str__(self) -> str:
+        return f"{self.user}: {self.dish} [{self.rating}]"
