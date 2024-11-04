@@ -4,3 +4,4 @@ from . import models
 
 admin.site.register(models.Order)
 admin.site.register(models.OrderDish)
+admin.site.register(models.OrderDeliveryRating)
