@@ -58,7 +58,10 @@ class CCCookListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CCCook
-        fields = ["url"]
+        fields = [
+            "url",
+            "public_name",
+        ]
 
 
 class DishListSerializer(NestedHyperlinkedModelSerializer):
@@ -139,7 +142,11 @@ class DishCategoryListSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.DishCategory
-        fields = ["url"]
+        fields = [
+            "url",
+            "name",
+            "image_url",
+        ]
 
 
 class DishRatingSerializer(serializers.ModelSerializer):

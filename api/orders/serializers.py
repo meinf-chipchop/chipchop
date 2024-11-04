@@ -141,10 +141,34 @@ class OrderListSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
+    dishes = serializers.HyperlinkedIdentityField(
+        view_name="order-dish-list",
+        lookup_field="pk",
+        lookup_url_kwarg="order_pk",
+    )
+
+    address = serializers.HyperlinkedRelatedField(
+        view_name="address-detail",
+        read_only=True,
+    )
+
+    deliverer = serializers.HyperlinkedRelatedField(
+        view_name="deliverer-detail",
+        read_only=True,
+    )
+
+    first_name = serializers.CharField(source="user.first_name")
+
     class Meta:
         model = models.Order
         fields = [
             "url",
+            "dishes",
+            "address",
+            "deliverer",
+            "first_name",
+            "order_type",
+            "order_status",
         ]
 
 
