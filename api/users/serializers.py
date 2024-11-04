@@ -17,7 +17,14 @@ User = get_user_model()
 class UserCreationSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email", "password", "phone", "age"]
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "password",
+            "phone",
+            "age",
+        ]
         extra_kwargs = {"password": {"write_only": True}}
 
 
@@ -29,6 +36,9 @@ class UserListSerializer(HyperlinkedModelSerializer):
         model = User
         fields = [
             "url",
+            "first_name",
+            "last_name",
+            "email",
         ]
 
 
@@ -36,7 +46,15 @@ class UserDetailSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email", "role", "phone", "age", "banned"]
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "role",
+            "phone",
+            "age",
+            "banned",
+        ]
 
     def create(self, validated_data):
         validated_data.pop("banned", None)  # Remove banned field if present
@@ -58,6 +76,10 @@ class AddressListSerializer(HyperlinkedModelSerializer):
         model = Address
         fields = [
             "url",
+            "street",
+            "city",
+            "zip_code",
+            "country_iso2",
         ]
 
 

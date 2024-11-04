@@ -1,6 +1,10 @@
-from rest_framework import permissions, mixins, viewsets
+from rest_framework import permissions, mixins, viewsets, exceptions
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from . import models, serializers
+
+from orders.models import OrderDish
 
 
 class CCCookViewSet(
@@ -36,7 +40,32 @@ class DishViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             return serializers.DishListSerializer
 
+        if self.action == "rate":
+            return serializers.DishRatingSerializer
+
         return super().get_serializer_class()
+
+    @action(detail=True, methods=["post"])
+    def rate(self, request, *args, **kwargs):
+        dish = self.get_object()
+        rating = request.data.get("rating")
+        user = request.user
+
+        if not OrderDish.objects.filter(order__user=user, dish=dish).exists():
+            raise exceptions.ValidationError(
+                "You need to have ordered this dish to be able to rate it!"
+            )
+
+        rating = models.DishRating.objects.create(
+            dish=dish,
+            user=user,
+            rating=rating,
+        )
+        rating.save()
+
+        serializer = self.get_serializer(rating)
+
+        return Response(serializer.data)
 
 
 class DishCategoryViewSet(viewsets.ModelViewSet):

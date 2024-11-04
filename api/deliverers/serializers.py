@@ -43,15 +43,25 @@ class CCDelivererDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CCDeliverer
-        fields = ["user", "transport"]
+        fields = [
+            "user",
+            "transport",
+        ]
 
 
 class CCDelivererListSerializer(serializers.ModelSerializer):
 
     url = serializers.HyperlinkedIdentityField(
-        view_name="deliverer-detail", lookup_field="pk"
+        view_name="deliverer-detail",
+        lookup_field="pk",
     )
+
+    email = serializers.EmailField(source="user.email")
 
     class Meta:
         model = models.CCDeliverer
-        fields = ["url"]
+        fields = [
+            "url",
+            "email",
+            "transport",
+        ]

@@ -6,7 +6,7 @@ from rest_framework_nested.serializers import (
 )
 from rest_framework.exceptions import ValidationError
 
-from . import models, validators
+from . import models
 from users.models import Address
 
 
@@ -101,26 +101,22 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 
     user = serializers.HyperlinkedRelatedField(
         view_name="user-detail",
-        lookup_field="pk",
         read_only=True,
     )
 
     deliverer = serializers.HyperlinkedRelatedField(
         view_name="deliverer-detail",
-        lookup_field="pk",
         read_only=True,
     )
 
-    dishes = serializers.HyperlinkedRelatedField(
+    dishes = serializers.HyperlinkedIdentityField(
         view_name="order-dish-list",
         lookup_field="pk",
         lookup_url_kwarg="order_pk",
-        read_only=True,
     )
 
     address = serializers.HyperlinkedRelatedField(
         view_name="address-detail",
-        lookup_field="pk",
         read_only=True,
     )
 
@@ -136,16 +132,8 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             "created_at",
         ]
 
-    def __init__(self, *args, **kwargs):
-        super(OrderDetailSerializer, self).__init__(*args, **kwargs)
 
-        if self.context["request"].method == "PUT":
-            self.fields["address"] = serializers.PrimaryKeyRelatedField(
-                queryset=Address.objects.filter(user=self.context["request"].user),
-            )
-
-
-class OrderListSerializer(serializers.HyperlinkedModelSerializer):
+class OrderListSerializer(serializers.ModelSerializer):
 
     url = serializers.HyperlinkedIdentityField(
         view_name="order-detail",
@@ -153,10 +141,34 @@ class OrderListSerializer(serializers.HyperlinkedModelSerializer):
         read_only=True,
     )
 
+    dishes = serializers.HyperlinkedIdentityField(
+        view_name="order-dish-list",
+        lookup_field="pk",
+        lookup_url_kwarg="order_pk",
+    )
+
+    address = serializers.HyperlinkedRelatedField(
+        view_name="address-detail",
+        read_only=True,
+    )
+
+    deliverer = serializers.HyperlinkedRelatedField(
+        view_name="deliverer-detail",
+        read_only=True,
+    )
+
+    first_name = serializers.CharField(source="user.first_name")
+
     class Meta:
         model = models.Order
         fields = [
             "url",
+            "dishes",
+            "address",
+            "deliverer",
+            "first_name",
+            "order_type",
+            "order_status",
         ]
 
 

@@ -35,6 +35,14 @@ class AccountUpgradePetitionListSerializer(serializers.ModelSerializer):
 
     url = serializers.HyperlinkedIdentityField(view_name="account-approval-detail")
 
+    email = serializers.EmailField(source="user.email")
+
     class Meta:
         model = models.AccountUpgradePetition
-        fields = ["url"]
+        fields = [
+            "url",
+            "email",
+            "state",
+            "created_at",
+            "updated_at",
+        ]
