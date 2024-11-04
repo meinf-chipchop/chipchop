@@ -34,12 +34,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         # If banned is being updated, check if the user is an admin
-        if "banned" in request.data:
-            if not request.user.is_staff:
-                return Response(
-                    {"Message": "You are not authorized to ban users."},
-                    status=status.HTTP_403_FORBIDDEN,
-                )
+        if "banned" in request.data and not request.user.is_staff:
+            return Response(
+                {"Message": "You are not authorized to ban users."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
 
         return super().update(request, *args, **kwargs)
 
