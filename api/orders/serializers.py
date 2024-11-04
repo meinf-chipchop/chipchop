@@ -2,7 +2,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from rest_framework import serializers
 from rest_framework_nested.serializers import (
     NestedHyperlinkedModelSerializer,
-    NestedHyperlinkedRelatedField,
     NestedHyperlinkedIdentityField,
 )
 from rest_framework.exceptions import ValidationError

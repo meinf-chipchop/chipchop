@@ -1,8 +1,7 @@
+from django.core import validators
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-
-from django.core import validators
 
 
 User = get_user_model()
@@ -92,6 +91,18 @@ class Dish(models.Model):
         null=True,
     )
 
+    def _get_rating_count(self):
+        return DishRating.objects.filter(dish=self).count()
+
+    rating_count = property(_get_rating_count)
+
+    def _get_rating_average(self):
+        return DishRating.objects.filter(dish=self).aggregate(models.Avg("rating"))[
+            "rating__avg"
+        ]
+
+    rating_average = property(_get_rating_average)
+
     def save(self, *args, **kwargs):
         if not self.created_at:
             self.created_at = timezone.now()
@@ -118,8 +129,8 @@ class DishRating(models.Model):
         null=False,
     )
     rating = models.DecimalField(
-        decimal_places=1,
-        max_digits=1,
+        decimal_places=2,
+        max_digits=3,
         null=False,
         validators=[
             validators.MinValueValidator(1),
