@@ -58,7 +58,10 @@ class CCCookListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CCCook
-        fields = ["url"]
+        fields = [
+            "url",
+            "public_name",
+        ]
 
 
 class DishListSerializer(NestedHyperlinkedModelSerializer):
@@ -66,6 +69,11 @@ class DishListSerializer(NestedHyperlinkedModelSerializer):
     url = NestedHyperlinkedIdentityField(
         view_name="dish-detail",
         parent_lookup_kwargs={"cook_pk": "user__pk"},
+    )
+
+    category = serializers.HyperlinkedRelatedField(
+        view_name="dish-category-detail",
+        read_only=True,
     )
 
     class Meta:
@@ -77,6 +85,8 @@ class DishListSerializer(NestedHyperlinkedModelSerializer):
 
 class DishDetailSerializer(serializers.ModelSerializer):
 
+    category = serializers.SerializerMethodField()
+
     class Meta:
         model = models.Dish
         fields = [
@@ -84,6 +94,8 @@ class DishDetailSerializer(serializers.ModelSerializer):
             "description",
             "category",
             "image_url",
+            "rating_average",
+            "rating_count",
             "estimated_time",
             "price",
             "discount",
@@ -94,20 +106,51 @@ class DishDetailSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user_id = self.context["request"].parser_context["kwargs"]["cook_pk"]
         user = models.CCCook.objects.get(pk=user_id)
-        return models.Dish.objects.create(user=user, **validated_data)
+        return models.Dish.objects.create(
+            user=user,
+            **validated_data,
+        )
+
+    def get_category(self, obj):
+        return obj.category.name
 
 
 class DishCategoryDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.DishCategory
-        fields = ["name", "image_url"]
+        fields = [
+            "name",
+            "image_url",
+        ]
 
 
 class DishCategoryListSerializer(serializers.HyperlinkedModelSerializer):
 
-    url = serializers.HyperlinkedIdentityField(view_name="dish-category-detail")
+    url = serializers.HyperlinkedIdentityField(
+        view_name="dish-category-detail",
+    )
 
     class Meta:
         model = models.DishCategory
-        fields = ["url"]
+        fields = [
+            "url",
+            "name",
+            "image_url",
+        ]
+
+
+class DishRatingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.DishRating
+        fields = ["rating"]
+
+    def create(self, validated_data):
+        dish = self.context["view"].get_object()
+        user = self.context["request"].user
+        return models.DishRating.objects.create(
+            dish=dish,
+            user=user,
+            **validated_data,
+        )
