@@ -1,12 +1,8 @@
-import { View, Text } from 'react-native'
 import React from 'react'
+import Swiper from '@/components/Swiper'
 
 const onboarding = () => {
-  return (
-    <View>
-      <Text>onboarding</Text>
-    </View>
-  )
+  return <Swiper />
 }
 
 export default onboarding

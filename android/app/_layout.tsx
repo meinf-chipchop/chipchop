@@ -1,58 +1,63 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import "@/global.css";
-import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
-import { useFonts } from 'expo-font';
-import { Slot } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import '@/global.css'
+import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider'
+import { useFonts } from 'expo-font'
+import { Slot } from 'expo-router'
+import * as SplashScreen from 'expo-splash-screen'
+import { useEffect } from 'react'
+import 'react-native-reanimated'
 import '../global.css'
-import { SessionProvider } from '@/auth/authContext';
+import { SessionProvider } from '@/auth/authContext'
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
-} from 'expo-router';
+} from 'expo-router'
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: '(auth)',
-};
+}
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    // SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    Jakarta: require('../assets/fonts/PlusJakartaSans-VariableFont_wght.ttf'),
+    JakartaItalic: require('../assets/fonts/PlusJakartaSans-Italic-VariableFont_wght.ttf'),
     ...FontAwesome.font,
-  });
+  })
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
-    if (error) throw error;
-  }, [error]);
+    if (error) throw error
+  }, [error])
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync()
     }
-  }, [loaded]);
+  }, [loaded])
 
   if (!loaded) {
-    return null;
+    return null
   }
 
-  return <GluestackUIProvider mode="light"><RootLayoutNav /></GluestackUIProvider>;
+  return (
+    <GluestackUIProvider mode="light">
+      <RootLayoutNav />
+    </GluestackUIProvider>
+  )
 }
 
 function RootLayoutNav() {
-
   return (
     <GluestackUIProvider mode="system">
       <SessionProvider>
         <Slot />
       </SessionProvider>
     </GluestackUIProvider>
-  );
+  )
 }

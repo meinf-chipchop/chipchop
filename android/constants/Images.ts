@@ -1,5 +1,6 @@
-import auth from '@/assets/images/auth.png'
-
 export const Images = {
-  auth,
+  auth: require('@/assets/images/auth.png'),
+  onboarding1: require('@/assets/images/onboarding1.png'),
+  onboarding2: require('@/assets/images/onboarding2.png'),
+  onboarding3: require('@/assets/images/onboarding3.png'),
 }
