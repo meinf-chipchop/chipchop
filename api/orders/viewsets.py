@@ -74,6 +74,9 @@ class OrderViewSet(viewsets.ModelViewSet):
         if self.action == "update":
             return serializers.OrderUpdateSerializer
 
+        if self.action == "rate_delivery":
+            return serializers.OrderDeliveryRatingSerializer
+
         return super().get_serializer_class()
 
     def create(self, request):
@@ -93,7 +96,6 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["get"])
     def accept(self, request, pk=None):
-        print(request.user.role)
         if request.user.role != UserRoles.DELIVERER:
             return response.Response(
                 {"error": "Only deliverers can accept orders"},
@@ -106,4 +108,31 @@ class OrderViewSet(viewsets.ModelViewSet):
         order.deliverer = deliverer
         order.save()
 
-        return response.Response(status=status.HTTP_200_OK)
+        serializer = self.get_serializer(order)
+        return response.Response(serializer.data)
+
+    @action(detail=True, methods=["post"])
+    def rate_delivery(self, request, pk=None):
+        if request.user != self.get_object().user:
+            return response.Response(
+                {"error": "Only the user that made the order can rate the delivery"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        rating = request.data.get("rating")
+        if rating is None:
+            return response.Response(
+                {"error": "Rating is required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        note = request.data.get("note")
+
+        order_rating = models.OrderDeliveryRating.objects.create(
+            order=self.get_object(),
+            rating=rating,
+            note=note,
+        )
+
+        serializer = self.get_serializer(order_rating)
+        return response.Response(serializer.data)

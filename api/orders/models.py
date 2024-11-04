@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from django.core import validators
 
 from deliverers.models import CCDeliverer
 from cooks.models import Dish
@@ -136,3 +137,41 @@ class OrderDish(models.Model):
     note = models.TextField(
         max_length=300,
     )
+
+
+class OrderDeliveryRating(models.Model):
+
+    class Meta:
+        verbose_name_plural = "Order Delivery Ratings"
+
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+    )
+
+    rating = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        null=False,
+        validators=[
+            validators.MinValueValidator(1),
+            validators.MaxValueValidator(5),
+        ],
+    )
+
+    note = models.TextField(
+        max_length=300,
+        null=True,
+    )
+
+    created_at = models.DateTimeField(
+        editable=False,
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.created_at:
+            self.created_at = timezone.now()
+        return super(OrderDeliveryRating, self).save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return f"{self.order}: {self.rating}"

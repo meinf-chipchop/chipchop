@@ -27,5 +27,21 @@ class CCDeliverer(models.Model):
         max_length=1,
     )
 
+    def _get_order_rating_count(self):
+        from orders.models import OrderDeliveryRating
+
+        return OrderDeliveryRating.objects.filter(order__deliverer=self).count()
+
+    rating_count = property(_get_order_rating_count)
+
+    def _get_order_rating_avg(self):
+        from orders.models import OrderDeliveryRating
+
+        return OrderDeliveryRating.objects.filter(order__deliverer=self).aggregate(
+            models.Avg("rating")
+        )["rating__avg"]
+
+    rating_average = property(_get_order_rating_avg)
+
     def __str__(self) -> str:
         return str(self.user)

@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # Add the current directory files (on your machine) to the container
-ADD . .
+COPY . .
 
 ADD requirements.txt ./requirements.txt
 

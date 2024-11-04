@@ -2,15 +2,15 @@ from django.contrib.auth import get_user_model, authenticate, login, logout
 
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 
-from rest_framework import viewsets
+from orders.serializers import OrderListSerializer
+from orders.models import Order
 from . import serializers, models
 
-# Create your views here.
 
 User = get_user_model()
 
@@ -32,14 +32,22 @@ class UserViewSet(viewsets.ModelViewSet):
     def me(self, request):
         return Response(self.serializer_class(request.user).data)
 
+    @action(detail=True, methods=["get"])
+    def orders(self, request, pk=None):
+        user = self.get_object()
+        orders = Order.objects.filter(user=user)
+        serializer = OrderListSerializer(
+            orders, many=True, context={"request": request}
+        )
+        return Response(serializer.data)
+
     def update(self, request, *args, **kwargs):
         # If banned is being updated, check if the user is an admin
-        if "banned" in request.data:
-            if not request.user.is_staff:
-                return Response(
-                    {"Message": "You are not authorized to ban users."},
-                    status=status.HTTP_403_FORBIDDEN,
-                )
+        if "banned" in request.data and not request.user.is_staff:
+            return Response(
+                {"Message": "You are not authorized to ban users."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
 
         return super().update(request, *args, **kwargs)
 
