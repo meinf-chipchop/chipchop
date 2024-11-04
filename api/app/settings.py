@@ -39,6 +39,7 @@ CSRF_COOKIE_SECURE = False  # Only HTTPS
 
 
 if not bool(env("DEV_MODE")):
+    print("Production mode")
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
@@ -47,6 +48,8 @@ if not bool(env("DEV_MODE")):
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     USE_X_FORWARDED_HOST = True
+    environ['HTTPS'] = "on"
+    environ['wsgi.url_scheme'] = 'https'
 
 
 
