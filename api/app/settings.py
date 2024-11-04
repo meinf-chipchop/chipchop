@@ -38,9 +38,9 @@ CSRF_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
 CSRF_COOKIE_SECURE = False  # Only HTTPS
 
 
+print("Dev mode", bool(env("DEV_MODE")) )
 if not bool(env("DEV_MODE")):
-    print("Production mode")
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
