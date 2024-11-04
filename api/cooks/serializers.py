@@ -47,7 +47,11 @@ class CCCookDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CCCook
-        fields = ["public_name", "user", "dishes"]
+        fields = [
+            "public_name",
+            "user",
+            "dishes",
+        ]
 
 
 class CCCookListSerializer(serializers.ModelSerializer):
@@ -71,15 +75,13 @@ class DishListSerializer(NestedHyperlinkedModelSerializer):
         parent_lookup_kwargs={"cook_pk": "user__pk"},
     )
 
-    category = serializers.HyperlinkedRelatedField(
-        view_name="dish-category-detail",
-        read_only=True,
-    )
+    category = serializers.CharField(source="category.name")
 
     class Meta:
         model = models.Dish
         fields = [
-            "url"
+            "url",
+            "category",
         ]
 
 

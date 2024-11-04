@@ -41,11 +41,18 @@ class CCDelivererDetailSerializer(serializers.ModelSerializer):
 
     user = UserDetailSerializer()
 
+    rating_average = serializers.DecimalField(
+        decimal_places=2,
+        max_digits=3,
+    )
+
     class Meta:
         model = models.CCDeliverer
         fields = [
             "user",
             "transport",
+            "rating_average",
+            "rating_count",
         ]
 
 
@@ -58,10 +65,16 @@ class CCDelivererListSerializer(serializers.ModelSerializer):
 
     email = serializers.EmailField(source="user.email")
 
+    rating_average = serializers.DecimalField(
+        decimal_places=2,
+        max_digits=3,
+    )
+
     class Meta:
         model = models.CCDeliverer
         fields = [
             "url",
             "email",
+            "rating_average",
             "transport",
         ]
