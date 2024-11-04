@@ -1,5 +1,10 @@
 # ChipChop
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=meinf-chipchop_chipchop&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=meinf-chipchop_chipchop)
+<a href="https://chipchop.mooo.com/login">
+<img src="https://img.shields.io/website?url=https%3A%2F%2Fchipchop.mooo.com%2Flogin&label=Admin-Panel" alt="Website">
+</a>
+
 ## How to run
 
 First complete the all .env-template fields in a new .env file in the same directory
