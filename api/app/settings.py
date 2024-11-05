@@ -19,7 +19,7 @@ env = environ.Env()
 # Print all environment variables
 for key, value in env.ENVIRON.items():
     print(f"{key}: {value}")
-    
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,8 +32,7 @@ SECRET_KEY = env("SECRET_KEY")
 DEV_MODE = env("DEV_MODE") in ["True", "true", "1"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not DEV_MODE
-
+DEBUG = DEV_MODE
 
 
 if DEV_MODE:
@@ -44,11 +43,10 @@ if DEV_MODE:
     CSRF_COOKIE_HTTPONLY = False  # Not accessible by client (not important)
     CSRF_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
     CSRF_COOKIE_SECURE = False  # Only HTTPS
-    
-    
-    
+
+
 USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Application definition

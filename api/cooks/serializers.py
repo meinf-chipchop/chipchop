@@ -117,6 +117,34 @@ class DishListSerializer(NestedHyperlinkedModelSerializer):
         return get_dish_rating_average(obj)
 
 
+class DishCreationSerializer(serializers.ModelSerializer):
+
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=models.DishCategory.objects.all(),
+        allow_null=True,
+    )
+
+    class Meta:
+        model = models.Dish
+        fields = [
+            "name",
+            "description",
+            "category",
+            "image_url",
+            "estimated_time",
+            "price",
+            "discount",
+        ]
+
+    def create(self, validated_data):
+        user_id = self.context["request"].parser_context["kwargs"]["cook_pk"]
+        user = models.CCCook.objects.get(pk=user_id)
+        return models.Dish.objects.create(
+            user=user,
+            **validated_data,
+        )
+
+
 class DishDetailSerializer(serializers.ModelSerializer):
 
     category = serializers.SerializerMethodField()
@@ -124,8 +152,6 @@ class DishDetailSerializer(serializers.ModelSerializer):
     rating_average = serializers.SerializerMethodField()
 
     rating_count = serializers.SerializerMethodField()
-
-    category = serializers.CharField(source="category.name")
 
     class Meta:
         model = models.Dish
@@ -142,14 +168,6 @@ class DishDetailSerializer(serializers.ModelSerializer):
             "created_at",
             "last_update_at",
         ]
-
-    def create(self, validated_data):
-        user_id = self.context["request"].parser_context["kwargs"]["cook_pk"]
-        user = models.CCCook.objects.get(pk=user_id)
-        return models.Dish.objects.create(
-            user=user,
-            **validated_data,
-        )
 
     def get_rating_average(self, obj):
         return get_dish_rating_average(obj)

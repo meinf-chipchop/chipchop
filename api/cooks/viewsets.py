@@ -45,6 +45,9 @@ class DishViewSet(viewsets.ModelViewSet):
         if self.action == "rate":
             return DishRatingSerializer
 
+        if self.action == "create":
+            return serializers.DishCreationSerializer
+
         return super().get_serializer_class()
 
     @action(detail=True, methods=["post"])
