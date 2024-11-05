@@ -29,12 +29,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
 
+DEV_MODE = env("DEV_MODE") in ["True", "true", "1"]
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(env("DEV_MODE"))
+DEBUG = not DEV_MODE
 
-print("Dev mode", bool(env("DEV_MODE")))
 
-if bool(env("DEV_MODE")):
+
+if DEV_MODE:
+    print("Running in development mode")
     CORS_ORIGIN_ALLOW_ALL = True
     CORS_ALLOW_CREDENTIALS = True
     CSRF_USE_SESSIONS = False
