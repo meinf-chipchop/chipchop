@@ -7,7 +7,12 @@ from rest_framework_nested.relations import NestedHyperlinkedIdentityField
 from users.serializers import UserDetailSerializer, UserCreationSerializer
 from users.models import UserRoles
 
-from ratings.utils import get_cooks_rating_average, get_cooks_rating_count
+from ratings.utils import (
+    get_cooks_rating_average,
+    get_cooks_rating_count,
+    get_dish_rating_average,
+    get_dish_rating_count,
+)
 
 from . import models
 
@@ -98,17 +103,29 @@ class DishListSerializer(NestedHyperlinkedModelSerializer):
 
     category = serializers.CharField(source="category.name")
 
+    rating_average = serializers.SerializerMethodField()
+
     class Meta:
         model = models.Dish
         fields = [
             "url",
+            "rating_average",
             "category",
         ]
+
+    def get_rating_average(self, obj):
+        return get_dish_rating_average(obj)
 
 
 class DishDetailSerializer(serializers.ModelSerializer):
 
     category = serializers.SerializerMethodField()
+
+    rating_average = serializers.SerializerMethodField()
+
+    rating_count = serializers.SerializerMethodField()
+
+    category = serializers.CharField(source="category.name")
 
     class Meta:
         model = models.Dish
@@ -134,8 +151,11 @@ class DishDetailSerializer(serializers.ModelSerializer):
             **validated_data,
         )
 
-    def get_category(self, obj):
-        return obj.category.name
+    def get_rating_average(self, obj):
+        return get_dish_rating_average(obj)
+
+    def get_rating_count(self, obj):
+        return get_dish_rating_count(obj)
 
 
 class DishCategoryDetailSerializer(serializers.ModelSerializer):
