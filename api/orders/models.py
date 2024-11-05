@@ -80,6 +80,11 @@ class Order(models.Model):
         editable=False,
     )
 
+    last_updated = models.DateTimeField(
+        editable=False,
+        default=timezone.now,
+    )
+
     address = models.ForeignKey(
         Address,
         on_delete=models.DO_NOTHING,
@@ -90,6 +95,7 @@ class Order(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             self.created_at = timezone.now()
+        self.last_updated = timezone.now()
         return super(Order, self).save(*args, **kwargs)
 
     @classmethod

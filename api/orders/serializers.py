@@ -130,6 +130,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             "order_type",
             "order_status",
             "created_at",
+            "last_updated",
         ]
 
 
