@@ -40,7 +40,7 @@ class AccountUpgradePetitionListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AccountUpgradePetition
         fields = [
-            "id",
+            "user_id",
             "url",
             "email",
             "state",
