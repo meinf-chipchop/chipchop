@@ -51,7 +51,6 @@ USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -69,6 +68,7 @@ INSTALLED_APPS = [
     "api",
     "cooks",
     "deliverers",
+    "ratings",
     "corsheaders",
 ]
 
@@ -91,13 +91,13 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
     "http://194.164.171.6",
-    "https://chipchop.mooo.com"
+    "https://chipchop.mooo.com",
 ]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://194.164.171.6",
-    "https://chipchop.mooo.com"
+    "https://chipchop.mooo.com",
 ]
 
 

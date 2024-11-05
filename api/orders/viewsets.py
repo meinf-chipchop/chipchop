@@ -3,9 +3,13 @@ from django.contrib.auth import get_user_model
 from rest_framework.decorators import action
 
 from . import models, serializers
+
 from users.models import UserRoles
 from deliverers.models import CCDeliverer
 from cooks.models import CCCook
+from ratings.models import DeliveryRating
+
+from ratings.serializers import DeliveryRatingSerializer
 
 User = get_user_model()
 
@@ -75,7 +79,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             return serializers.OrderUpdateSerializer
 
         if self.action == "rate_delivery":
-            return serializers.OrderDeliveryRatingSerializer
+            return DeliveryRatingSerializer
 
         return super().get_serializer_class()
 
@@ -128,7 +132,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         note = request.data.get("note")
 
-        order_rating = models.OrderDeliveryRating.objects.create(
+        order_rating = DeliveryRating.objects.create(
             order=self.get_object(),
             rating=rating,
             note=note,

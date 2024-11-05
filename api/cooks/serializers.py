@@ -7,6 +7,8 @@ from rest_framework_nested.relations import NestedHyperlinkedIdentityField
 from users.serializers import UserDetailSerializer, UserCreationSerializer
 from users.models import UserRoles
 
+from ratings.utils import get_cooks_rating_average, get_cooks_rating_count
+
 from . import models
 
 User = get_user_model()
@@ -39,11 +41,16 @@ class CCCookCreationSerializer(serializers.ModelSerializer):
 class CCCookDetailSerializer(serializers.ModelSerializer):
 
     user = UserDetailSerializer()
+
     dishes = serializers.HyperlinkedIdentityField(
         view_name="dish-list",
         lookup_field="pk",
         lookup_url_kwarg="cook_pk",
     )
+
+    rating_average = serializers.SerializerMethodField()
+
+    rating_count = serializers.SerializerMethodField()
 
     class Meta:
         model = models.CCCook
@@ -51,7 +58,15 @@ class CCCookDetailSerializer(serializers.ModelSerializer):
             "public_name",
             "user",
             "dishes",
+            "rating_average",
+            "rating_count",
         ]
+
+    def get_rating_average(self, obj):
+        return get_cooks_rating_average(obj)
+
+    def get_rating_count(self, obj):
+        return get_cooks_rating_count(obj)
 
 
 class CCCookListSerializer(serializers.ModelSerializer):
@@ -60,12 +75,18 @@ class CCCookListSerializer(serializers.ModelSerializer):
         view_name="cook-detail", lookup_field="pk"
     )
 
+    rating_average = serializers.SerializerMethodField()
+
     class Meta:
         model = models.CCCook
         fields = [
             "url",
             "public_name",
+            "rating_average",
         ]
+
+    def get_rating_average(self, obj):
+        return get_cooks_rating_average(obj)
 
 
 class DishListSerializer(NestedHyperlinkedModelSerializer):
@@ -140,19 +161,3 @@ class DishCategoryListSerializer(serializers.HyperlinkedModelSerializer):
             "name",
             "image_url",
         ]
-
-
-class DishRatingSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.DishRating
-        fields = ["rating"]
-
-    def create(self, validated_data):
-        dish = self.context["view"].get_object()
-        user = self.context["request"].user
-        return models.DishRating.objects.create(
-            dish=dish,
-            user=user,
-            **validated_data,
-        )

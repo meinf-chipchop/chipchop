@@ -1,4 +1,3 @@
-from django.core import validators
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
@@ -91,18 +90,6 @@ class Dish(models.Model):
         null=True,
     )
 
-    def _get_rating_count(self):
-        return DishRating.objects.filter(dish=self).count()
-
-    rating_count = property(_get_rating_count)
-
-    def _get_rating_average(self):
-        return DishRating.objects.filter(dish=self).aggregate(models.Avg("rating"))[
-            "rating__avg"
-        ]
-
-    rating_average = property(_get_rating_average)
-
     def save(self, *args, **kwargs):
         if not self.created_at:
             self.created_at = timezone.now()
@@ -111,32 +98,3 @@ class Dish(models.Model):
 
     def __str__(self) -> str:
         return f"{self.user}: {self.name}"
-
-
-class DishRating(models.Model):
-
-    class Meta:
-        verbose_name_plural = "Dish Ratings"
-
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=False,
-    )
-    dish = models.ForeignKey(
-        Dish,
-        on_delete=models.CASCADE,
-        null=False,
-    )
-    rating = models.DecimalField(
-        decimal_places=2,
-        max_digits=3,
-        null=False,
-        validators=[
-            validators.MinValueValidator(1),
-            validators.MaxValueValidator(5),
-        ],
-    )
-
-    def __str__(self) -> str:
-        return f"{self.user}: {self.dish} [{self.rating}]"
