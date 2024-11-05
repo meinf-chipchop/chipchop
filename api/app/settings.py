@@ -30,26 +30,21 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = bool(env("DEV_MODE"))
 
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-CSRF_USE_SESSIONS = False
-CSRF_COOKIE_HTTPONLY = False  # Not accessible by client (not important)
-CSRF_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
-CSRF_COOKIE_SECURE = False  # Only HTTPS
 
+print("Dev mode", bool(env("DEV_MODE")))
 
-print("Dev mode", bool(env("DEV_MODE")) )
-if not bool(env("DEV_MODE")):
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 3600
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    USE_X_FORWARDED_HOST = True
-    environ['HTTPS'] = "on"
-    environ['wsgi.url_scheme'] = 'https'
+if bool(env("DEV_MODE")):
+    CORS_ORIGIN_ALLOW_ALL = True
+    CORS_ALLOW_CREDENTIALS = True
+    CSRF_USE_SESSIONS = False
+    CSRF_COOKIE_HTTPONLY = False  # Not accessible by client (not important)
+    CSRF_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
+    CSRF_COOKIE_SECURE = False  # Only HTTPS
+    
+    
+    
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 
