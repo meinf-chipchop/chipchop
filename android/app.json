@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Chip Chop",
-    "slug": "Chip Chop",
+    "slug": "chipchop",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -13,13 +13,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.chipchop"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.chipchop"
     },
     "web": {
       "bundler": "metro",
@@ -30,10 +32,22 @@
       "expo-router",
       "expo-secure-store",
       "expo-build-properties",
-      "expo-font"
+      "expo-font",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps._some_id_here_"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "22523043-2896-4bd8-a6f1-d35b3523d78f"
+      }
+    },
+    "owner": "vgerj02"
   }
 }
