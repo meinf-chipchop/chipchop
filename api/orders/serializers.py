@@ -208,25 +208,6 @@ class OrderUpdateSerializer(serializers.ModelSerializer):
         return value
 
 
-class OrderDeliveryRatingSerializer(serializers.ModelSerializer):
-
-    rating = serializers.DecimalField(
-        max_digits=3,
-        decimal_places=2,
-        validators=[
-            MinValueValidator(0.0),
-            MaxValueValidator(5.0),
-        ],
-    )
-
-    class Meta:
-        model = models.OrderDeliveryRating
-        fields = [
-            "rating",
-            "note",
-        ]
-
-
 class OrderCreationSerializer(serializers.ModelSerializer):
 
     url = serializers.HyperlinkedIdentityField(

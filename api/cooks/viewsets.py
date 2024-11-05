@@ -4,6 +4,8 @@ from rest_framework.response import Response
 
 from . import models, serializers
 
+from ratings.serializers import DishRatingSerializer
+from ratings.models import DishRating
 from orders.models import OrderDish
 
 
@@ -41,7 +43,7 @@ class DishViewSet(viewsets.ModelViewSet):
             return serializers.DishListSerializer
 
         if self.action == "rate":
-            return serializers.DishRatingSerializer
+            return DishRatingSerializer
 
         return super().get_serializer_class()
 
@@ -56,7 +58,7 @@ class DishViewSet(viewsets.ModelViewSet):
                 "You need to have ordered this dish to be able to rate it!"
             )
 
-        rating = models.DishRating.objects.create(
+        rating = DishRating.objects.create(
             dish=dish,
             user=user,
             rating=rating,
