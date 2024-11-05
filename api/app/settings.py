@@ -32,7 +32,7 @@ SECRET_KEY = env("SECRET_KEY")
 DEV_MODE = env("DEV_MODE") in ["True", "true", "1"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not DEV_MODE
+DEBUG = True
 
 
 
