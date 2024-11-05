@@ -14,8 +14,8 @@ COPY . .
 ADD requirements.txt ./requirements.txt
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip \
+  && pip install -r requirements.txt
 
 # Start the server
 CMD ["bash", "start.sh"]
