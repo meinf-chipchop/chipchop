@@ -28,6 +28,7 @@ Some passthrough have been configured like
 
 - http://194.164.171.6
 - https://chipchop.mooo.com _(HTTPS)_
+- https://chipchop.mooo.com/api/schema/swagger/ _(HTTPS)_
 
 ## Default User Admin:
 
