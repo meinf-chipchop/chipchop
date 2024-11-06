@@ -1,6 +1,8 @@
 services:
   backend:
     build: ./api
+    volumes:
+      - ./api/:/app/:cached
     environment:
       DB_HOST: db
       DB_USER: ${POSTGRES_USERNAME}
@@ -11,13 +13,15 @@ services:
       ADMIN_EMAIL: ${DJANGO_ADMIN_EMAIL}
       ADMIN_USERNAME: ${DJANGO_ADMIN_USERNAME}
       ADMIN_PASSWORD: ${DJANGO_ADMIN_PASSWORD}
-      DEV_MODE: FALSE
+      DEV_MODE: 0
     depends_on:
       db:
         condition: service_healthy
 
   nginx:
-    build: ./nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.prod
     env_file:
       - ./.env
     ports:
@@ -26,6 +30,11 @@ services:
     depends_on:
       - backend
       - admin-panel
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://backend:8000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   admin-panel:
     env_file:

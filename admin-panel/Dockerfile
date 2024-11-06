@@ -4,8 +4,8 @@ ARG DEV_MODE
 
 WORKDIR /app/
 
-ADD . .
+COPY . .
 
-RUN npm install
-RUN if [ $DEV_MODE = FALSE ]; then npm run build; fi
-CMD if [ $DEV_MODE = FALSE ]; then npm run start; else npm run dev; fi
+RUN npm install \
+  && if [ "$DEV_MODE" = FALSE ]; then npm run build; fi
+CMD if [ "$DEV_MODE" = FALSE ]; then npm run start; else npm run dev; fi

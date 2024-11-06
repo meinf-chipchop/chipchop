@@ -16,9 +16,12 @@ import environ
 
 env = environ.Env()
 
+# Print all environment variables
+for key, value in env.ENVIRON.items():
+    print(f"{key}: {value}")
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -26,8 +29,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
 
+DEV_MODE = env("DEV_MODE") in ["True", "true", "1"]
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(env("DEV_MODE"))
+DEBUG = True
+
+if DEV_MODE:
+    print("Running in development mode")
+    CORS_ORIGIN_ALLOW_ALL = True
+    CORS_ALLOW_CREDENTIALS = True
+    CSRF_USE_SESSIONS = False
+    CSRF_COOKIE_HTTPONLY = False  # Not accessible by client (not important)
+    CSRF_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
+    CSRF_COOKIE_SECURE = False  # Only HTTPS
+
+
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Application definition
@@ -47,6 +65,7 @@ INSTALLED_APPS = [
     "api",
     "cooks",
     "deliverers",
+    "ratings",
     "corsheaders",
 ]
 
@@ -69,22 +88,15 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
     "http://194.164.171.6",
+    "https://chipchop.mooo.com",
 ]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://194.164.171.6",
+    "https://chipchop.mooo.com",
 ]
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-CSRF_USE_SESSIONS = False
-CSRF_COOKIE_HTTPONLY = False  # Not accessible by client (not important)
-CSRF_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
-CSRF_COOKIE_SECURE = False  # Only HTTPS
 
-SESSION_COOKIE_HTTPONLY = False  # Not accessible by client
-SESSION_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
-SESSION_COOKIE_SECURE = False  # Only HTTPS
 
 TEMPLATES = [
     {
