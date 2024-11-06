@@ -12,6 +12,8 @@ import petitions.viewsets
 import users.viewsets
 import orders.viewsets
 
+from . import viewsets
+
 
 # Initialize the main router
 router = DefaultRouter()
@@ -67,6 +69,11 @@ router.register(
     r"orders",
     orders.viewsets.OrderViewSet,
     basename="order",
+)
+router.register(
+    r"stats",
+    viewsets.StatisticsViewset,
+    basename="stats",
 )
 
 
