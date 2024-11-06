@@ -1,5 +1,22 @@
 import fetchWrapper from "./fetchWrapper";
 
+export interface User {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  age: number;
+}
+
+export interface NewUser {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  phone: string;
+  age: number;
+}
+
 export function logout() {
   return fetchWrapper("/api/logout/", {
     method: "GET",
