@@ -169,6 +169,9 @@ class DishDetailSerializer(serializers.ModelSerializer):
             "last_update_at",
         ]
 
+    def get_category(self, obj):
+        return obj.category.name
+
     def get_rating_average(self, obj):
         return get_dish_rating_average(obj)
 
