@@ -29,6 +29,7 @@ class Order(models.Model):
         # ORDER STATUS -- STATUS INDEX ORDER IS IMPORTANT, DO NOT CHANGE
         PENDING = ("P", "Pending")
         APPROVED = ("A", "Approved")
+        REJECTED = ("R", "Rejected")
         COOKING = ("C", "Cooking")
         BURNT_KITCHEN = ("B", "Burnt Kitchen")
         COOKED = ("K", "Cooked")
@@ -37,7 +38,6 @@ class Order(models.Model):
         TRAFFIC_ACCIENT = ("T", "Traffic Accident")
         SEGARRO_AMIGO = ("S", "Atracao")
         FINISHED = ("F", "Finished")
-        REJECTED = ("R", "Rejected")
 
     class OrderType(models.TextChoices):
         DELIVERY = ("D", "Delivery")
@@ -80,6 +80,11 @@ class Order(models.Model):
         editable=False,
     )
 
+    last_updated = models.DateTimeField(
+        editable=False,
+        default=timezone.now,
+    )
+
     address = models.ForeignKey(
         Address,
         on_delete=models.DO_NOTHING,
@@ -90,6 +95,7 @@ class Order(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             self.created_at = timezone.now()
+        self.last_updated = timezone.now()
         return super(Order, self).save(*args, **kwargs)
 
     @classmethod

@@ -32,6 +32,7 @@ class DeliveryRating(models.Model):
     note = models.TextField(
         max_length=300,
         blank=True,
+        default="",
     )
 
     created_at = models.DateTimeField(

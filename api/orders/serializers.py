@@ -7,7 +7,7 @@ from rest_framework_nested.serializers import (
 from rest_framework.exceptions import ValidationError
 
 from . import models
-from users.models import Address
+from users.models import Address, UserRoles
 
 
 class OrderDishCreationSerializer(serializers.ModelSerializer):
@@ -130,6 +130,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             "order_type",
             "order_status",
             "created_at",
+            "last_updated",
         ]
 
 
@@ -194,16 +195,18 @@ class OrderUpdateSerializer(serializers.ModelSerializer):
     def validate_order_status(self, value):
         choices = [c[0] for c in models.Order.OrderStatus.choices]
         old_idx = choices.index(self.instance.order_status)
-        cooked_idx = choices.index(models.Order.OrderStatus.COOKED)
-
-        if old_idx < cooked_idx:
-            raise ValidationError(
-                "Cannot set deliverer status without order being cooked"
-            )
-
         new_idx = choices.index(value)
+
         if new_idx <= old_idx:
             raise ValidationError("New status must move the order forward")
+
+        role = self.context["request"].user.role
+        if role == UserRoles.DELIVERER:
+            cooked_status_idx = choices.index(models.Order.OrderStatus.COOKED)
+            if old_idx < cooked_status_idx:
+                raise ValidationError(
+                    "Deliverers can't update the status unless the order is cooked"
+                )
 
         return value
 

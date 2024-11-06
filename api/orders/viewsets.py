@@ -44,7 +44,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         if self.request.user.role == UserRoles.COOK:
             return (
                 models.Order.objects.filter(
-                    dishes__dish__cook__user=CCCook.objects.get(user=self.request.user),
+                    orderdish__dish__user=CCCook.objects.get(user=self.request.user),
                 )
                 | user_filter
             )
