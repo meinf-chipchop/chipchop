@@ -17,8 +17,8 @@ import environ
 env = environ.Env()
 
 # Print all environment variables
-for key, value in env.ENVIRON.items():
-    print(f"{key}: {value}")
+# for key, value in env.ENVIRON.items():
+#     print(f"{key}: {value}")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "deliverers",
     "ratings",
     "corsheaders",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -185,4 +186,12 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 50,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "ChipChop API",
+    "DESCRIPTION": "ChipChop is THE local food delivery service",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
