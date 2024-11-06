@@ -195,14 +195,8 @@ class OrderUpdateSerializer(serializers.ModelSerializer):
     def validate_order_status(self, value):
         choices = [c[0] for c in models.Order.OrderStatus.choices]
         old_idx = choices.index(self.instance.order_status)
-        cooked_idx = choices.index(models.Order.OrderStatus.COOKED)
-
-        if old_idx < cooked_idx:
-            raise ValidationError(
-                "Cannot set deliverer status without order being cooked"
-            )
-
         new_idx = choices.index(value)
+
         if new_idx <= old_idx:
             raise ValidationError("New status must move the order forward")
 
