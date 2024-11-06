@@ -32,8 +32,7 @@ SECRET_KEY = env("SECRET_KEY")
 DEV_MODE = env("DEV_MODE") in ["True", "true", "1"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = DEV_MODE
-
+DEBUG = True
 
 if DEV_MODE:
     print("Running in development mode")
