@@ -14,7 +14,7 @@ class DeliveryRating(models.Model):
     class Meta:
         verbose_name_plural = "Order Delivery Ratings"
 
-    order = models.ForeignKey(
+    order = models.OneToOneField(
         Order,
         on_delete=models.CASCADE,
         primary_key=True,
