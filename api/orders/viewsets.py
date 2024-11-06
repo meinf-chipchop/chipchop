@@ -130,15 +130,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             )
 
         if self.request.method == "GET":
-            order_rating = DeliveryRating.objects.filter(
-                order=self.get_object()
-            ).first()
-
-            if order_rating is None:
-                return response.Response(
-                    {"error": "Rating not found"},
-                    status=status.HTTP_404_NOT_FOUND,
-                )
+            return self.rate_fetch(request, pk)
         else:
             order_rating = DeliveryRatingCreationSerializer(
                 data=request.data,
@@ -151,34 +143,53 @@ class OrderViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            if self.request.method == "PUT":
-                order_rating = DeliveryRating.objects.filter(
-                    order=self.get_object()
-                ).first()
-                if order_rating is None:
-                    return response.Response(
-                        {"error": "Rating not found"},
-                        status=status.HTTP_404_NOT_FOUND,
-                    )
+            return self.rate_create(request, pk)
 
-                rating = request.data.get("rating")
-                if rating is not None:
-                    order_rating.rating = rating
+    def rate_fetch(self, request, pk=None):
+        order_rating = DeliveryRating.objects.filter(order=self.get_object()).first()
 
-                note = request.data.get("note")
-                if note is not None:
-                    order_rating.note = note
+        if order_rating is None:
+            return response.Response(
+                {"error": "Rating not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
-                order_rating.save()
-            elif self.request.method == "POST":
+        serializer = self.get_serializer(order_rating)
+        return response.Response(serializer.data)
 
-                if DeliveryRating.objects.filter(order=self.get_object()).exists():
-                    return response.Response(
-                        {"error": "Rating already exists"},
-                        status=status.HTTP_400_BAD_REQUEST,
-                    )
+    def rate_create(self, request, pk=None):
+        if self.request.method == "PUT":
+            order_rating = DeliveryRating.objects.filter(
+                order=self.get_object()
+            ).first()
+            if order_rating is None:
+                return response.Response(
+                    {"error": "Rating not found"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
 
-                order_rating.save()
+            rating = request.data.get("rating")
+            if rating is not None:
+                order_rating.rating = rating
+
+            note = request.data.get("note")
+            if note is not None:
+                order_rating.note = note
+
+            order_rating.save()
+        elif self.request.method == "POST":
+            order_rating = DeliveryRatingCreationSerializer(
+                data=request.data,
+                context={"request": request},
+            )
+
+            if DeliveryRating.objects.filter(order=self.get_object()).exists():
+                return response.Response(
+                    {"error": "Rating already exists"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            order_rating.save()
 
         serializer = self.get_serializer(order_rating)
         return response.Response(serializer.data)
