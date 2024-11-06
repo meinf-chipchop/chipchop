@@ -14,9 +14,10 @@ class DeliveryRating(models.Model):
     class Meta:
         verbose_name_plural = "Order Delivery Ratings"
 
-    order = models.ForeignKey(
+    order = models.OneToOneField(
         Order,
         on_delete=models.CASCADE,
+        primary_key=True,
     )
 
     rating = models.DecimalField(
@@ -52,6 +53,12 @@ class DishRating(models.Model):
 
     class Meta:
         verbose_name_plural = "Dish Ratings"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "dish"],
+                name="Unique User-Dish Rating",
+            ),
+        ]
 
     user = models.ForeignKey(
         User,
