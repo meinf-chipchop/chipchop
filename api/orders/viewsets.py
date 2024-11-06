@@ -79,6 +79,8 @@ class OrderViewSet(viewsets.ModelViewSet):
             return serializers.OrderCreationSerializer
 
         if self.action == "update":
+            if self.request.user.role == UserRoles.USER:
+                return serializers.EmptySerializer
             return serializers.OrderUpdateSerializer
 
         return super().get_serializer_class()

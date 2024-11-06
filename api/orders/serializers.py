@@ -238,3 +238,7 @@ class OrderCreationSerializer(serializers.ModelSerializer):
             view_name="address-detail",
             queryset=Address.objects.filter(user=self.context["request"].user),
         )
+
+
+class EmptySerializer(serializers.Serializer):
+    pass
