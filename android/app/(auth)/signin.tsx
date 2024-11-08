@@ -1,54 +1,53 @@
-import { useState } from 'react'
-import { ScrollView, Text, View } from 'react-native'
-import InputField from '@/components/InputField'
-import { Ionicons } from '@expo/vector-icons'
-import { Button, ButtonText } from '@/components/ui/button'
-import { z } from 'zod'
-import { useSession } from '@/auth/authContext'
-import OAuth from '@/components/Auth'
-import { router } from 'expo-router'
+import { useState } from "react";
+import { ScrollView, Text, View } from "react-native";
+import InputField from "@/components/InputField";
+import { Ionicons } from "@expo/vector-icons";
+import { Button, ButtonText } from "@/components/ui/button";
+import { z } from "zod";
+import { useSession } from "@/auth/authContext";
+import OAuth from "@/components/Auth";
+import { router } from "expo-router";
 
 const signInValidationSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-})
+  email: z.string().email("Invalid email address"),
+});
 const SignIn = () => {
   const [form, setForm] = useState({
-    email: '',
-    password: '',
-  })
-  const { signIn } = useSession()
+    email: "",
+    password: "",
+  });
+  const { signIn } = useSession();
 
-  const [errors, setErrors] = useState({ email: '', password: '' })
+  const [errors, setErrors] = useState({ email: "", password: "" });
 
   const validateForm = () => {
     try {
-      setErrors({ email: '', password: '' })
-      signInValidationSchema.parse(form)
-      return true
+      setErrors({ email: "", password: "" });
+      signInValidationSchema.parse(form);
+      return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const newErrors = { email: '', password: '' }
+        const newErrors = { email: "", password: "" };
         error.errors.forEach((err) => {
-          if (err.path[0] === 'email') newErrors.email = err.message
-          else if (err.path[0] === 'password') newErrors.password = err.message
-        })
-        setErrors(newErrors)
+          if (err.path[0] === "email") newErrors.email = err.message;
+          else if (err.path[0] === "password") newErrors.password = err.message;
+        });
+        setErrors(newErrors);
       }
-      return false
+      return false;
     }
-  }
+  };
 
   const onSignInPress = async () => {
     if (validateForm()) {
       signIn(form.email, form.password, () => {
-        router.push('/modal')
-      })
+        router.push("/modal");
+      });
       // Proceed with sign up logic
     } else {
-      console.log(errors)
+      console.log(errors);
     }
-  }
+  };
   return (
     <ScrollView className="flex-1 bg-white pt-4">
       <View className="flex-1 bg-white">
@@ -82,6 +81,6 @@ const SignIn = () => {
         </View>
       </View>
     </ScrollView>
-  )
-}
-export default SignIn
+  );
+};
+export default SignIn;

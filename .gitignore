@@ -4,3 +4,9 @@
 
 .env
 .venv
+
+.DS_Store
+
+*.pem
+
+migrations/

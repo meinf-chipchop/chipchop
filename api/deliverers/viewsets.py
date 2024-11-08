@@ -1,6 +1,11 @@
 from rest_framework import permissions, mixins, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from . import models, serializers
+
+from ratings.models import DeliveryRating
+from ratings.serializers import DeliveryRatingSerializer
 
 
 class CCDelivererViewSet(
@@ -21,3 +26,10 @@ class CCDelivererViewSet(
             return serializers.CCDelivererCreationSerializer
 
         return super().get_serializer_class()
+
+    @action(detail=True, methods=["GET"])
+    def ratings(self, request, pk=None):
+        deliverer = self.get_object()
+        ratings = DeliveryRating.objects.filter(order__deliverer=deliverer)
+        serializer = DeliveryRatingSerializer(ratings, many=True)
+        return Response(serializer.data)
