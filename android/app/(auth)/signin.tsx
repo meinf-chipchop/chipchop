@@ -1,53 +1,61 @@
-import { useState } from "react";
-import { ScrollView, Text, View } from "react-native";
-import InputField from "@/components/InputField";
-import { Ionicons } from "@expo/vector-icons";
-import { Button, ButtonText } from "@/components/ui/button";
-import { z } from "zod";
-import { useSession } from "@/auth/authContext";
-import OAuth from "@/components/Auth";
-import { router } from "expo-router";
+import { useState } from 'react'
+import { ScrollView, Text, View } from 'react-native'
+import InputField from '@/components/InputField'
+import { Ionicons } from '@expo/vector-icons'
+import { Button, ButtonSpinner, ButtonText } from '@/components/ui/button'
+import { z } from 'zod'
+import { useSession } from '@/auth/authContext'
+import OAuth from '@/components/Auth'
+import { router } from 'expo-router'
 
 const signInValidationSchema = z.object({
-  email: z.string().email("Invalid email address"),
-});
+  email: z.string().email('Invalid email address'),
+})
 const SignIn = () => {
   const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-  const { signIn } = useSession();
-
-  const [errors, setErrors] = useState({ email: "", password: "" });
+    email: '',
+    password: '',
+  })
+  const { signIn } = useSession()
+  const [errors, setErrors] = useState({ email: '', password: '' })
+  const [loading, setLoading] = useState(false)
+  const [response, setResponse] = useState({ ok: true, errors: '' })
 
   const validateForm = () => {
     try {
-      setErrors({ email: "", password: "" });
-      signInValidationSchema.parse(form);
-      return true;
+      setErrors({ email: '', password: '' })
+      signInValidationSchema.parse(form)
+      return true
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const newErrors = { email: "", password: "" };
+        const newErrors = { email: '', password: '' }
         error.errors.forEach((err) => {
-          if (err.path[0] === "email") newErrors.email = err.message;
-          else if (err.path[0] === "password") newErrors.password = err.message;
-        });
-        setErrors(newErrors);
+          if (err.path[0] === 'email') newErrors.email = err.message
+          else if (err.path[0] === 'password') newErrors.password = err.message
+        })
+        setErrors(newErrors)
       }
-      return false;
+      return false
     }
-  };
+  }
 
   const onSignInPress = async () => {
     if (validateForm()) {
-      signIn(form.email, form.password, () => {
-        router.push("/modal");
-      });
-      // Proceed with sign up logic
+      setLoading(true)
+      signIn(form.email, form.password)
+        .then((res) => {
+          if (res.length === 0) {
+            setResponse({ ok: true, errors: '' })
+            router.push('/')
+          } else setResponse({ ok: false, errors: res })
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     } else {
-      console.log(errors);
+      console.log(errors)
     }
-  };
+  }
   return (
     <ScrollView className="flex-1 bg-white pt-4">
       <View className="flex-1 bg-white">
@@ -74,13 +82,22 @@ const SignIn = () => {
           <Text className="text-sm text-right font-JakartaSemiBold text-primary-500 my-2">
             Forgot Password?
           </Text>
-          <Button onPress={onSignInPress} className="mt-6 rounded-full">
+          <Button
+            disabled={loading}
+            onPress={onSignInPress}
+            className="mt-6 rounded-full"
+          >
+            {loading && <ButtonSpinner />}
             <ButtonText>Sign in</ButtonText>
           </Button>
-          <OAuth />
+          {response.errors.length > 0 && (
+            <Text className="color-error-400 text-center font-bold">
+              {response.errors}
+            </Text>
+          )}
         </View>
       </View>
     </ScrollView>
-  );
-};
-export default SignIn;
+  )
+}
+export default SignIn

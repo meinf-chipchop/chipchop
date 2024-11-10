@@ -27,8 +27,12 @@ const BoardingItem = ({ item }: BoardingItemProps) => {
         },
       ]}
     >
+      <Image
+        resizeMode="contain"
+        source={item.image}
+        style={styles.itemImage}
+      />
       <Text style={styles.itemTitle}>{item.title}</Text>
-      <Image source={item.image} style={styles.itemImage} />
       <Text style={styles.itemDesc}>{item.description}</Text>
     </View>
   )
@@ -49,9 +53,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   itemImage: {
+    flex: 0.7,
     maxWidth: '80%',
     maxHeight: '20%',
-    resizeMode: 'contain',
   },
   itemDesc: {
     fontSize: 16,

@@ -1,5 +1,11 @@
 import { useState } from 'react'
-import { Text, View, ScrollView, TouchableOpacity } from 'react-native'
+import {
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native'
 import { Image } from 'expo-image'
 import { Images } from '@/constants/Images'
 import SignUp from './signup'
@@ -14,7 +20,7 @@ const AuthForms = () => {
       <View className="flex-1 px-6">
         <View className="relative w-screen flex justify-center items-center">
           <Image
-            style={{ width: 100, height: 100 }}
+            style={{ width: 600, height: 200 }}
             contentFit="contain"
             source={Images.auth}
           />
