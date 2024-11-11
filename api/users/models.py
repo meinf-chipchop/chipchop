@@ -38,8 +38,8 @@ class CCUser(AbstractUser):
 
     username = models.CharField(max_length=150, blank=True, null=True)
     email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=15)
-    age = models.SmallIntegerField()
+    phone = models.CharField(max_length=15, blank=True, null=True)
+    birth_date = models.DateField(null=True, blank=True)
     banned = models.BooleanField(default=False)
     role = models.CharField(
         choices=UserRoles.choices, default=UserRoles.USER, max_length=1
@@ -48,7 +48,7 @@ class CCUser(AbstractUser):
     objects = CCUserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["age", "password"]
+    REQUIRED_FIELDS = ["birth_date", "password"]
 
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"

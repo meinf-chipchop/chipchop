@@ -20,8 +20,6 @@ class Command(BaseCommand):
                 username=env("ADMIN_EMAIL"),
                 password=env("ADMIN_PASSWORD"),
                 email=env("ADMIN_EMAIL"),
-                age=0,
-                phone="",
             )
             admin.save()
             self.stdout.write("OK")
