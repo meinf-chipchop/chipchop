@@ -3,6 +3,12 @@
 import { useState, useEffect } from "react"
 import { User, Check, X, Search } from "lucide-react"
 
+
+import { FilterContainer } from "../../../components/GeneralComponents/CooksDeliveres/FilterContainerCooksDeliveres"
+// import { UserTable } from "../../../components/GeneralComponents/Users/UsersGrid"
+import { Pagination } from "../../../components/GeneralComponents/paginations"
+
+
 // Mock API functions (replace with actual API calls)
 const getAccountApprovals = async (page: number, pageSize: number) => {
   // Simulated API call
@@ -51,7 +57,6 @@ export default function CooksPage() {
         name: item.user.email,
         status: mapState(item.state)
       }))
-    //   setCooks(mappedCooks)
     }
     fetchCooks()
   }, [currentPage])
@@ -76,28 +81,12 @@ export default function CooksPage() {
   return (
     <div className="bg-white rounded-lg p-6 shadow-md">
       <h2 className="text-3xl font-semibold mb-4 text-[#2c3e50]">Cooks Approval</h2>
-      <div className="mb-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search by name"
-            value={nameFilter}
-            onChange={(e) => setNameFilter(e.target.value)}
-            className="w-full sm:w-64 px-4 py-2 bg-[#f0f0f0] text-[#2c3e50] rounded-md pl-10"
-          />
-          <Search className="absolute left-3 top-2.5 h-5 w-5 text-[#6a9fad]" />
-        </div>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as any)}
-          className="w-full sm:w-auto px-4 py-2 bg-[#f0f0f0] text-[#2c3e50] rounded-md"
-        >
-          <option value="all">All Statuses</option>
-          <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
-        </select>
-      </div>
+      <FilterContainer
+        nameFilter={nameFilter}
+        statusFilter={statusFilter}
+        onNameFilterChange={setNameFilter}
+        onStatusFilterChange={setStatusFilter}
+      />
       <table className="min-w-full divide-y divide-[#e0e0e0]">
         <thead>
           <tr>
@@ -121,13 +110,12 @@ export default function CooksPage() {
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2c3e50]">
                 <span
-                  className={`px-2 py-1 rounded-full text-xs ${
-                    cook.status === "approved"
-                      ? "bg-green-200 text-green-900"
-                      : cook.status === "rejected"
+                  className={`px-2 py-1 rounded-full text-xs ${cook.status === "approved"
+                    ? "bg-green-200 text-green-900"
+                    : cook.status === "rejected"
                       ? "bg-red-200 text-red-900"
                       : "bg-yellow-200 text-yellow-900"
-                  }`}
+                    }`}
                 >
                   {cook.status}
                 </span>
@@ -150,25 +138,11 @@ export default function CooksPage() {
           ))}
         </tbody>
       </table>
-      <div className="mt-4 flex justify-between items-center">
-        <button
-          className="px-4 py-2 bg-[#6a9fad] text-white rounded disabled:opacity-50"
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <span className="text-[#2c3e50]">
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          className="px-4 py-2 bg-[#6a9fad] text-white rounded disabled:opacity-50"
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }
