@@ -18,6 +18,8 @@ User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserDetailSerializer
+   
+    permission_classes = [AllowAny]
 
     def get_serializer_class(self):
         if self.action == "list":
