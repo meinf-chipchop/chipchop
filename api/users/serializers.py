@@ -23,7 +23,7 @@ class UserCreationSerializer(ModelSerializer):
             "email",
             "password",
             "phone",
-            "age",
+            "birth_date",
         ]
         extra_kwargs = {"password": {"write_only": True}}
 
@@ -53,7 +53,7 @@ class UserDetailSerializer(ModelSerializer):
             "email",
             "role",
             "phone",
-            "age",
+            "birth_date",
             "banned",
         ]
 
