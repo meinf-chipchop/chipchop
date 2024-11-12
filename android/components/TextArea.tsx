@@ -1,6 +1,5 @@
-import React from 'react'
-import { TextInputProps } from 'react-native'
-import { Input, InputField, InputSlot } from './ui/input'
+import React from "react";
+import { TextInputProps } from "react-native";
 import {
   FormControl,
   FormControlError,
@@ -8,24 +7,23 @@ import {
   FormControlErrorText,
   FormControlLabel,
   FormControlLabelText,
-} from './ui/form-control'
-import { AlertCircleIcon } from 'lucide-react-native'
+} from "./ui/form-control";
+import { AlertCircleIcon } from "lucide-react-native";
+import { Textarea, TextareaInput } from "./ui/textarea";
 
-interface InputFieldProps extends TextInputProps {
-  label?: string
-  placeholder?: string
-  secureTextEntry?: boolean
-  containerStyle?: string
-  inputStyle?: string
-  iconStyle?: string
-  className?: string
-  leftIcon?: React.ReactNode
-  rightIcon?: React.ReactNode
-  isInvalid?: boolean
-  error?: string
+interface TextAreaProps extends TextInputProps {
+  label?: string;
+  placeholder?: string;
+  secureTextEntry?: boolean;
+  containerStyle?: string;
+  inputStyle?: string;
+  iconStyle?: string;
+  className?: string;
+  isInvalid?: boolean;
+  error?: string;
 }
 
-const TextField = ({
+const TextArea = ({
   label,
   placeholder,
   value,
@@ -34,23 +32,20 @@ const TextField = ({
   secureTextEntry = false,
   containerStyle,
   inputStyle,
-  leftIcon,
-  rightIcon,
   className,
   isInvalid,
   error,
   ...props
-}: InputFieldProps) => {
+}: TextAreaProps) => {
   return (
     <FormControl isInvalid={!!error} className={containerStyle}>
       {label && (
         <FormControlLabel>
-          <FormControlLabelText className="pl-1">{label}</FormControlLabelText>
+          <FormControlLabelText className="">{label}</FormControlLabelText>
         </FormControlLabel>
       )}
-      <Input className={`rounded-full bg-background-50`}>
-        {leftIcon && <InputSlot className="pl-3">{leftIcon}</InputSlot>}
-        <InputField
+      <Textarea className={`bg-background-50 `}>
+        <TextareaInput
           className={`w-full ${inputStyle}`}
           placeholder={placeholder}
           value={value}
@@ -59,8 +54,7 @@ const TextField = ({
           secureTextEntry={secureTextEntry}
           {...props}
         />
-        {rightIcon && <InputSlot className="pr-3">{rightIcon}</InputSlot>}
-      </Input>
+      </Textarea>
       {error && (
         <FormControlError className="pl-3">
           <FormControlErrorIcon as={AlertCircleIcon} />
@@ -70,7 +64,7 @@ const TextField = ({
         </FormControlError>
       )}
     </FormControl>
-  )
-}
+  );
+};
 
-export default TextField
+export default TextArea;

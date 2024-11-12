@@ -1,10 +1,11 @@
-import { Tabs } from "expo-router";
+import { Tabs, useNavigation } from "expo-router";
 import { Image, ImageSourcePropType, View } from "react-native";
 
 import { icons } from "@/constants/Icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Home } from "lucide-react-native";
 import { Colors } from "@/constants/Colors";
+import { useEffect } from "react";
 
 const TabIcon = ({
   source,
@@ -34,6 +35,11 @@ const TabIcon = ({
 );
 
 export default function Layout() {
+  const navigation = useNavigation();
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
+
   return (
     <Tabs
       initialRouteName="index"
