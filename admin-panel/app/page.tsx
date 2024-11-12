@@ -18,10 +18,6 @@ export default function LoginForm() {
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [loginError, setLoginError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [_, setFocusedField] = useState<"email" | "password" | null>(null);
-
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,22 +31,6 @@ export default function LoginForm() {
   const handleLoginSuccess = () => {
     router.push('/dashboard');
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (emailRef.current && !emailRef.current.contains(event.target as Node)) {
-        if (formData.email === "") setFocusedField(null);
-      }
-      if (passwordRef.current && !passwordRef.current.contains(event.target as Node)) {
-        if (formData.password === "") setFocusedField(null);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [formData]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#dfe1d5] to-[#8fbdc7] py-12 px-4 sm:px-6 lg:px-8">

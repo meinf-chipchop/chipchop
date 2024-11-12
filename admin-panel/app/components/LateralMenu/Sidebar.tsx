@@ -14,7 +14,7 @@ export function Sidebar({ email }: Readonly<SidebarProps>) {
         <h1 className="text-2xl font-bold text-[#2c3e50]">Admin Panel</h1>
       </div>
       <nav className="flex-1">
-        <ul className="space-y-2 py-4">
+        <ul className="space-y-2 py-4 mx-4">
           {menuItems.map((item) => (
             <MenuItem key={item.text} {...item} />
           ))}
