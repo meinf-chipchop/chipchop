@@ -1,22 +1,63 @@
-import { Dish } from "@/lib/dishes";
-import { View, Image, Text } from "react-native";
+import { formatDate } from "@/lib/utils";
+import React from "react";
+import { Image, ImageSourcePropType, Text, View } from "react-native";
 
-export default function DishCard({ dish }: { dish: Dish }) {
+const DishCard = ({ dish }: { dish: Dish }) => {
   return (
-    <View className="rounded-xl overflow-hidden shadow-md">
-      <Image
-        source={{ uri: dish.image_url }}
-        style={{ width: "100%", aspectRatio: 16 / 9 }}
-      />
-      <View className=" shadow py-1">
-        <Text className="font-bold text-lg ms-3">{dish.name}</Text>
+    <View className="mb-2 mt-10 relative">
+      {/* Large circular dish image */}
+      <View className="absolute -top-10 translate-x-1 right-0 z-10">
+        <Image
+          source={dish.dish_image_url as ImageSourcePropType}
+          className="w-32 h-32 rounded-full border-4 border-white"
+        />
       </View>
-      <View className="bg-[#d6b48b] p-3 relative">
-        <Text>{dish.description}</Text>
-        <Text className="absolute right-4 top-2 bg-black text-white rounded-md p-1">
-          {dish.price}€
+
+      {/* Card content */}
+      <View className="bg-primary-500 rounded-3xl shadow-sm shadow-neutral-300 pt-2 pb-4 px-2">
+        <View className="w-[70%]">
+          <Text className="font-bold text-white text-xl mb-2 bg-primary-700 p-2 w-fit rounded-full">
+            {dish.dish_name}
+          </Text>
+          <Text className="mb-4 font-semibold text-primary-900">
+            {dish.dish_description}
+          </Text>
+        </View>
+
+        <View className="flex flex-row items-center justify-between mb-4">
+          <View className="flex flex-row items-center bg-primary-700 px-3 py-2 rounded-full">
+            <Image
+              source={{ uri: dish.chef.profile_image_url }}
+              className="w-10 h-10 rounded-full mr-2"
+            />
+            <View>
+              <Text className="font-bold text-white ">{`${dish.chef.first_name} ${dish.chef.last_name}`}</Text>
+              <Text className="text-primary-500 font-bold">Chef</Text>
+              {/* <View className="flex flex-row items-center">
+                <Image
+                  source={icons.star}
+                  className="w-4 h-4 mr-1"
+                  tintColor="#E7D4B5"
+                />
+                <Text className="text-primary-900 font-bold">
+                  {dish.chef.rating}
+                </Text>
+              </View> */}
+            </View>
+          </View>
+          <View className="bg-white px-4 py-2 rounded-full">
+            <Text className="font-extrabold text-lg text-primary-900">
+              ${dish.dish_price.toFixed(2)}
+            </Text>
+          </View>
+        </View>
+
+        <Text className="text-primary-900 text-right">
+          {formatDate(dish.created_at)}
         </Text>
       </View>
     </View>
   );
-}
+};
+
+export default DishCard;
