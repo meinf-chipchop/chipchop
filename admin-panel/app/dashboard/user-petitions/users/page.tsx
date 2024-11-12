@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { Pagination } from "../../../components/GeneralComponents/paginations";
 import { FilterUsers } from "../../../components/GeneralComponents/Users/FilterUsers";
 import UserTable from "../../../components/GeneralComponents/Users/UserTable";
-import { getUsers } from "@/lib/api/users";
+import { getUsers, requestUserStatusChange } from "@/lib/api/users";
 
 interface User {
   id: number;
@@ -15,6 +15,7 @@ interface User {
   status: "Allowed" | "Banned";
   totalOrders: number;
 }
+
 
 export default function UsersPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,13 +64,14 @@ export default function UsersPage() {
   const paginatedUsers = filteredUsers.slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage);
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
-  const handleStatusChange = (id: number, newStatus: "Allowed" | "Banned") => {
+  const handleStatusChange = async (id: number, newStatus: "Allowed" | "Banned") => {
     const updatedUsers = users.map((user) => {
       if (user.id === id) {
         return { ...user, status: newStatus };
       }
       return user;
     });
+    await requestUserStatusChange(id, newStatus == "Banned");
     setUsers(updatedUsers);
   };
 
