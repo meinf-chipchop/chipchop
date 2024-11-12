@@ -4,6 +4,7 @@ import { Me, me } from "@/lib/auth";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getDishCategories } from "@/lib/dishCategories";
 
 const Dishes = () => {
   const loading = false;
@@ -12,6 +13,9 @@ const Dishes = () => {
 
   useEffect(() => {
     me().then((user) => setSelfUser(user));
+    getDishCategories().then((categories) =>
+      console.log("Categories->", categories)
+    );
   }, []);
 
   useEffect(() => {
@@ -19,8 +23,9 @@ const Dishes = () => {
       getCookDishes(selfUser.id).then((dishes) => setDishes(dishes));
   }, [selfUser]);
 
-  console.log(dishes);
-  console.log(selfUser);
+  console.log("Dishes->", dishes);
+  console.log("Me->", selfUser);
+
   return (
     <SafeAreaView className="bg-general-500">
       <FlatList
