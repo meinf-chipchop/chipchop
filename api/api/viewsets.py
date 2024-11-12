@@ -12,17 +12,11 @@ User = get_user_model()
 
 
 def get_model_monthly_statistics(model):
-    result = {}
-    for i in range(1, 13):
-        result[i] = get_model_by_month(model, i)
-    return result
+    return [(i, get_model_by_month(model, i)) for i in range(1, 13)]
 
 
 def get_model_week_day_statistics(model):
-    result = {}
-    for i in range(1, 8):
-        result[i] = get_model_by_week_day(model, i)
-    return result
+    return [(i, get_model_by_week_day(model, i)) for i in range(1, 8)]
 
 
 def get_model_by_month(model, month):
