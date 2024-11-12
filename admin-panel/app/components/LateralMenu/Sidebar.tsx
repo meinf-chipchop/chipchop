@@ -1,4 +1,3 @@
-import Link from "next/link"
 import { menuItems } from "./menuData"
 import { MenuItem } from "./MenuItem"
 import { UserEmailDisplay } from "./UserEmailDisplay"
