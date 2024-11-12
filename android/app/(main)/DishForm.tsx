@@ -19,10 +19,7 @@ const DishForm = () => {
     discount: 0,
   });
 
-  const handleInputChange = (
-    field: keyof Dish,
-    value: string | number | boolean
-  ) => {
+  const handleInputChange = (field: keyof Dish, value: string | number) => {
     setDish({ ...dish, [field]: value });
   };
 
