@@ -4,8 +4,8 @@ import { useState, useEffect } from "react"
 import { User, Check, X } from "lucide-react"
 
 
-import { FilterContainer } from "../../../components/GeneralComponents/CooksDeliverers/FilterContainerCooksDeliverers"
-import { Pagination } from "../../../components/GeneralComponents/paginations"
+import { FilterContainer } from "@/app/components/GeneralComponents/CooksDeliverers/FilterContainerCooksDeliverers"
+import { Pagination } from "@/app/components/GeneralComponents/paginations"
 
 import { AccountApprovalState, getAccountApprovals, setStateAccountApproval } from "@/lib/api/account-approvals"
 

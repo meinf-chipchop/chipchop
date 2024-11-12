@@ -3,7 +3,7 @@
 
 
 
-import DashboardCharts from "../components/DashboardPage/DashboardCharts";
+import DashboardCharts from "@/app/components/DashboardPage/DashboardCharts";
 
 
 import {

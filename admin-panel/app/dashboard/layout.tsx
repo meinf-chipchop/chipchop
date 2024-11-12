@@ -1,6 +1,6 @@
 'use client'
 
-import { Sidebar } from "../components/LateralMenu/Sidebar"
+import { Sidebar } from "@/app/components/LateralMenu/Sidebar"
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation";
 import { me } from "@/lib/api/me";

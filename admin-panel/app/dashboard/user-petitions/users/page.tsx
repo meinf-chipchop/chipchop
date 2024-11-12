@@ -3,9 +3,9 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { Pagination } from "../../../components/GeneralComponents/paginations";
-import { FilterUsers } from "../../../components/GeneralComponents/Users/FilterUsers";
-import UserTable from "../../../components/GeneralComponents/Users/UserTable";
+import { Pagination } from "@/app/components/GeneralComponents/paginations";
+import { FilterUsers } from "@/app/components/GeneralComponents/Users/FilterUsers";
+import UserTable from "@/app/components/GeneralComponents/Users/UserTable";
 import { getUsers, requestUserStatusChange } from "@/lib/api/users";
 
 interface User {
