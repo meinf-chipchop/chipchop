@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { LockIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
