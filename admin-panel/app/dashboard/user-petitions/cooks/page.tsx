@@ -7,7 +7,7 @@ import { User, Check, X } from "lucide-react"
 import { FilterContainer } from "../../../components/GeneralComponents/CooksDeliverers/FilterContainerCooksDeliverers"
 import { Pagination } from "../../../components/GeneralComponents/paginations"
 
-import { getAccountApprovals, setStateAccountApproval } from "@/lib/api/account-approvals"
+import { AccountApprovalState, getAccountApprovals, setStateAccountApproval } from "@/lib/api/account-approvals"
 
 interface User {
   id: number
@@ -52,7 +52,7 @@ export default function CooksPage() {
   const totalPages = Math.ceil(filteredCooks.length / usersPerPage)
 
   const handleApproval = async (id: number, newStatus: "A" | "R") => {
-    await setStateAccountApproval(id, newStatus)
+    await setStateAccountApproval(id, newStatus as AccountApprovalState)
     setCooks(prevCooks =>
       prevCooks.map(cook =>
         cook.id === id ? { ...cook, status: newStatus === "A" ? "approved" : "rejected" } : cook
