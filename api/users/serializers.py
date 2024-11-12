@@ -7,9 +7,11 @@ from rest_framework.serializers import (
     CharField,
     HyperlinkedModelSerializer,
     HyperlinkedIdentityField,
+    SerializerMethodField,
 )
 
 from users.models import Address
+from orders.models import Order
 
 User = get_user_model()
 
@@ -32,14 +34,22 @@ class UserListSerializer(HyperlinkedModelSerializer):
 
     url = HyperlinkedIdentityField(view_name="user-detail")
 
+    total_orders = SerializerMethodField()
+
     class Meta:
         model = User
         fields = [
+            "id",
             "url",
             "first_name",
             "last_name",
             "email",
+            "banned",
+            "total_orders",
         ]
+
+    def get_total_orders(self, obj):
+        return Order.objects.filter(user=obj).count()
 
 
 class UserDetailSerializer(ModelSerializer):

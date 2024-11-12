@@ -4,7 +4,8 @@ ARG DEV_MODE
 
 WORKDIR /app/
 
-COPY . .
+COPY package*.json .
+COPY node_modules .
 
 RUN npm install \
   && if [ "$DEV_MODE" = FALSE ]; then npm run build; fi
