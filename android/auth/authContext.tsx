@@ -33,33 +33,61 @@ export function useSession() {
 export function SessionProvider({ children }: PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState("session");
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string): Promise<string> => {
     try {
       const response = await login(email, password);
-      if (response.ok) {
-        setSession(getCsrfToken() ?? "user");
-        return "";
-      } else {
-        return "Login failed: " + response.text;
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        const errorMessage = error?.message || "Unknown error occurred.";
+        console.error(
+          `[signIn] Login failed with status ${response.status}: ${errorMessage}`
+        );
+        return `Login failed: ${errorMessage}`;
       }
+
+      const csrfToken = getCsrfToken();
+      if (!csrfToken) {
+        console.error("[signIn] CSRF token missing or invalid.");
+        return "Login failed: Unable to retrieve session token.";
+      }
+
+      setSession(csrfToken);
+      return ""; // Success, no error message
     } catch (error) {
-      console.log("Error: " + error);
-      return "Error: " + error;
+      console.error("[signIn] Unexpected error:", error);
+      return `Error: ${
+        error instanceof Error ? error.message : "Unknown error occurred."
+      }`;
     }
   };
 
-  const signUp = async (user: NewUser) => {
+  const signUp = async (user: NewUser): Promise<string> => {
     try {
       const response = await register(user);
-      if (response.ok) {
-        setSession(getCsrfToken() ?? "user");
-        return "";
-      } else {
-        return "Sign up failed: " + response.text;
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        const errorMessage = error?.message || "Unknown error occurred.";
+        console.error(
+          `[signUp] Server responded with status ${response.status}: ${errorMessage}`
+        );
+        return `Sign up failed: ${errorMessage}`;
       }
+
+      const token = getCsrfToken();
+      if (!token) {
+        console.error("[signUp] CSRF token missing or invalid.");
+        return "Sign up failed: Unable to retrieve session token.";
+      }
+
+      setSession(token);
+      return ""; // Success, no error message
     } catch (error) {
-      console.log("Error: " + error);
-      return "Error: " + error;
+      console.error("[signUp] Unexpected error:", error);
+      return `Error: ${
+        error instanceof Error ? error.message : "Unknown error occurred."
+      }`;
     }
   };
 
