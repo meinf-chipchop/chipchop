@@ -20,8 +20,14 @@ export default function DashboardCharts() {
       {
         label: 'New Deliverers',
         data: [],
-        borderColor: '#6a9fad',
-        backgroundColor: 'rgba(106, 159, 173, 0.5)',
+        borderColor: '#ad8f6a',
+        backgroundColor: 'rgba(173, 143, 106, 0.5)',
+      },
+      {
+        label: 'New Users',
+        data: [],
+        borderColor: '#ad6d6a',
+        backgroundColor: 'rgba(173, 109, 106, 0.5)',
       },
     ],
   });
@@ -48,37 +54,6 @@ export default function DashboardCharts() {
 
   useEffect(() => {
     fetchData().then((data) => {
-      const mapDayNumber = (n: number): string => {
-        switch (n) {
-          case 0: return 'Sun';
-          case 1: return 'Mon';
-          case 2: return 'Tue';
-          case 3: return 'Wed';
-          case 4: return 'Thu';
-          case 5: return 'Fri';
-          case 6: return 'Sat';
-          default: return '';
-        }
-      }
-
-      const mapMonthNumber = (n: number): string => {
-        switch (n) {
-          case 1: return 'Jan';
-          case 2: return 'Feb';
-          case 3: return 'Mar';
-          case 4: return 'Apr';
-          case 5: return 'May';
-          case 6: return 'Jun';
-          case 7: return 'Jul';
-          case 8: return 'Aug';
-          case 9: return 'Sep';
-          case 10: return 'Oct';
-          case 11: return 'Nov';
-          case 12: return 'Dec';
-          default: return '';
-        }
-      }
-
       setMonthlyData((prevData) => ({
         ...prevData,
         datasets: [
@@ -89,6 +64,10 @@ export default function DashboardCharts() {
           {
             ...prevData.datasets[1],
             data: data.new_deliverers.map((entry: number[]) => entry[1]),
+          },
+          {
+            ...prevData.datasets[2],
+            data: data.new_users.map((entry: number[]) => entry[1]),
           },
         ],
       }));
