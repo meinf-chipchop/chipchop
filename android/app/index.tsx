@@ -11,7 +11,7 @@ export default function Index() {
     if (!isLoading) {
 
       if (session) {
-        router.push('/(main)'); // Redirect to home if logged in
+        router.push('/(main)/(tabs)/home'); // Redirect to home if logged in
       } else {
         router.push('/(auth)/onboarding'); // Redirect to login if not logged in
       }
