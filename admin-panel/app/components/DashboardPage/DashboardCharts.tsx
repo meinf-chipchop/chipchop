@@ -27,7 +27,7 @@ export default function DashboardCharts() {
   });
 
   const [orderData, setOrderData] = useState({
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     datasets: [
       {
         label: 'Orders',
@@ -48,16 +48,47 @@ export default function DashboardCharts() {
 
   useEffect(() => {
     fetchData().then((data) => {
+      const mapDayNumber = (n: number): string => {
+        switch (n) {
+          case 0: return 'Sun';
+          case 1: return 'Mon';
+          case 2: return 'Tue';
+          case 3: return 'Wed';
+          case 4: return 'Thu';
+          case 5: return 'Fri';
+          case 6: return 'Sat';
+          default: return '';
+        }
+      }
+
+      const mapMonthNumber = (n: number): string => {
+        switch (n) {
+          case 1: return 'Jan';
+          case 2: return 'Feb';
+          case 3: return 'Mar';
+          case 4: return 'Apr';
+          case 5: return 'May';
+          case 6: return 'Jun';
+          case 7: return 'Jul';
+          case 8: return 'Aug';
+          case 9: return 'Sep';
+          case 10: return 'Oct';
+          case 11: return 'Nov';
+          case 12: return 'Dec';
+          default: return '';
+        }
+      }
+
       setMonthlyData((prevData) => ({
         ...prevData,
         datasets: [
           {
             ...prevData.datasets[0],
-            data: data.new_cooks.map((entry: { month: string; amount: number }) => entry.amount),
+            data: data.new_cooks.map((entry: number[]) => entry[1]),
           },
           {
             ...prevData.datasets[1],
-            data: data.new_deliverers.map((entry: { month: string; amount: number }) => entry.amount),
+            data: data.new_deliverers.map((entry: number[]) => entry[1]),
           },
         ],
       }));
@@ -67,7 +98,7 @@ export default function DashboardCharts() {
         datasets: [
           {
             ...prevData.datasets[0],
-            data: data.orders_by_week_day.map((entry: { week_day: string; amount: number }) => entry.amount),
+            data: data.orders_by_week_day.map((entry: number[]) => entry[1]),
           },
         ],
       }));
@@ -113,7 +144,7 @@ export default function DashboardCharts() {
               <p className="text-2xl font-bold text-white">{metrics.totalCooks}</p>
             </div>
             <div className="bg-[#6a9fad] p-4 rounded-lg">
-              <p className="text-sm text-white">Total Deliverers</p>
+              <p className="text-sm text-white">Total Users</p>
               <p className="text-2xl font-bold text-white">{metrics.totalUsers}</p>
             </div>
             <div className="bg-[#6a9fad] p-4 rounded-lg">
