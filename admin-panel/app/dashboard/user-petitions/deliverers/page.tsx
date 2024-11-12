@@ -59,6 +59,17 @@ export default function DeliverersPage() {
     )
   }
 
+  const getDelivererStatusColor = (status: string) => {
+    switch (status) {
+      case "approved":
+        return "bg-green-200 text-green-900"
+      case "rejected":
+        return "bg-red-200 text-red-900"
+      default:
+        return "bg-yellow-200 text-yellow-900"
+    }
+  }
+
   return (
     <div className="bg-white rounded-lg p-6 shadow-md">
       <h2 className="text-3xl font-semibold mb-4 text-[#2c3e50]">Deliverers Approval</h2>
@@ -91,12 +102,7 @@ export default function DeliverersPage() {
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2c3e50]">
                 <span
-                  className={`px-2 py-1 rounded-full text-xs ${deliverer.status === "approved"
-                    ? "bg-green-200 text-green-900"
-                    : deliverer.status === "rejected"
-                      ? "bg-red-200 text-red-900"
-                      : "bg-yellow-200 text-yellow-900"
-                    }`}
+                  className={`px-2 py-1 rounded-full text-xs ${getDelivererStatusColor(deliverer.status)}
                 >
                   {deliverer.status}
                 </span>

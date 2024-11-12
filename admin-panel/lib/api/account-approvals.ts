@@ -62,7 +62,7 @@ export async function setStateAccountApproval(
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "X-CSRFToken": getCsrfToken() || "",
+      "X-CSRFToken": getCsrfToken() ?? "",
     },
     credentials: "include",
     body: JSON.stringify({
