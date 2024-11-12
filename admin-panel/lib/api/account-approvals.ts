@@ -1,6 +1,7 @@
-interface AccountApproval {
-  user: any;
-  info: any;
+interface GeneralAccountApproval {
+  user_id: number;
+  url: string;
+  email: string;
   state: string;
   created_at: string;
   updated_at: string;
@@ -9,7 +10,7 @@ interface AccountApproval {
 export async function getAccountApprovals(
   pageNumber: number,
   pageSize: number
-): Promise<AccountApproval[]> {
+): Promise<GeneralAccountApproval[]> {
   const offset = (pageNumber - 1) * pageSize;
 
   const limitString = `limit=${pageSize}`;
@@ -32,38 +33,8 @@ export async function getAccountApprovals(
     throw new Error("An error occurred while fetching account approvals.");
   }
 
-  const initialData = await initialResponse.json();
-  const urls = initialData.results;
-
-  const results = await Promise.all(
-    urls.map(async (url: any) => {
-      const response = await fetch(url.url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        throw new Error("An error occurred while fetching account approvals.");
-      }
-
-      return response.json();
-    })
-  );
-
-  return results.flatMap((result): AccountApproval => {
-    {
-      return {
-        user: result.user,
-        info: result.info,
-        state: result.state,
-        created_at: result.created_at,
-        updated_at: result.updated_at,
-      };
-    }
-  });
+  const data = await initialResponse.json();
+  return data.results;
 }
 
 export function getCsrfToken() {

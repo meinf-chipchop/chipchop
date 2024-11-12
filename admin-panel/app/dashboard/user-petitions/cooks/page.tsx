@@ -1,26 +1,31 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import { User, Check, X, Search } from "lucide-react"
+import { User, Check, X } from "lucide-react"
 
 
 import { FilterContainer } from "../../../components/GeneralComponents/CooksDeliveres/FilterContainerCooksDeliveres"
 // import { UserTable } from "../../../components/GeneralComponents/Users/UsersGrid"
 import { Pagination } from "../../../components/GeneralComponents/paginations"
 
+import { getAccountApprovals } from "@/lib/api/account-approvals"
+
 
 // Mock API functions (replace with actual API calls)
-const getAccountApprovals = async (page: number, pageSize: number) => {
-  // Simulated API call
-  return Array(pageSize).fill(null).map((_, index) => ({
-    user: {
-      id: page * pageSize + index + 1,
-      email: `cook${page * pageSize + index + 1}@example.com`,
-      role: "C"
-    },
-    state: Math.random() > 0.5 ? "P" : "A"
-  }))
-}
+// const getAccountApprovals = async (page: number, pageSize: number) => {
+//   // Simulated API call
+
+//   return
+
+//   return Array(pageSize).fill(null).map((_, index) => ({
+//     user: {
+//       id: page * pageSize + index + 1,
+//       email: `cook${page * pageSize + index + 1}@example.com`,
+//       role: "C"
+//     },
+//     state: Math.random() > 0.5 ? "P" : "A"
+//   }))
+// }
 
 const setStateAccountApproval = async (id: number, state: "A" | "R") => {
   // Simulated API call
@@ -52,11 +57,12 @@ export default function CooksPage() {
   useEffect(() => {
     const fetchCooks = async () => {
       const data = await getAccountApprovals(currentPage, usersPerPage)
-      const mappedCooks = data.map(item => ({
-        id: item.user.id,
-        name: item.user.email,
+      const mappedCooks: User[] = data.map(item => ({
+        id: item.user_id,
+        name: item.email,
         status: mapState(item.state)
-      }))
+      }));
+      setCooks(mappedCooks);
     }
     fetchCooks()
   }, [currentPage])
