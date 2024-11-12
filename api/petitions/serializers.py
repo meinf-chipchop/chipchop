@@ -37,6 +37,8 @@ class AccountUpgradePetitionListSerializer(serializers.ModelSerializer):
 
     email = serializers.EmailField(source="user.email")
 
+    role = serializers.CharField(source="user.role")
+
     class Meta:
         model = models.AccountUpgradePetition
         fields = [
@@ -44,6 +46,7 @@ class AccountUpgradePetitionListSerializer(serializers.ModelSerializer):
             "url",
             "email",
             "state",
+            "role",
             "created_at",
             "updated_at",
         ]
