@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Pagination } from "../../../components/GeneralComponents/paginations";
 import { FilterUsers } from "../../../components/GeneralComponents/Users/FilterUsers";
 import UserTable from "../../../components/GeneralComponents/Users/UserTable";
+import { getUsers } from "@/lib/api/users";
 
 interface User {
   id: number;
@@ -14,16 +15,6 @@ interface User {
   status: "Allowed" | "Banned";
   totalOrders: number;
 }
-
-const mockUsers: User[] = Array(20)
-  .fill(null)
-  .map((_, index) => ({
-    id: index + 1,
-    name: `User ${index + 1}`,
-    email: `user${index + 1}@example.com`,
-    status: Math.random() > 0.5 ? "Allowed" : "Banned",
-    totalOrders: Math.floor(Math.random() * 100) + 1,
-  }));
 
 export default function UsersPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,11 +26,29 @@ export default function UsersPage() {
   const usersPerPage = 11;
 
   useEffect(() => {
-    setUsers(mockUsers);
+    const data = async () => {
+      const mapStatus = (status: boolean) => {
+        return status ? "Banned" : "Allowed";
+      }
+
+      const res = await getUsers();
+      const users: any[] = res.results;
+
+      const mappedUsers = users.map((user) => ({
+        id: user.id,
+        name: user.first_name,
+        email: user.email,
+        status: mapStatus(user.banned),
+        totalOrders: user.total_orders,
+      }) as User);
+
+      setUsers(mappedUsers);
+    }
+    data();
   }, []);
 
   const filteredUsers = users.filter((user) => {
-    const matchesNameOrEmail = 
+    const matchesNameOrEmail =
       user.name.toLowerCase().includes(nameFilter.toLowerCase()) ||
       user.email.toLowerCase().includes(nameFilter.toLowerCase());
 
