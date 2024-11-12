@@ -1,11 +1,13 @@
 // FilterContainer.tsx
 import { Search } from "lucide-react"
 
+type StatusFilterValue = "all" | "pending" | "approved" | "rejected";
+
 interface FilterContainerProps {
   nameFilter: string;
   statusFilter: "all" | "pending" | "approved" | "rejected";
   onNameFilterChange: (value: string) => void;
-  onStatusFilterChange: (value: "all" | "pending" | "approved" | "rejected") => void;
+  onStatusFilterChange: (value: StatusFilterValue) => void;
 }
 
 export function FilterContainer({
@@ -13,7 +15,7 @@ export function FilterContainer({
   statusFilter,
   onNameFilterChange,
   onStatusFilterChange,
-}: FilterContainerProps) {
+}: Readonly<FilterContainerProps>) {
   return (
     <div className="mb-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
       <div className="relative">
@@ -28,7 +30,7 @@ export function FilterContainer({
       </div>
       <select
         value={statusFilter}
-        onChange={(e) => onStatusFilterChange(e.target.value as any)}
+        onChange={(e) => onStatusFilterChange(e.target.value as StatusFilterValue)}
         className="w-full sm:w-auto px-4 py-2 bg-[#f0f0f0] text-[#2c3e50] rounded-md"
       >
         <option value="all">All Statuses</option>

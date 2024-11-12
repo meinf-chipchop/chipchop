@@ -51,35 +51,42 @@ export default function DashboardCharts() {
   });
 
 
+  const getMonthlyDatasets = (prevData: any, data: any) => {
+    return [
+      {
+        ...prevData.datasets[0],
+        data: data.new_cooks.map((entry: number[]) => entry[1]),
+      },
+      {
+        ...prevData.datasets[1],
+        data: data.new_deliverers.map((entry: number[]) => entry[1]),
+      },
+      {
+        ...prevData.datasets[2],
+        data: data.new_users.map((entry: number[]) => entry[1]),
+      },
+    ]
+  }
+
+  const getDailyDatasets = (prevData: any, data: any) => {
+    return [
+      {
+        ...prevData.datasets[0],
+        data: data.orders_by_week_day.map((entry: number[]) => entry[1]),
+      },
+    ]
+  }
 
   useEffect(() => {
     fetchData().then((data) => {
       setMonthlyData((prevData) => ({
         ...prevData,
-        datasets: [
-          {
-            ...prevData.datasets[0],
-            data: data.new_cooks.map((entry: number[]) => entry[1]),
-          },
-          {
-            ...prevData.datasets[1],
-            data: data.new_deliverers.map((entry: number[]) => entry[1]),
-          },
-          {
-            ...prevData.datasets[2],
-            data: data.new_users.map((entry: number[]) => entry[1]),
-          },
-        ],
+        datasets: getMonthlyDatasets(prevData, data),
       }));
 
       setOrderData((prevData) => ({
         ...prevData,
-        datasets: [
-          {
-            ...prevData.datasets[0],
-            data: data.orders_by_week_day.map((entry: number[]) => entry[1]),
-          },
-        ],
+        datasets: getDailyDatasets(prevData, data),
       }));
 
       setMetrics({

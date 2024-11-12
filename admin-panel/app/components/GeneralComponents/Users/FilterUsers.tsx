@@ -1,12 +1,14 @@
 import { LucideArrowDown01, LucideArrowUp10, Search } from "lucide-react";
 
+type StatusFilterValue = "all" | "Allowed" | "Banned";
+
 interface FilterUsersProps {
   nameFilter: string;
-  statusFilter: "all" | "Allowed" | "Banned";
+  statusFilter: StatusFilterValue;
   minOrders: number | null;
   maxOrders: number | null;
   onNameFilterChange: (value: string) => void;
-  onStatusFilterChange: (value: "all" | "Allowed" | "Banned") => void;
+  onStatusFilterChange: (value: StatusFilterValue) => void;
   onMinOrdersChange: (value: number | null) => void;
   onMaxOrdersChange: (value: number | null) => void;
 }
@@ -20,7 +22,7 @@ export function FilterUsers({
   onStatusFilterChange,
   onMinOrdersChange,
   onMaxOrdersChange,
-}: FilterUsersProps) {
+}: Readonly<FilterUsersProps>) {
   return (
     <div className="mb-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
       {/* Filtro de Nome */}
@@ -67,7 +69,7 @@ export function FilterUsers({
       {/* Filtro de Status */}
       <select
         value={statusFilter}
-        onChange={(e) => onStatusFilterChange(e.target.value as "all" | "Allowed" | "Banned")}
+        onChange={(e) => onStatusFilterChange(e.target.value as StatusFilterValue)}
         className="w-full sm:w-auto px-4 py-2 bg-[#f0f0f0] text-[#2c3e50] rounded-md"
       >
         <option value="all">All Statuses</option>

@@ -13,14 +13,13 @@ interface MenuItemProps {
 export const MenuItem: React.FC<MenuItemProps> = ({ icon: Icon, text, href, subItems }) => {
   const pathname = usePathname()
   const [isExpanded, setIsExpanded] = useState(false)
-  const isActive = pathname === href || (subItems && subItems.some(item => pathname === item.href))
+  const isActive = pathname === href || subItems?.some(item => pathname === item.href)
 
   return (
     <li>
-      <div
-        className={`flex items-center justify-between px-4 py-2 rounded-lg cursor-pointer ${
-          isActive ? "bg-[#6ca4ac] text-white" : "text-black-300 hover:bg-[#6ca4ac]"
-        }`}
+      <button
+        className={`flex items-center justify-between px-4 py-2 rounded-lg cursor-pointer ${isActive ? "bg-[#6ca4ac] text-white" : "text-black-300 hover:bg-[#6ca4ac]"
+          }`}
         onClick={() => subItems ? setIsExpanded(!isExpanded) : null}
       >
         <Link href={href} className="flex items-center space-x-2 flex-1">
@@ -30,7 +29,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({ icon: Icon, text, href, subI
         {subItems && (
           isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />
         )}
-      </div>
+      </button>
       {subItems && isExpanded && (
         <ul className="ml-6 mt-2 space-y-2">
           {subItems.map((item) => (

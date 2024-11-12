@@ -3,14 +3,18 @@ import { MenuItem } from "./MenuItem"
 import { UserEmailDisplay } from "./UserEmailDisplay"
 import { LogoutButton } from "./LogoutButton"
 
-export function Sidebar({ email }: { email: string }) {
+interface SidebarProps {
+  email: string
+}
+
+export function Sidebar({ email }: Readonly<SidebarProps>) {
   return (
     <aside className="hidden md:flex flex-col w-64 bg-[#d1c4a1] overflow-y-auto">
       <div className="p-4">
         <h1 className="text-2xl font-bold text-[#2c3e50]">Admin Panel</h1>
       </div>
       <nav className="flex-1">
-        <ul className="space-y-2 py-4">
+        <ul className="space-y-2 py-4 mx-4">
           {menuItems.map((item) => (
             <MenuItem key={item.text} {...item} />
           ))}
