@@ -3,7 +3,7 @@ import { View, Image, Text } from "react-native";
 
 export default function DishCard({ dish }: { dish: Dish }) {
   return (
-    <View className="rounded-xl mx-1 my-2 overflow-hidden shadow-md">
+    <View className="rounded-xl overflow-hidden shadow-md">
       <Image
         source={{ uri: dish.image_url }}
         style={{ width: "100%", aspectRatio: 16 / 9 }}
