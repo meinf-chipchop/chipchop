@@ -5,7 +5,11 @@ import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation";
 import { me } from "@/lib/api/me";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+interface AdminLayoutProps {
+  children: React.ReactNode
+}
+
+export default function AdminLayout({ children }: Readonly<AdminLayoutProps>) {
   const router = useRouter();
   const { email, error: emailError } = useOwnEmail();
 
