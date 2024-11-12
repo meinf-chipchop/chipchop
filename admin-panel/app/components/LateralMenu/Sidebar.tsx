@@ -3,7 +3,11 @@ import { MenuItem } from "./MenuItem"
 import { UserEmailDisplay } from "./UserEmailDisplay"
 import { LogoutButton } from "./LogoutButton"
 
-export function Sidebar({ email }: { email: string }) {
+interface SidebarProps {
+  email: string
+}
+
+export function Sidebar({ email }: Readonly<SidebarProps>) {
   return (
     <aside className="hidden md:flex flex-col w-64 bg-[#d1c4a1] overflow-y-auto">
       <div className="p-4">

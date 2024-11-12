@@ -28,8 +28,8 @@ export default function UsersPage() {
 
   useEffect(() => {
     const data = async () => {
-      const mapStatus = (status: boolean) => {
-        return status ? "Banned" : "Allowed";
+      const extractStatus = (user: any) => {
+        return user.banned ? "Banned" : "Allowed";
       }
 
       const res = await getUsers();
@@ -39,7 +39,7 @@ export default function UsersPage() {
         id: user.id,
         name: user.first_name,
         email: user.email,
-        status: mapStatus(user.banned),
+        status: extractStatus(user),
         totalOrders: user.total_orders,
       }) as User);
 

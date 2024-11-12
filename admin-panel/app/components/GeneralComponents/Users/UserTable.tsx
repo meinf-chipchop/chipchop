@@ -1,6 +1,6 @@
 // components/GeneralComponents/Users/UserTable.tsx
 
-import { User, Check, X } from "lucide-react";
+import { User } from "lucide-react";
 import UserTableRow from "../Users/UserTableRow";
 
 interface User {
@@ -16,7 +16,7 @@ interface UserTableProps {
   onStatusChange: (id: number, newStatus: "Allowed" | "Banned") => void;
 }
 
-export default function UserTable({ users, onStatusChange }: UserTableProps) {
+export default function UserTable({ users, onStatusChange }: Readonly<UserTableProps>) {
   return (
     <table className="min-w-full divide-y divide-[#e0e0e0]">
       <thead>

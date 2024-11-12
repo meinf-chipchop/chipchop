@@ -18,7 +18,7 @@ export default function LoginForm() {
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [loginError, setLoginError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [focusedField, setFocusedField] = useState<"email" | "password" | null>(null);
+  const [_, setFocusedField] = useState<"email" | "password" | null>(null);
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
