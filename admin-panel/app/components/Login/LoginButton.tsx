@@ -23,14 +23,13 @@ const LoginButton: React.FC<LoginButtonProps> = ({
 
   const validateForm = (): boolean => {
     const newErrors: Partial<FormData> = {};
-    if (!formData.email) {
-      newErrors.email = "Email address is required.";
-    } else if (!/^\S+@\S+$/i.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address.";
+
+    for (const key in formData) {
+      if (!formData[key as keyof FormData]) {
+        newErrors[key as keyof FormData] = `${key} is required.`;
+      }
     }
-    if (!formData.password) {
-      newErrors.password = "Password is required.";
-    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -55,7 +54,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({
       {isLoading && (
         <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-[#dfe1d5] to-[#8fbdc7] z-50">
           <div className="flex flex-col items-center space-y-4 p-8 rounded-xl">
-          <svg
+            <svg
               className="animate-spin h-10 w-10 text-[#415f63]"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
