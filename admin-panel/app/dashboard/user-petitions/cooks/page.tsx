@@ -4,19 +4,10 @@ import { useState, useEffect } from "react"
 import { User, Check, X } from "lucide-react"
 
 
-import { FilterContainer } from "../../../components/GeneralComponents/CooksDeliveres/FilterContainerCooksDeliveres"
-// import { UserTable } from "../../../components/GeneralComponents/Users/UsersGrid"
+import { FilterContainer } from "../../../components/GeneralComponents/CooksDeliverers/FilterContainerCooksDeliverers"
 import { Pagination } from "../../../components/GeneralComponents/paginations"
 
 import { getAccountApprovals, setStateAccountApproval } from "@/lib/api/account-approvals"
-
-
-// const setStateAccountApproval = async (id: number, state: "A" | "R") => {
-//   // Simulated API call
-
-//   console.log(`Setting state for user ${id} to ${state}`)
-//   return { success: true }
-// }
 
 interface User {
   id: number
@@ -42,7 +33,7 @@ export default function CooksPage() {
   useEffect(() => {
     const fetchCooks = async () => {
       const data = await getAccountApprovals(currentPage, usersPerPage)
-      const mappedCooks: User[] = data.map(item => ({
+      const mappedCooks: User[] = data.filter(i => i.role == "C").map(item => ({
         id: item.user_id,
         name: item.email,
         status: mapState(item.state)

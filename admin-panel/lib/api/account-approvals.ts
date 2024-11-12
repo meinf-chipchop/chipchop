@@ -3,6 +3,7 @@ interface GeneralAccountApproval {
   url: string;
   email: string;
   state: string;
+  role: string;
   created_at: string;
   updated_at: string;
 }

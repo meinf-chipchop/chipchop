@@ -1,29 +1,12 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import { User, Check, X, Search } from "lucide-react"
+import { User, Check, X } from "lucide-react"
 
 import { Pagination } from "../../../components/GeneralComponents/paginations"
-import { FilterContainer } from "../../../components/GeneralComponents/CooksDeliveres/FilterContainerCooksDeliveres"
+import { FilterContainer } from "../../../components/GeneralComponents/CooksDeliverers/FilterContainerCooksDeliverers"
 
-// Mock API functions (replace with actual API calls)
-const getAccountApprovals = async (page: number, pageSize: number) => {
-  // Simulated API call
-  return Array(pageSize).fill(null).map((_, index) => ({
-    user: {
-      id: page * pageSize + index + 1,
-      email: `deliverer${page * pageSize + index + 1}@example.com`,
-      role: "D"
-    },
-    state: Math.random() > 0.5 ? "P" : "A"
-  }))
-}
-
-const setStateAccountApproval = async (id: number, state: "A" | "R") => {
-  // Simulated API call
-  console.log(`Setting state for user ${id} to ${state}`)
-  return { success: true }
-}
+import { getAccountApprovals, setStateAccountApproval } from "@/lib/api/account-approvals"
 
 interface User {
   id: number
@@ -49,12 +32,12 @@ export default function DeliverersPage() {
   useEffect(() => {
     const fetchDeliverers = async () => {
       const data = await getAccountApprovals(currentPage, usersPerPage)
-      const mappedDeliverers = data.map(item => ({
-        id: item.user.id,
-        name: item.user.email,
+      const mappedDeliverers: User[] = data.filter(i => i.role == "D").map(item => ({
+        id: item.user_id,
+        name: item.email,
         status: mapState(item.state)
       }))
-      //   setDeliverers(mappedDeliverers)
+      setDeliverers(mappedDeliverers)
     }
     fetchDeliverers()
   }, [currentPage])
@@ -109,10 +92,10 @@ export default function DeliverersPage() {
               <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2c3e50]">
                 <span
                   className={`px-2 py-1 rounded-full text-xs ${deliverer.status === "approved"
-                      ? "bg-green-200 text-green-900"
-                      : deliverer.status === "rejected"
-                        ? "bg-red-200 text-red-900"
-                        : "bg-yellow-200 text-yellow-900"
+                    ? "bg-green-200 text-green-900"
+                    : deliverer.status === "rejected"
+                      ? "bg-red-200 text-red-900"
+                      : "bg-yellow-200 text-yellow-900"
                     }`}
                 >
                   {deliverer.status}
