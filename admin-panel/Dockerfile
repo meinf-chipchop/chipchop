@@ -6,13 +6,14 @@ WORKDIR /app/
 
 COPY .next .
 COPY public ./public
-COPY *.json .
-
 COPY app ./app
 COPY lib ./lib
 COPY ./node_modules .
 
-COPY next* .
+COPY *.json .
+COPY *.mjs .
+
+
 
 RUN npm install \
   && if [ "$DEV_MODE" = FALSE ]; then npm run build; fi
