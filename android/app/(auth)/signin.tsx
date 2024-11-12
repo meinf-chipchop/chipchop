@@ -5,7 +5,6 @@ import { Ionicons } from '@expo/vector-icons'
 import { Button, ButtonSpinner, ButtonText } from '@/components/ui/button'
 import { z } from 'zod'
 import { useSession } from '@/auth/authContext'
-import OAuth from '@/components/Auth'
 import { router } from 'expo-router'
 
 const signInValidationSchema = z.object({

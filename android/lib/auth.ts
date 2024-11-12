@@ -17,6 +17,13 @@ export interface NewUser {
   birth_date: string;
 }
 
+export function getCsrfToken() {
+  return document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("csrftoken"))
+    ?.split("=")[1];
+}
+
 export function logout() {
   return fetchWrapper("/api/logout/", {
     method: "GET",
@@ -44,7 +51,6 @@ export function register(user: NewUser) {
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include",
     body: JSON.stringify(user),
   });
 }

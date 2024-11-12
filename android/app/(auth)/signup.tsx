@@ -14,7 +14,13 @@ const signUpValidationSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number'),
-  age: z.string().min(1, 'Age is required'),
+  birth_date: z
+    .string()
+    .min(1, 'Date is required')
+    .regex(
+      /^\d{4}-\d{2}-\d{2}$/,
+      'Invalid date. Should be in YYYY-MM-DD format'
+    ),
 })
 
 const CustomerSignUp = () => {
@@ -24,7 +30,7 @@ const CustomerSignUp = () => {
     email: '',
     password: '',
     phone: '',
-    age: '',
+    birth_date: '',
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
@@ -114,18 +120,24 @@ const CustomerSignUp = () => {
           textContentType="telephoneNumber"
           value={form.phone}
           onChangeText={(value: string) => setForm({ ...form, phone: value })}
-          error={errors.phoneNumber}
+          error={errors.phone}
         />
         <InputField
           label="Age"
           placeholder="Age"
           leftIcon={<Ionicons name="calendar" size={14} />}
           textContentType="birthdateDay"
-          value={form.age.toString()}
-          onChangeText={(value: string) => setForm({ ...form, age: value })}
-          error={errors.age}
+          value={form.birth_date}
+          onChangeText={(value: string) =>
+            setForm({ ...form, birth_date: value })
+          }
+          error={errors.birth_date}
         />
-        <Button disabled={loading} onPress={onSignUpPress} className="rounded-full mt-6">
+        <Button
+          disabled={loading}
+          onPress={onSignUpPress}
+          className="rounded-full mt-6"
+        >
           {loading && <ButtonSpinner />}
           <ButtonText>Sign up</ButtonText>
         </Button>
