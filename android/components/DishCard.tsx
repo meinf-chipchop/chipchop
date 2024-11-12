@@ -25,30 +25,10 @@ const DishCard = ({ dish }: { dish: Dish }) => {
           </Text>
         </View>
 
-        <View className="flex flex-row items-center justify-between mb-4">
-          <View className="flex flex-row items-center bg-primary-700 px-3 py-2 rounded-full">
-            <Image
-              // source={{ uri: dish. }}
-              className="w-10 h-10 rounded-full mr-2"
-            />
-            <View>
-              {/* <Text className="font-bold text-white ">{`${dish.chef.first_name} ${dish.chef.last_name}`}</Text> */}
-              <Text className="text-primary-500 font-bold">Chef</Text>
-              {/* <View className="flex flex-row items-center">
-                <Image
-                  source={icons.star}
-                  className="w-4 h-4 mr-1"
-                  tintColor="#E7D4B5"
-                />
-                <Text className="text-primary-900 font-bold">
-                  {dish.chef.rating}
-                </Text>
-              </View> */}
-            </View>
-          </View>
-          <View className="bg-white px-4 py-2 rounded-full">
+        <View className="flex flex-row mb-4 justify-end w-full">
+          <View className="bg-white px-4 py-2 rounded-full ">
             <Text className="font-extrabold text-lg text-primary-900">
-              ${dish.price.toFixed(2)}
+              ${dish.price}
             </Text>
           </View>
         </View>

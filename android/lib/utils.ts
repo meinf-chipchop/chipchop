@@ -22,5 +22,11 @@ export function formatDate(dateString: string): string {
 }
 
 export async function getByURL<T>(url: string): Promise<T> {
-  return fetch(url).then((response) => response.json() as Promise<T>);
+  return fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  }).then((response) => response.json() as Promise<T>);
 }

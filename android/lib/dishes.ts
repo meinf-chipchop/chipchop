@@ -36,8 +36,6 @@ export async function getCookDishes(cook_id: number): Promise<Dish[]> {
     credentials: "include",
   }).then((response) => response.json() as Promise<DishList>);
 
-  console.log(dishList);
-
   let dishes: Dish[] = [];
   for (let dish of dishList.results) {
     dishes.push(await getByURL(dish.url));
