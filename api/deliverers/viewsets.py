@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from . import models, serializers
 
 from ratings.models import DeliveryRating
-from ratings.serializers import DeliveryRatingSerializer
+from ratings.serializers import DeliveryRatingDetailSerializer
 
 
 class CCDelivererViewSet(
@@ -31,5 +31,5 @@ class CCDelivererViewSet(
     def ratings(self, request, pk=None):
         deliverer = self.get_object()
         ratings = DeliveryRating.objects.filter(order__deliverer=deliverer)
-        serializer = DeliveryRatingSerializer(ratings, many=True)
+        serializer = DeliveryRatingDetailSerializer(ratings, many=True)
         return Response(serializer.data)

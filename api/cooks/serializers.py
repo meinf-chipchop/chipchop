@@ -184,6 +184,7 @@ class DishCategoryDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DishCategory
         fields = [
+            "id",
             "name",
             "image_url",
         ]

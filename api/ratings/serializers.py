@@ -29,7 +29,17 @@ class DishRatingSerializer(serializers.ModelSerializer):
         )
 
 
-class DeliveryRatingSerializer(serializers.ModelSerializer):
+class DeliveryRatingDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.DeliveryRating
+        fields = [
+            "rating",
+            "note",
+        ]
+
+
+class DeliveryRatingCreationSerializer(serializers.ModelSerializer):
 
     rating = serializers.DecimalField(
         max_digits=3,
@@ -46,3 +56,12 @@ class DeliveryRatingSerializer(serializers.ModelSerializer):
             "rating",
             "note",
         ]
+
+    def create(self, validated_data):
+        order_id = self.context["request"].parser_context["kwargs"]["order_pk"]
+        order = models.Order.objects.get(pk=order_id)
+
+        return models.DeliveryRating.objects.create(
+            order=order,
+            **validated_data,
+        )

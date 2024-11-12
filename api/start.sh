@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Update the db with the models / changes 
-python manage.py makemigrations --noinput deliverers orders users cooks petitions
+python manage.py makemigrations --noinput deliverers orders users cooks petitions ratings
 python manage.py migrate --noinput
 
 # Create superuser from environment variables
