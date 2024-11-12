@@ -4,7 +4,7 @@ import { Line, Bar } from 'react-chartjs-2';
 
 const fetchData = async () => {
   const response = await fetch('/api/stats');
-  return response.json();
+  return await response.json();
 };
 
 export default function DashboardCharts() {
@@ -44,7 +44,7 @@ export default function DashboardCharts() {
     ordersThisMonth: 0,
   });
 
-  
+
 
   useEffect(() => {
     fetchData().then((data) => {
@@ -67,7 +67,7 @@ export default function DashboardCharts() {
         datasets: [
           {
             ...prevData.datasets[0],
-            data: data.orders.map((entry: { week_day: string; amount: number }) => entry.amount),
+            data: data.orders_by_week_day.map((entry: { week_day: string; amount: number }) => entry.amount),
           },
         ],
       }));
