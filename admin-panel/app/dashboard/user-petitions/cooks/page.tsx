@@ -8,30 +8,15 @@ import { FilterContainer } from "../../../components/GeneralComponents/CooksDeli
 // import { UserTable } from "../../../components/GeneralComponents/Users/UsersGrid"
 import { Pagination } from "../../../components/GeneralComponents/paginations"
 
-import { getAccountApprovals } from "@/lib/api/account-approvals"
+import { getAccountApprovals, setStateAccountApproval } from "@/lib/api/account-approvals"
 
 
-// Mock API functions (replace with actual API calls)
-// const getAccountApprovals = async (page: number, pageSize: number) => {
+// const setStateAccountApproval = async (id: number, state: "A" | "R") => {
 //   // Simulated API call
 
-//   return
-
-//   return Array(pageSize).fill(null).map((_, index) => ({
-//     user: {
-//       id: page * pageSize + index + 1,
-//       email: `cook${page * pageSize + index + 1}@example.com`,
-//       role: "C"
-//     },
-//     state: Math.random() > 0.5 ? "P" : "A"
-//   }))
+//   console.log(`Setting state for user ${id} to ${state}`)
+//   return { success: true }
 // }
-
-const setStateAccountApproval = async (id: number, state: "A" | "R") => {
-  // Simulated API call
-  console.log(`Setting state for user ${id} to ${state}`)
-  return { success: true }
-}
 
 interface User {
   id: number
