@@ -1,3 +1,7 @@
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import fetchWrapper from "./fetchWrapper";
+import { getByURL } from "./utils";
+
 export interface Dish {
   name: string;
   description: string;
@@ -12,6 +16,32 @@ export interface Dish {
   last_update_at: string;
 }
 
-export async function getDishByURL(url: string): Promise<Dish> {
-  return fetch(url).then((response) => response.json() as Promise<Dish>);
+export interface DishList {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: {
+    url: string;
+    rating_average: string;
+    category: string;
+  }[];
+}
+
+export async function getCookDishes(cook_id: number): Promise<Dish[]> {
+  let dishList = await fetchWrapper(`/api/cooks/${cook_id}/dishes/`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  }).then((response) => response.json() as Promise<DishList>);
+
+  console.log(dishList);
+
+  let dishes: Dish[] = [];
+  for (let dish of dishList.results) {
+    dishes.push(await getByURL(dish.url));
+  }
+
+  return dishes;
 }

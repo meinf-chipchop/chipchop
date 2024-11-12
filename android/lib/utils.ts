@@ -21,3 +21,6 @@ export function formatDate(dateString: string): string {
   return `${day < 10 ? "0" + day : day} ${month} ${year}`;
 }
 
+export async function getByURL<T>(url: string): Promise<T> {
+  return fetch(url).then((response) => response.json() as Promise<T>);
+}

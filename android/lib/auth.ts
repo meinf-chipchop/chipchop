@@ -8,6 +8,17 @@ export interface User {
   birth_date: string;
 }
 
+export interface Me {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  role: string;
+  phone: string;
+  age: number;
+  banned: boolean;
+}
+
 export interface NewUser {
   first_name: string;
   last_name: string;
@@ -32,6 +43,16 @@ export function logout() {
     },
     credentials: "include",
   });
+}
+
+export function me(): Promise<Me> {
+  return fetchWrapper("/api/users/me/", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  }).then((response) => response.json() as Promise<Me>);
 }
 
 export function login(email: string, password: string) {
