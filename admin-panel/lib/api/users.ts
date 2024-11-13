@@ -24,7 +24,7 @@ export async function requestUserStatusChange(user_id: number, is_ban: boolean) 
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': getCsrfToken() || '',
+            'X-CSRFToken': getCsrfToken() ?? '',
         },
         credentials: 'include',
         body: JSON.stringify({
