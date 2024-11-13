@@ -1,4 +1,3 @@
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import fetchWrapper from "./fetchWrapper";
 import { getByURL } from "./utils";
 
@@ -6,14 +5,14 @@ export interface Dish {
   name: string;
   description: string;
   category: string;
-  image_url: string;
-  rating_average: string;
-  rating_count: string;
-  estimated_time: string;
+  image_url?: string;
+  rating_average?: string;
+  rating_count?: string;
+  estimated_time?: string;
   price: number;
-  discount: number;
-  created_at: string;
-  last_update_at: string;
+  discount?: number;
+  created_at?: string;
+  last_update_at?: string;
 }
 
 export interface DishList {
@@ -42,4 +41,20 @@ export async function getCookDishes(cook_id: number): Promise<Dish[]> {
   }
 
   return dishes;
+}
+
+export async function createCookDish(
+  cook_id: number,
+  dish: Dish
+): Promise<Dish> {
+  let createdDish = await fetchWrapper(`/api/cooks/${cook_id}/dishes/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(dish),
+  }).then((response) => response.json() as Promise<Dish>);
+
+  return createdDish;
 }

@@ -1,27 +1,20 @@
 import { useState } from "react";
-import { ScrollView, Text, View, Switch } from "react-native";
+import { ScrollView, Text } from "react-native";
 import InputField from "@/components/InputField";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, ButtonText } from "@/components/ui/button";
 import TextArea from "@/components/TextArea";
-import {
-  FormControl,
-  FormControlLabel,
-  FormControlLabelText,
-} from "@/components/ui/form-control";
+import { Dish, createCookDish } from "@/lib/dishes";
 
 const globalStyles = "pb-4";
 
 const DishForm = () => {
-  //
   const [dish, setDish] = useState<Dish>({
-    user: "", // Default value for user
     name: "",
     description: "",
+    category: "",
     price: 0,
     discount: 0,
-    hidden: false,
-    createdAt: new Date(),
   });
 
   const handleInputChange = (
@@ -31,7 +24,12 @@ const DishForm = () => {
     setDish({ ...dish, [field]: value });
   };
 
-  const handleSubmit = () => { };
+  const handleSubmit = () => {
+    // TODO: set current user id
+    createCookDish(1, dish).then((response) => {
+      console.log(response);
+    });
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-general-500">
@@ -76,44 +74,18 @@ const DishForm = () => {
           containerStyle={globalStyles}
           label="Discount"
           placeholder="Enter discount"
-          value={dish.discount.toString()}
+          value={dish.discount?.toString()}
           onChangeText={(value) =>
             handleInputChange("discount", parseFloat(value))
           }
           keyboardType="numeric"
         />
-        <FormControl className={`space-y-4 ${globalStyles}`}>
-          <FormControlLabel>
-            <FormControlLabelText> Visibility</FormControlLabelText>
-          </FormControlLabel>
-          <View className="flex-row pl-1">
-            <Text>Private</Text>
-            <Switch
-              className="mx-4"
-              trackColor={{ false: "red", true: "green" }}
-              thumbColor={!dish.hidden ? "#FF0000" : "#00FF00"}
-              activeThumbColor={"green"} // for web
-              onValueChange={() => {
-                handleInputChange("hidden", !dish.hidden);
-              }}
-              value={dish.hidden}
-            />
-            <Text>Public</Text>
-          </View>
-        </FormControl>
-        <InputField
-          containerStyle={globalStyles}
-          label="Image URL"
-          placeholder="Enter image URL"
-          value={dish.imageUrl}
-          onChangeText={(value) => handleInputChange("imageUrl", value)}
-        />
         <InputField
           containerStyle={globalStyles}
           label="Estimated Time"
           placeholder="Enter estimated time"
-          value={dish.estimatedTime}
-          onChangeText={(value) => handleInputChange("estimatedTime", value)}
+          value={dish.estimated_time}
+          onChangeText={(value) => handleInputChange("estimated_time", value)}
         />
       </ScrollView>
       <Text>{dish.description}</Text>
