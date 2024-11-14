@@ -5,10 +5,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, ButtonText } from "@/components/ui/button";
 import TextArea from "@/components/TextArea";
 import { Dish, createCookDish } from "@/lib/dishes";
+import { useSession } from "@/auth/authContext";
 
 const globalStyles = "pb-4";
 
 const DishForm = () => {
+  const { user } = useSession();
   const [dish, setDish] = useState<Dish>({
     name: "",
     description: "",
@@ -25,10 +27,11 @@ const DishForm = () => {
   };
 
   const handleSubmit = () => {
-    // TODO: set current user id
-    createCookDish(1, dish).then((response) => {
-      console.log(response);
-    });
+    if (user) {
+      createCookDish(user.id, dish).then((response) => {
+        console.log(response);
+      });
+    }
   };
 
   return (

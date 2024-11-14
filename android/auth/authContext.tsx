@@ -1,12 +1,27 @@
-import { useContext, createContext, type PropsWithChildren } from "react";
+import {
+  useContext,
+  createContext,
+  type PropsWithChildren,
+  useEffect,
+  useState,
+} from "react";
 import { useStorageState } from "./useStorageState";
-import { NewUser, login, logout, register, getCsrfToken } from "@/lib/auth";
+import {
+  NewUser,
+  login,
+  logout,
+  register,
+  getCsrfToken,
+  Me,
+  me,
+} from "@/lib/auth";
 
 const AuthContext = createContext<{
   signIn: (email: string, password: string) => Promise<string>;
   signUp: (user: NewUser) => Promise<string>;
   signOut: () => void;
   handleForgotPassword: () => void;
+  user?: Me | null;
   session?: string | null;
   isLoading: boolean;
 }>({
@@ -14,6 +29,7 @@ const AuthContext = createContext<{
   signUp: async () => "Not implemented",
   signOut: async () => null,
   handleForgotPassword: () => null,
+  user: null,
   session: null,
   isLoading: true,
 });
@@ -32,6 +48,24 @@ export function useSession() {
 
 export function SessionProvider({ children }: PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState("session");
+  const [user, setUser] = useState<Me | null>(null);
+
+  // Fetch user data when session is set
+  useEffect(() => {
+    if (session) {
+      (async () => {
+        try {
+          const userData = await me();
+          setUser(userData);
+        } catch (error) {
+          console.error("[SessionProvider] Failed to fetch user:", error);
+          setUser(null);
+        }
+      })();
+    } else {
+      setUser(null); // Clear user if no session
+    }
+  }, [session]);
 
   const signIn = async (email: string, password: string): Promise<string> => {
     try {
@@ -101,6 +135,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
           if (response.ok) setSession(null);
         },
         handleForgotPassword: () => null,
+        user,
         session,
         isLoading,
       }}
