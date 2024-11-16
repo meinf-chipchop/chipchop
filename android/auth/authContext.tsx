@@ -56,6 +56,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
       (async () => {
         try {
           const userData = await me();
+          console.log("[SessionProvider] user:", userData);
           setUser(userData);
         } catch (error) {
           console.error("[SessionProvider] Failed to fetch user:", error);
@@ -73,7 +74,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
       if (!response.ok) {
         const error = await response.json().catch(() => ({}));
-        const errorMessage = error?.message || "Unknown error occurred.";
+        const errorMessage = error?.Message || "Unknown error occurred.";
         console.error(
           `[signIn] Login failed with status ${response.status}: ${errorMessage}`
         );
@@ -90,9 +91,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
       return ""; // Success, no error message
     } catch (error) {
       console.error("[signIn] Unexpected error:", error);
-      return `Error: ${
-        error instanceof Error ? error.message : "Unknown error occurred."
-      }`;
+      return `Error: ${error instanceof Error ? error.message : "Unknown error occurred."
+        }`;
     }
   };
 
@@ -112,16 +112,14 @@ export function SessionProvider({ children }: PropsWithChildren) {
       const token = getCsrfToken();
       if (!token) {
         console.error("[signUp] CSRF token missing or invalid.");
-        return "Sign up failed: Unable to retrieve session token.";
       }
 
-      setSession(token);
+      setSession(token ?? "");
       return ""; // Success, no error message
     } catch (error) {
       console.error("[signUp] Unexpected error:", error);
-      return `Error: ${
-        error instanceof Error ? error.message : "Unknown error occurred."
-      }`;
+      return `Error: ${error instanceof Error ? error.message : "Unknown error occurred."
+        }`;
     }
   };
 
@@ -132,7 +130,13 @@ export function SessionProvider({ children }: PropsWithChildren) {
         signUp,
         signOut: async () => {
           const response = await logout();
-          if (response.ok) setSession(null);
+          if (!response.ok) {
+            console.error(
+              `[signOut] Failed to log out with status ${response.status}`
+            );
+          } else {
+            setSession(null);
+          }
         },
         handleForgotPassword: () => null,
         user,

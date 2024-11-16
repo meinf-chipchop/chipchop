@@ -55,14 +55,10 @@ const TextArea = ({
           {...props}
         />
       </Textarea>
-      {error && (
-        <FormControlError className="pl-3">
-          <FormControlErrorIcon as={AlertCircleIcon} />
-          <FormControlErrorText className="text-sm">
-            {error}
-          </FormControlErrorText>
-        </FormControlError>
-      )}
+      <FormControlError className="pl-3">
+        <FormControlErrorIcon as={AlertCircleIcon} />
+        <FormControlErrorText className="text-sm">{error}</FormControlErrorText>
+      </FormControlError>
     </FormControl>
   );
 };

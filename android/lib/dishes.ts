@@ -1,10 +1,11 @@
+import { getCsrfToken } from "./auth";
 import fetchWrapper from "./fetchWrapper";
 import { getByURL } from "./utils";
 
 export interface Dish {
   name: string;
   description: string;
-  category: string;
+  category: number;
   image_url?: string;
   rating_average?: string;
   rating_count?: string;
@@ -51,10 +52,16 @@ export async function createCookDish(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "X-CSRFToken": getCsrfToken() ?? "",
     },
     credentials: "include",
     body: JSON.stringify(dish),
-  }).then((response) => response.json() as Promise<Dish>);
+  }).then((response) => {
+    if (!response.ok) {
+      throw new Error("Failed to create dish");
+    }
+    return response.json() as Promise<Dish>;
+  });
 
   return createdDish;
 }

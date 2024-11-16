@@ -1,74 +1,73 @@
-import { useState } from 'react'
-import { ScrollView, View, Text } from 'react-native'
-import { z } from 'zod'
-import InputField from '@/components/InputField'
-import { router } from 'expo-router'
-import { Button, ButtonSpinner, ButtonText } from '@/components/ui/button'
-import { Ionicons } from '@expo/vector-icons'
-import OAuth from '@/components/Auth'
-import { useSession } from '@/auth/authContext'
-import { NewUser } from '@/lib/auth'
+import { useState } from "react";
+import { ScrollView, View, Text } from "react-native";
+import { z } from "zod";
+import InputField from "@/components/InputField";
+import { router } from "expo-router";
+import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
+import { Ionicons } from "@expo/vector-icons";
+import { useSession } from "@/auth/authContext";
+import { NewUser } from "@/lib/auth";
 
 const signUpValidationSchema = z.object({
-  first_name: z.string().min(1, 'First name is required'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number'),
+  first_name: z.string().min(1, "First name is required"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number"),
   birth_date: z
     .string()
-    .min(1, 'Date is required')
+    .min(1, "Date is required")
     .regex(
       /^\d{4}-\d{2}-\d{2}$/,
-      'Invalid date. Should be in YYYY-MM-DD format'
+      "Invalid date. Should be in YYYY-MM-DD format"
     ),
-})
+});
 
 const CustomerSignUp = () => {
   const [form, setForm] = useState<NewUser>({
-    first_name: '',
-    last_name: '',
-    email: '',
-    password: '',
-    phone: '',
-    birth_date: '',
-  })
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [loading, setLoading] = useState(false)
-  const { signUp } = useSession()
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+    phone: "",
+    birth_date: "",
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
+  const { signUp } = useSession();
 
   const validateForm = () => {
     try {
-      setErrors({})
-      signUpValidationSchema.parse(form)
-      return true
+      setErrors({});
+      signUpValidationSchema.parse(form);
+      return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const newErrors: Record<string, string> = {}
+        const newErrors: Record<string, string> = {};
         error.errors.forEach((err) => {
-          newErrors[err.path[0]] = err.message
-        })
-        setErrors(newErrors)
+          newErrors[err.path[0]] = err.message;
+        });
+        setErrors(newErrors);
       }
-      return false
+      return false;
     }
-  }
+  };
 
-  const [response, setResponse] = useState({ ok: true, errors: '' })
+  const [response, setResponse] = useState({ ok: true, errors: "" });
   const onSignUpPress = async () => {
     if (validateForm()) {
-      setLoading(true)
+      setLoading(true);
       signUp(form)
         .then((res) => {
           if (res.length === 0) {
-            setResponse({ ok: true, errors: '' })
-            router.push('/')
-          } else setResponse({ ok: false, errors: res })
+            setResponse({ ok: true, errors: "" });
+            router.push("/");
+          } else setResponse({ ok: false, errors: res });
         })
         .finally(() => {
-          setLoading(false)
-        })
+          setLoading(false);
+        });
     }
-  }
+  };
 
   return (
     <ScrollView className="flex-1 bg-white pt-4">
@@ -146,10 +145,9 @@ const CustomerSignUp = () => {
             {response.errors}
           </Text>
         )}
-        <OAuth />
       </View>
     </ScrollView>
-  )
-}
+  );
+};
 
-export default CustomerSignUp
+export default CustomerSignUp;
