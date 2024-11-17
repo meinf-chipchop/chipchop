@@ -7,22 +7,10 @@ import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Ionicons } from "@expo/vector-icons";
 import { useSession } from "@/auth/authContext";
 import { NewUser } from "@/lib/auth";
-
-const signUpValidationSchema = z.object({
-  first_name: z.string().min(1, "First name is required"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number"),
-  birth_date: z
-    .string()
-    .min(1, "Date is required")
-    .regex(
-      /^\d{4}-\d{2}-\d{2}$/,
-      "Invalid date. Should be in YYYY-MM-DD format"
-    ),
-});
+import { useTranslation } from "react-i18next";
 
 const CustomerSignUp = () => {
+  const { t } = useTranslation();
   const [form, setForm] = useState<NewUser>({
     first_name: "",
     last_name: "",
@@ -34,6 +22,19 @@ const CustomerSignUp = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const { signUp } = useSession();
+
+  const signUpValidationSchema = z.object({
+    first_name: z.string().min(1, t("validation_form.first_name_required")),
+    email: z.string().email(t("validation_form.invalid_email")),
+    password: z.string().min(8, t("validation_form.password_min_length")),
+    phone: z
+      .string()
+      .regex(/^\+?[1-9]\d{1,14}$/, t("validation_form.invalid_phone_number")),
+    birth_date: z
+      .string()
+      .min(1, t("validation_form.age_required"))
+      .regex(/^\d{4}-\d{2}-\d{2}$/, t("validation_form.age_invalid")),
+  });
 
   const validateForm = () => {
     try {
@@ -73,8 +74,8 @@ const CustomerSignUp = () => {
     <ScrollView className="flex-1 bg-white pt-4">
       <View className="flex-1 bg-white mb-10 gap-2">
         <InputField
-          label="First Name"
-          placeholder="First name"
+          label={t("user.first_name")}
+          placeholder={t("user.first_name")}
           leftIcon={<Ionicons name="person" size={14} />}
           value={form.first_name}
           onChangeText={(value: string) =>
@@ -83,8 +84,8 @@ const CustomerSignUp = () => {
           error={errors.first_name}
         />
         <InputField
-          label="Last Name"
-          placeholder="Last name"
+          label={t("user.second_name")}
+          placeholder={t("user.second_name")}
           leftIcon={<Ionicons name="person" size={14} />}
           value={form.last_name}
           onChangeText={(value: string) =>
@@ -92,8 +93,8 @@ const CustomerSignUp = () => {
           }
         />
         <InputField
-          label="Email"
-          placeholder="Email"
+          label={t("user.email")}
+          placeholder={t("user.email")}
           leftIcon={<Ionicons name="mail" size={14} />}
           textContentType="emailAddress"
           value={form.email}
@@ -101,8 +102,8 @@ const CustomerSignUp = () => {
           error={errors.email}
         />
         <InputField
-          label="Password"
-          placeholder="Password"
+          label={t("user.password")}
+          placeholder={t("user.password")}
           leftIcon={<Ionicons name="lock-closed" size={14} />}
           secureTextEntry={true}
           textContentType="password"
@@ -113,8 +114,8 @@ const CustomerSignUp = () => {
           error={errors.password}
         />
         <InputField
-          label="Phone Number"
-          placeholder="Phone number"
+          label={t("user.phone_number")}
+          placeholder={t("user.phone_number")}
           leftIcon={<Ionicons name="call" size={14} />}
           textContentType="telephoneNumber"
           value={form.phone}
@@ -122,8 +123,8 @@ const CustomerSignUp = () => {
           error={errors.phone}
         />
         <InputField
-          label="Age"
-          placeholder="Age"
+          label={t("user.age")}
+          placeholder={t("user.age")}
           leftIcon={<Ionicons name="calendar" size={14} />}
           textContentType="birthdateDay"
           value={form.birth_date}
@@ -138,7 +139,7 @@ const CustomerSignUp = () => {
           className="rounded-full mt-6"
         >
           {loading && <ButtonSpinner />}
-          <ButtonText>Sign up</ButtonText>
+          <ButtonText>{t("auth.sign_up")}</ButtonText>
         </Button>
         {response.errors.length > 0 && (
           <Text className="color-error-400 text-center font-bold">

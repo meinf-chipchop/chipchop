@@ -21,21 +21,15 @@ import {
   FormControlLabel,
   FormControlLabelText,
 } from "@/components/ui/form-control";
-import { Stack, router, useNavigation } from "expo-router";
+import { Stack, router } from "expo-router";
 import { z } from "zod";
 import { AlertCircleIcon, ChevronLeftIcon } from "lucide-react-native";
+import { useTranslation } from "react-i18next";
 
 const globalStyles = "pb-4";
 
-const validateForm = z.object({
-  name: z.string({ required_error: "Name is required" }),
-  description: z.string({ required_error: "Description is required" }),
-  category: z.number().positive("Category is required"),
-  price: z.number().positive("Price is required"),
-  estimated_time: z.string().time({ message: "Estimated time is required" }),
-});
-
 const DishForm = () => {
+  const { t } = useTranslation();
   const { user } = useSession();
   const [dish, setDish] = useState<Dish>({
     name: "",
@@ -70,6 +64,34 @@ const DishForm = () => {
   const handleInputChange = (field: keyof Dish, value: string | number) => {
     setDish({ ...dish, [field]: value });
   };
+
+  const validateForm = z.object({
+    name: z.string().min(1, {
+      message: t("validation_form.field_required", {
+        field: t("labels.name"),
+      }),
+    }),
+    description: z.string().min(1, {
+      message: t("validation_form.field_required", {
+        field: t("labels.description"),
+      }),
+    }),
+    category: z
+      .number()
+      .positive(
+        t("validation_form.field_required", { field: t("labels.category") })
+      ),
+    price: z
+      .number()
+      .positive(
+        t("validation_form.field_required", { field: t("labels.price") })
+      ),
+    estimated_time: z.string().time({
+      message: t("validation_form.field_required", {
+        field: t("labels.estimated_time"),
+      }),
+    }),
+  });
 
   const validate = () => {
     try {
@@ -123,7 +145,7 @@ const DishForm = () => {
           .finally(() => setLoading(false));
       } else {
         console.error("User not found");
-        setResponse({ ok: false, errors: "User not found" });
+        setResponse({ ok: false, errors: t("errors.user_not_found") });
       }
     else console.log(errors);
   };
@@ -132,7 +154,7 @@ const DishForm = () => {
     <>
       <Stack.Screen
         options={{
-          headerTitle: "Create a Dish",
+          headerTitle: t("dish.create"),
           headerLeft: () => (
             <Button
               className="pl-4"
@@ -153,33 +175,35 @@ const DishForm = () => {
         >
           <InputField
             containerStyle={globalStyles}
-            label="Name"
-            placeholder="Enter dish name"
+            label={t("labels.name")}
+            placeholder={t("dish.enter_name")}
             value={dish.name}
             onChangeText={(value) => handleInputChange("name", value)}
             error={errors.name}
           />
           <TextArea
             containerStyle={globalStyles}
-            label="Description"
-            placeholder="Enter dish description"
+            label={t("labels.description")}
+            placeholder={t("dish.enter_description")}
             value={dish.description}
             onChangeText={(value) => handleInputChange("description", value)}
             error={errors.description}
           />
-          <FormControl className={globalStyles}>
+          <FormControl className={globalStyles} isInvalid={!!errors.category}>
             <FormControlLabel>
-              <FormControlLabelText>Category</FormControlLabelText>
+              <FormControlLabelText>
+                {t("labels.category")}
+              </FormControlLabelText>
             </FormControlLabel>
             <SelectDropDown
-              placeholder="Select a category"
-              empty={{ label: "No categories", value: "" }}
+              placeholder={t("dish.select_category")}
+              empty={{ label: t("dish.no_categories"), value: "" }}
               items={categories.map((category) => ({
                 label: category.name,
                 value: category.id,
               }))}
               onValueChange={(value: string) =>
-                handleInputChange("category", value)
+                handleInputChange("category", parseInt(value))
               }
             />
             <FormControlError className="pl-3">
@@ -191,8 +215,8 @@ const DishForm = () => {
           </FormControl>
           <InputField
             containerStyle={globalStyles}
-            label="Price"
-            placeholder="Enter price"
+            label={t("labels.price")}
+            placeholder={t("dish.enter_price")}
             value={dish.price.toString()}
             onChangeText={(value) =>
               handleInputChange("price", parseFloat(value))
@@ -202,8 +226,8 @@ const DishForm = () => {
           />
           <InputField
             containerStyle={globalStyles}
-            label="Discount"
-            placeholder="Enter discount"
+            label={t("labels.discount")}
+            placeholder={t("dish.enter_discount")}
             value={dish.discount?.toString()}
             onChangeText={(value) =>
               handleInputChange("discount", parseFloat(value))
@@ -212,8 +236,8 @@ const DishForm = () => {
           />
           <InputField
             containerStyle={globalStyles}
-            label="Estimated Time"
-            placeholder="Enter estimated time"
+            label={t("labels.estimated_time")}
+            placeholder={t("dish.enter_estimated_time")}
             value={dish.estimated_time}
             onChangeText={(value) => handleInputChange("estimated_time", value)}
             error={errors.estimated_time}
@@ -225,7 +249,7 @@ const DishForm = () => {
           onPress={handleSubmit}
         >
           {loading && <ButtonSpinner />}
-          <ButtonText>Create</ButtonText>
+          <ButtonText>{t("labels.create")}</ButtonText>
         </Button>
         {response.errors.length > 0 && (
           <Text className="color-error-400 text-center font-bold">

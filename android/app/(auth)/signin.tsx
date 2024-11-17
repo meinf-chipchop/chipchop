@@ -6,11 +6,10 @@ import { z } from "zod";
 import { useSession } from "@/auth/authContext";
 import { router } from "expo-router";
 import InputField from "@/components/InputField";
+import { useTranslation } from "react-i18next";
 
-const signInValidationSchema = z.object({
-  email: z.string().email("Invalid email address"),
-});
 const SignIn = () => {
+  const { t } = useTranslation();
   const { signIn } = useSession();
   const [form, setForm] = useState({
     email: "",
@@ -19,6 +18,10 @@ const SignIn = () => {
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState({ ok: true, errors: "" });
+
+  const signInValidationSchema = z.object({
+    email: z.string().email(t("validation_form.invalid_email")),
+  });
 
   const validateForm = () => {
     try {
@@ -30,7 +33,6 @@ const SignIn = () => {
         const newErrors = { email: "", password: "" };
         error.errors.forEach((err) => {
           if (err.path[0] === "email") newErrors.email = err.message;
-          else if (err.path[0] === "password") newErrors.password = err.message;
         });
         setErrors(newErrors);
       }
@@ -57,8 +59,8 @@ const SignIn = () => {
     <ScrollView className="flex-1 bg-white pt-4">
       <View className="flex-1 bg-white gap-4">
         <InputField
-          label="Email"
-          placeholder="Email"
+          label={t("user.email")}
+          placeholder={t("user.email")}
           leftIcon={<Ionicons name="mail" size={14} />}
           textContentType="emailAddress"
           value={form.email}
@@ -66,8 +68,8 @@ const SignIn = () => {
           error={errors.email}
         />
         <InputField
-          label="Password"
-          placeholder="Enter password"
+          label={t("user.password")}
+          placeholder={t("user.password")}
           leftIcon={<Ionicons name="lock-closed" size={16} />}
           secureTextEntry={true}
           textContentType="password"
@@ -78,7 +80,7 @@ const SignIn = () => {
           error={errors.password}
         />
         <Text className="text-sm text-right font-JakartaSemiBold text-primary-500 my-2">
-          Forgot Password?
+          {t("auth.forgot_password")}
         </Text>
         <Button
           disabled={loading}
@@ -86,7 +88,7 @@ const SignIn = () => {
           className="mt-6 rounded-full"
         >
           {loading && <ButtonSpinner />}
-          <ButtonText>Sign in</ButtonText>
+          <ButtonText>{t("auth.sign_in")}</ButtonText>
         </Button>
         {response.errors.length > 0 && (
           <Text className="color-error-400 text-center font-bold">

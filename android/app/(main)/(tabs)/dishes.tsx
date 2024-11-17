@@ -5,8 +5,10 @@ import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getDishCategories } from "@/lib/dishCategories";
+import { useTranslation } from "react-i18next";
 
 const Dishes = () => {
+  const { t } = useTranslation();
   const loading = false;
   const [selfUser, setSelfUser] = useState<Me | null>(null);
   const [dishes, setDishes] = useState<Dish[] | null>([]);
@@ -47,7 +49,7 @@ const Dishes = () => {
                   alt="No dishes found"
                   resizeMode="contain"
                 /> */}
-                <Text className="text-sm">No dishes found</Text>
+                <Text className="text-sm">{t("dish.no_dishes_found")}</Text>
               </>
             ) : (
               <ActivityIndicator size="small" color="#000" />
