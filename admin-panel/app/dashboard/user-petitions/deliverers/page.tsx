@@ -102,7 +102,7 @@ export default function DeliverersPage() {
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2c3e50]">
                 <span
-                  className={`px-2 py-1 rounded-full text-xs ${getDelivererStatusColor(deliverer.status)}
+                  className={`px-2 py-1 rounded-full text-xs ${getDelivererStatusColor(deliverer.status)}`}
                 >
                   {deliverer.status}
                 </span>
