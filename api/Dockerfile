@@ -11,7 +11,7 @@ WORKDIR /app
 # Add the current directory files (on your machine) to the container
 COPY . .
 
-ADD requirements.txt ./requirements.txt
+COPY requirements.txt ./requirements.txt
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --upgrade pip \
