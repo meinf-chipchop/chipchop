@@ -10,7 +10,7 @@ const resources = {
   "es-ES": { translation: translationEs },
 };
 
-const initI18n = async () => {
+export const initI18n = async () => {
   let savedLanguage: string = "";
   let storageLanguage: string | null = await getStorageItemAsync(
     "selectedLanguage"
@@ -34,7 +34,5 @@ const initI18n = async () => {
     },
   });
 };
-
-initI18n();
 
 export default i18n;

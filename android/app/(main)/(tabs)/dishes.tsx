@@ -46,7 +46,7 @@ const Dishes = () => {
         ListEmptyComponent={
           <View className="flex-1 flex-grow w-full items-center justify-center">
             {!loading ? (
-              <VStack className="justify-items-center" space="md">
+              <VStack className="justify-items-center" space="lg">
                 <Center>
                   <CookingPot size={128} color={Colors.chestnut[400]} />
                   <Text className="text-lg color-primary-400">

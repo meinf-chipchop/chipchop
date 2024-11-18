@@ -1,11 +1,13 @@
 import { Colors } from "./Colors";
 import { Images } from "./Images";
-import i18n from "@/i18n";
+import en from "@/i18n/locales/en-US.json";
+
+type OnBoardingKeys = `onboarding.${keyof typeof en.onboarding}`;
 
 export interface OnboardingItem {
   id: number;
-  title: string;
-  description: string;
+  title: OnBoardingKeys;
+  description: OnBoardingKeys;
   image: ImageData;
   backgroundColor: string;
 }
@@ -13,22 +15,22 @@ export interface OnboardingItem {
 export const onBoardingItems: OnboardingItem[] = [
   {
     id: 1,
-    title: i18n.t("onboarding.homemade_delights"),
-    description: i18n.t("onboarding.homemade_desc"),
+    title: "onboarding.homemade_delights",
+    description: "onboarding.homemade_desc",
     image: Images.onboarding1,
     backgroundColor: Colors.chestnut["50"],
   },
   {
     id: 2,
-    title: i18n.t("onboarding.swift_service"),
-    description: i18n.t("onboarding.swift_desc"),
+    title: "onboarding.swift_service",
+    description: "onboarding.swift_desc",
     image: Images.onboarding2,
     backgroundColor: Colors.chestnut["50"],
   },
   {
     id: 3,
-    title: i18n.t("onboarding.personalized_cusine"),
-    description: i18n.t("onboarding.personalized_desc"),
+    title: "onboarding.personalized_cusine",
+    description: "onboarding.personalized_cusine",
     image: Images.onboarding3,
     backgroundColor: Colors.chestnut["50"],
   },

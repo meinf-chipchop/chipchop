@@ -15,6 +15,7 @@ import {
   Me,
   me,
 } from "@/lib/auth";
+import { router } from "expo-router";
 
 const AuthContext = createContext<{
   signIn: (email: string, password: string) => Promise<string>;
@@ -138,6 +139,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
             );
           } else {
             setSession(null);
+            router.push("/");
           }
         },
         handleForgotPassword: () => null,

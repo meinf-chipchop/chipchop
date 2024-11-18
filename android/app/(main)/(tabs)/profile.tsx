@@ -1,53 +1,38 @@
-import ActionableItem from "@/components/ActionableItem";
-import LanguageSelector from "@/components/LanguageSelector";
-import { Box } from "@/components/ui/box";
-import { Divider } from "@/components/ui/divider";
-import { Heading } from "@/components/ui/heading";
+import { useSession } from "@/auth/authContext";
+import {
+  Avatar,
+  AvatarFallbackText,
+  AvatarImage,
+} from "@/components/ui/avatar";
 import { VStack } from "@/components/ui/vstack";
-import { getLanguageCode, getLanguageName } from "@/i18n/languageUtils";
-import { useStorageState } from "@/storage/useStorageState";
-import { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Text } from "@/components/ui/text";
+import { Button, ButtonText } from "@/components/ui/button";
+import { View } from "react-native";
 
 const Profile = () => {
-  const [[loading, languageCode], setLanguageCode] =
-    useStorageState("selectedLanguage");
-  const [language, setLanguage] = useState("");
-
-  useEffect(() => {
-    if (!loading && languageCode) {
-      const name = getLanguageName(languageCode);
-      console.log("name " + name + "code " + languageCode);
-      if (name) setLanguage(name);
-    }
-  }, [loading, languageCode]);
+  const { user, signOut } = useSession();
 
   return (
-    <SafeAreaView>
-      <Box className="w-full max-w-[600px] m-auto p-4">
-        <VStack space="md">
-          <Box>
-            <Divider className="mt-4 mb-4" />
-            <Heading size="sm" className="mb-2">
-              Language
-            </Heading>
-            <LanguageSelector
-              language={language ?? ""}
-              setLanguage={(name) => {
-                setLanguage(name);
-                const code = getLanguageCode(name);
-                console.log("code", code);
-                if (code) setLanguageCode(code);
-              }}
-              availableLanguages={["English", "Spanish"]}
-              className="w-fit"
-            />
-          </Box>
-          <Divider />
-          <ActionableItem text="Profile" onPress={() => {}} />
-        </VStack>
-      </Box>
-    </SafeAreaView>
+    <View className="px-12">
+      <VStack space="md">
+        <Avatar>
+          <AvatarFallbackText>{user?.first_name}</AvatarFallbackText>
+          <AvatarImage
+            source={{
+              uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+            }}
+          />
+        </Avatar>
+        <Text>{user?.first_name + " " + user?.last_name}</Text>
+        <Button
+          variant="outline"
+          className="bg-red-400 color-red-400"
+          onPress={() => signOut()}
+        >
+          <ButtonText className="color-white">Close session</ButtonText>
+        </Button>
+      </VStack>
+    </View>
   );
 };
 

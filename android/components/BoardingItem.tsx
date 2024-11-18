@@ -4,17 +4,19 @@ import {
   Image,
   View,
   useWindowDimensions,
-} from 'react-native'
-import React from 'react'
-import { OnboardingItem } from '@/constants/Onboarding'
-import { Colors } from '@/constants/Colors'
+} from "react-native";
+import React from "react";
+import { OnboardingItem } from "@/constants/Onboarding";
+import { Colors } from "@/constants/Colors";
+import { useTranslation } from "react-i18next";
 
 type BoardingItemProps = {
-  item: OnboardingItem
-}
+  item: OnboardingItem;
+};
 
 const BoardingItem = ({ item }: BoardingItemProps) => {
-  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions()
+  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
+  const { t } = useTranslation();
 
   return (
     <View
@@ -32,37 +34,37 @@ const BoardingItem = ({ item }: BoardingItemProps) => {
         source={item.image}
         style={styles.itemImage}
       />
-      <Text style={styles.itemTitle}>{item.title}</Text>
-      <Text style={styles.itemDesc}>{item.description}</Text>
+      <Text style={styles.itemTitle}>{t(item.title)}</Text>
+      <Text style={styles.itemDesc}>{t(item.description)}</Text>
     </View>
-  )
-}
+  );
+};
 
-export default BoardingItem
+export default BoardingItem;
 
 const styles = StyleSheet.create({
   itemContainer: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: 40,
   },
   itemTitle: {
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginHorizontal: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   itemImage: {
     flex: 0.7,
-    maxWidth: '80%',
-    maxHeight: '20%',
+    maxWidth: "80%",
+    maxHeight: "20%",
   },
   itemDesc: {
     fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginHorizontal: 40,
     marginTop: 12,
-    color: Colors.botticelli['500'],
+    color: Colors.botticelli["500"],
   },
-})
+});
