@@ -2,10 +2,12 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import * as Localization from "expo-localization";
 import translationEn from "./locales/en-US.json";
+import translationEs from "./locales/es-ES.json";
 import { getStorageItemAsync } from "@/storage/useStorageState";
 
 const resources = {
   "en-US": { translation: translationEn },
+  "es-ES": { translation: translationEs },
 };
 
 const initI18n = async () => {
