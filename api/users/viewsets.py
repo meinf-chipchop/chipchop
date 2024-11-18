@@ -28,6 +28,14 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return super().get_serializer_class()
 
+    def get_permissions(self):
+        if self.action == "create":
+            return [AllowAny()]
+        return super().get_permissions()
+
+    def perform_create(self, serializer):
+        return User.objects.create_user(**serializer.validated_data)
+
     @action(detail=False, methods=["get"])
     def me(self, request):
         return Response(self.serializer_class(request.user).data)
