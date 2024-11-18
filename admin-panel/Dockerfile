@@ -8,12 +8,10 @@ COPY .next .
 COPY public ./public
 COPY app ./app
 COPY lib ./lib
-COPY ./node_modules .
+# COPY ./node_modules .
 
 COPY *.json .
 COPY *.mjs .
-
-
 
 RUN npm install \
   && if [ "$DEV_MODE" = FALSE ]; then npm run build; fi
