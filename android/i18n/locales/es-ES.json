@@ -1,0 +1,59 @@
+{
+  "user": {
+    "age": "Edad",
+    "email": "Correo electrónico",
+    "first_name": "Nombre",
+    "password": "Contraseña",
+    "phone_number": "Número de teléfono",
+    "second_name": "Apellido"
+  },
+  "labels": {
+    "category": "Categoría",
+    "create": "Crear",
+    "description": "Descripción",
+    "discount": "Descuento",
+    "estimated_time": "Tiempo estimado",
+    "name": "Nombre",
+    "price": "Precio",
+    "next": "Siguiente",
+    "lets_start": "¡Comencemos!"
+  },
+  "auth": {
+    "log_in": "Iniciar sesión",
+    "sign_up": "Regístrate",
+    "sign_in": "Acceder",
+    "forgot_password": "¿Olvidaste tu contraseña?"
+  },
+  "onboarding": {
+    "homemade_delights": "Delicias caseras",
+    "homemade_desc": "Favoritos caseros, elaborados por el chef y entregados frescos a tu puerta.",
+    "swift_service": "Servicio rápido",
+    "swift_desc": "Entrega rápida y fresca directamente a tu puerta. ¡Disfruta cada comida con facilidad!",
+    "personalized_cusine": "Cocina personalizada",
+    "personalized_desc": "Tus comidas favoritas, entregadas a ti."
+  },
+  "validation_form": {
+    "field_required": "{{field}} es obligatorio",
+    "age_invalid": "Fecha no válida. Debe estar en formato YYYY-MM-DD",
+    "age_required": "La fecha es obligatoria",
+    "first_name_required": "El nombre es obligatorio",
+    "invalid_email": "Dirección de correo electrónico no válida",
+    "invalid_phone_number": "Número de teléfono no válido",
+    "password_min_length": "La contraseña debe tener al menos 8 caracteres",
+    "password_required": "La contraseña es obligatoria"
+  },
+  "errors": {
+    "user_not_found": "Usuario no encontrado"
+  },
+  "dish": {
+    "create": "Crear un plato",
+    "enter_description": "Introduce la descripción del plato",
+    "enter_discount": "Introduce un descuento para aplicar al plato",
+    "enter_estimated_time": "Introduce el tiempo estimado para preparar el plato",
+    "enter_name": "Introduce el nombre del plato",
+    "enter_price": "Introduce el precio del plato",
+    "no_categories": "No hay categorías",
+    "no_dishes_found": "No se encontraron platos",
+    "select_category": "Selecciona una categoría"
+  }
+}

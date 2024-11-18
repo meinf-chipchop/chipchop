@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useStorageState } from "./useStorageState";
+import { useStorageState } from "@/storage/useStorageState";
 import {
   NewUser,
   login,
@@ -91,8 +91,9 @@ export function SessionProvider({ children }: PropsWithChildren) {
       return ""; // Success, no error message
     } catch (error) {
       console.error("[signIn] Unexpected error:", error);
-      return `Error: ${error instanceof Error ? error.message : "Unknown error occurred."
-        }`;
+      return `Error: ${
+        error instanceof Error ? error.message : "Unknown error occurred."
+      }`;
     }
   };
 
@@ -118,8 +119,9 @@ export function SessionProvider({ children }: PropsWithChildren) {
       return ""; // Success, no error message
     } catch (error) {
       console.error("[signUp] Unexpected error:", error);
-      return `Error: ${error instanceof Error ? error.message : "Unknown error occurred."
-        }`;
+      return `Error: ${
+        error instanceof Error ? error.message : "Unknown error occurred."
+      }`;
     }
   };
 

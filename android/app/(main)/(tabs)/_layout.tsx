@@ -1,11 +1,11 @@
 import { Tabs, useNavigation } from "expo-router";
 import { Image, ImageSourcePropType, View } from "react-native";
 
-import { icons } from "@/constants/Icons";
 import { Ionicons } from "@expo/vector-icons";
-import { Home } from "lucide-react-native";
 import { Colors } from "@/constants/Colors";
 import { useEffect } from "react";
+import { Text } from "@/components/ui/text";
+import { Heading } from "@/components/ui/heading";
 
 const TabIcon = ({
   source,
@@ -102,7 +102,13 @@ export default function Layout() {
         name="profile"
         options={{
           title: "Profile",
-          headerShown: false,
+          headerShown: true,
+          headerTitleAlign: "center",
+          headerTitle: ({}) => {
+            return (
+              <Heading className="justify-center">Profile information</Heading>
+            );
+          },
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="options" color={color} size={size} />
           ),
