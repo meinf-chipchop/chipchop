@@ -9,7 +9,7 @@ import { useStorageState } from "@/storage/useStorageState";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const Profile = () => {
+const Settings = () => {
   const [[loading, languageCode], setLanguageCode] =
     useStorageState("selectedLanguage");
   const [language, setLanguage] = useState("");
@@ -45,10 +45,11 @@ const Profile = () => {
           </Box>
           <Divider />
           <ActionableItem text="Profile" onPress={() => {}} />
+          <ActionableItem text="Policy and Privacy" onPress={() => {}} />
         </VStack>
       </Box>
     </SafeAreaView>
   );
 };
 
-export default Profile;
+export default Settings;

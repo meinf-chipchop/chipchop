@@ -1,17 +1,16 @@
 import { Tabs, useNavigation } from "expo-router";
-import { Image, ImageSourcePropType, View } from "react-native";
-
+import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { useEffect } from "react";
-import { Text } from "@/components/ui/text";
 import { Heading } from "@/components/ui/heading";
+import { useTranslation } from "react-i18next";
 
 const TabIcon = ({
-  source,
+  icon,
   focused,
 }: {
-  source: ImageSourcePropType;
+  icon: React.ReactNode;
   focused: boolean;
 }) => (
   <View
@@ -24,17 +23,13 @@ const TabIcon = ({
         focused ? "bg-primary-700" : ""
       }`}
     >
-      <Image
-        source={source}
-        tintColor="white"
-        resizeMode="contain"
-        className="w-6 h-6"
-      />
+      {icon}
     </View>
   </View>
 );
 
 export default function Layout() {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -70,8 +65,11 @@ export default function Layout() {
         options={{
           title: "Home",
           headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" color={color} size={size} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabIcon
+              icon={<Ionicons name="home" color={color} size={size} />}
+              focused={focused}
+            />
           ),
         }}
       />
@@ -80,21 +78,11 @@ export default function Layout() {
         options={{
           title: "Dishes",
           headerShown: false,
-          // tabBarButton: () => {
-          //   return <Ionicons name="home" />;
-          // },
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="restaurant" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="chat"
-        options={{
-          title: "Chat",
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubble" color={color} size={size} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabIcon
+              icon={<Ionicons name="restaurant" color={color} size={size} />}
+              focused={focused}
+            />
           ),
         }}
       />
@@ -103,14 +91,16 @@ export default function Layout() {
         options={{
           title: "Profile",
           headerShown: true,
-          headerTitleAlign: "center",
+          headerTitleAlign: "left",
           headerTitle: ({}) => {
-            return (
-              <Heading className="justify-center">Profile information</Heading>
-            );
+            return <Heading>{t("labels.profile")}</Heading>;
           },
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="options" color={color} size={size} />
+          headerStyle: { backgroundColor: "#f2f2f2" },
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabIcon
+              icon={<Ionicons name="person-sharp" color={color} size={size} />}
+              focused={focused}
+            />
           ),
         }}
       />

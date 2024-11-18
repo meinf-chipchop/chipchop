@@ -8,6 +8,8 @@
     "second_name": "Second Name"
   },
   "labels": {
+    "configuration": "Configuration",
+    "profile": "Profile",
     "category": "Category",
     "create": "Create",
     "description": "Description",
