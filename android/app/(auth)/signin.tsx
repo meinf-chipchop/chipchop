@@ -47,7 +47,7 @@ const SignIn = () => {
         .then((res) => {
           if (res.length === 0) {
             setResponse({ ok: true, errors: "" });
-            router.push("/");
+            router.push("/home");
           } else setResponse({ ok: false, errors: res });
         })
         .finally(() => {

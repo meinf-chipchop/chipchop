@@ -46,19 +46,19 @@ const Dishes = () => {
         ListEmptyComponent={
           <View className="flex-1 flex-grow w-full items-center justify-center">
             {!loading ? (
-              <VStack className="justify-items-center" space="lg">
+              <VStack className="justify-items-center" space="xl">
                 <Center>
-                  <CookingPot size={128} color={Colors.chestnut[400]} />
-                  <Text className="text-lg color-primary-400">
+                  <CookingPot size={128} color={Colors.chestnut[700]} />
+                  <Text className="text-lg color-primary-500 py-10">
                     {t("dish.no_dishes_found") + "  😔"}
                   </Text>
                   <Button
-                    className="rounded-full"
+                    variant="outline"
                     onPress={() => {
                       router.push("/DishForm");
                     }}
                   >
-                    <ButtonText>Create a dish !</ButtonText>
+                    <ButtonText>{t("dish.create")}</ButtonText>
                   </Button>
                 </Center>
               </VStack>

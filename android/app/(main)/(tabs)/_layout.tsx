@@ -1,10 +1,12 @@
-import { Tabs, useNavigation } from "expo-router";
+import { Tabs, router, useNavigation } from "expo-router";
 import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { useEffect } from "react";
 import { Heading } from "@/components/ui/heading";
 import { useTranslation } from "react-i18next";
+import { Settings } from "lucide-react-native";
+import { Button, ButtonIcon } from "@/components/ui/button";
 
 const TabIcon = ({
   icon,
@@ -96,6 +98,15 @@ export default function Layout() {
             return <Heading>{t("labels.profile")}</Heading>;
           },
           headerStyle: { backgroundColor: "#f2f2f2" },
+          headerRight: () => (
+            <Button
+              variant="link"
+              className="pr-4"
+              onPress={() => router.push("/Settings")}
+            >
+              <ButtonIcon as={Settings} size="xl" />
+            </Button>
+          ),
           tabBarIcon: ({ color, size, focused }) => (
             <TabIcon
               icon={<Ionicons name="person-sharp" color={color} size={size} />}

@@ -18,10 +18,10 @@ export default function ActionableItem({
   return (
     <Pressable
       onPress={onPress}
-      className={`flex-row items-center justify-between p-4 bg-white border-b border-gray-200 ${containerStyle}`}
+      className={`flex-row items-center justify-between p-4 ${containerStyle}`}
     >
-      <Text className={`text-base text-gray-800 ${textStyle}`}>{text}</Text>
-      <ChevronRight size={20} color="#9CA3AF" />
+      <Text className={`font-bold text-gray-800 ${textStyle}`}>{text}</Text>
+      <ChevronRight size={20} color="#000000" />
     </Pressable>
   );
 }

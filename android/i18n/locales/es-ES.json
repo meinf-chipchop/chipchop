@@ -8,6 +8,13 @@
     "second_name": "Apellido"
   },
   "labels": {
+    "chef": "Chef",
+    "deliver": "Repartidor",
+    "settings": "Ajustes",
+    "language": "Idioma",
+    "configuration": "Configuración",
+    "policy_and_privacy": "Política y privacidad",
+    "profile": "Perfil",
     "category": "Categoría",
     "create": "Crear",
     "description": "Descripción",
@@ -22,15 +29,16 @@
     "log_in": "Iniciar sesión",
     "sign_up": "Regístrate",
     "sign_in": "Acceder",
-    "forgot_password": "¿Olvidaste tu contraseña?"
+    "sign_out": "Cerrar sesión",
+    "forgot_password": "¿Has olvidado tu contraseña?"
   },
   "onboarding": {
     "homemade_delights": "Delicias caseras",
-    "homemade_desc": "Favoritos caseros, elaborados por el chef y entregados frescos a tu puerta.",
+    "homemade_desc": "Tus platos favoritos caseros, elaborados por el chef y entregados frescos a tu puerta.",
     "swift_service": "Servicio rápido",
     "swift_desc": "Entrega rápida y fresca directamente a tu puerta. ¡Disfruta cada comida con facilidad!",
     "personalized_cusine": "Cocina personalizada",
-    "personalized_desc": "Tus comidas favoritas, entregadas a ti."
+    "personalized_desc": "Tus comidas favoritas, entregadas en tu puerta."
   },
   "validation_form": {
     "field_required": "{{field}} es obligatorio",
@@ -53,7 +61,11 @@
     "enter_name": "Introduce el nombre del plato",
     "enter_price": "Introduce el precio del plato",
     "no_categories": "No hay categorías",
-    "no_dishes_found": "No se encontraron platos",
+    "no_dishes_found": "No se han encontrado platos",
+    "become_chef": "¡Conviértete en chef y empieza a vender tus propios platos!",
     "select_category": "Selecciona una categoría"
+  },
+  "settings": {
+    "work_with_us": "Trabaja con nosotros"
   }
 }
