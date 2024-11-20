@@ -37,8 +37,7 @@ class OrderCreationValidator:
             self.deliverer = None
             self.address = None
 
-        if self.address:
-            if self.address.user != self.context["request"].user:
-                raise ValidationError("Address does not belong to user")
+        if self.address and self.address.user != self.context["request"].user:
+            raise ValidationError("Address does not belong to user")
 
         return self.order_type, self.deliverer, self.address

@@ -1,7 +1,7 @@
 // components/GeneralComponents/Users/UserTable.tsx
 
 import { User } from "lucide-react";
-import UserTableRow from "../Users/UserTableRow";
+import UserTableRow from "@/app/components/GeneralComponents/Users/UserTableRow";
 
 interface User {
   id: number;
