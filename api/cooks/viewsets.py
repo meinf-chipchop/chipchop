@@ -29,6 +29,11 @@ class CCCookViewSet(
         return super().get_serializer_class()
 
 
+class FullDishListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = models.Dish.objects.all()
+    serializer_class = serializers.DishListSerializer
+
+
 class DishViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.DishDetailSerializer
     lookup_field = "pk"
