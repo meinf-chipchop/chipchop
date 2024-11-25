@@ -75,6 +75,11 @@ router.register(
     viewsets.StatisticsViewset,
     basename="stats",
 )
+router.register(
+    r"dishes",
+    cooks.viewsets.FullDishListViewSet,
+    basename="dish",
+)
 
 
 urlpatterns = [
