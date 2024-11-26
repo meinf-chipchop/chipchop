@@ -7,7 +7,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import { SessionProvider } from "@/auth/authContext";
-import "../global.css";
 import "@/i18n";
 import { initI18n } from "@/i18n";
 
