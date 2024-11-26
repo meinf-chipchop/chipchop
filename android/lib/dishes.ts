@@ -65,3 +65,13 @@ export async function createCookDish(
 
   return createdDish;
 }
+
+export async function getDish(cook_id: number, dish_id: number): Promise<Dish> {
+  return fetchWrapper(`/api/cooks/${cook_id}/dishes/${dish_id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  }).then((response) => response.json() as Promise<Dish>);
+}

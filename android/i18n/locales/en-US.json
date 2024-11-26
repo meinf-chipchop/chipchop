@@ -23,7 +23,8 @@
     "name": "Name",
     "price": "Price",
     "next": "Next",
-    "lets_start": "Get Started!"
+    "lets_start": "Get Started!",
+    "loading": "Loading..."
   },
   "auth": {
     "log_in": "Log In",
