@@ -53,14 +53,6 @@ export default function RootLayout() {
 
   return (
     <GluestackUIProvider mode="light">
-      <RootLayoutNav />
-    </GluestackUIProvider>
-  );
-}
-
-function RootLayoutNav() {
-  return (
-    <GluestackUIProvider mode="system">
       <SessionProvider>
         <Slot />
       </SessionProvider>
