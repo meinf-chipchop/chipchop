@@ -23,7 +23,9 @@
     "name": "Nombre",
     "price": "Precio",
     "next": "Siguiente",
-    "lets_start": "¡Comencemos!"
+    "lets_start": "¡Comencemos!",
+    "image_url": "URL de la imagen",
+    "loading": "Cargando..."
   },
   "auth": {
     "log_in": "Iniciar sesión",

@@ -1,22 +1,29 @@
-import { useEffect } from 'react';
-import { useRouter } from 'expo-router';
-import { useSession } from '@/auth/authContext';
-import { View } from 'react-native';
+import { useEffect } from "react";
+import { useRouter } from "expo-router";
+import { useSession } from "@/auth/authContext";
+import { View } from "react-native";
+import { me } from "@/lib/auth";
 
 export default function Index() {
   const { session, isLoading } = useSession();
   const router = useRouter();
 
+  // Check if me works, if error go to auth page
+  useEffect(() => {
+    me()
+      .then((user) => console.log("User->", user))
+      .catch(() => router?.push("/(auth)/signin"));
+  }, [router]);
+
   useEffect(() => {
     if (!isLoading) {
-
       if (session) {
-        router.push('/(main)/(tabs)/home'); // Redirect to home if logged in
+        router.push("/(main)/(tabs)/home"); // Redirect to home if logged in
       } else {
-        router.push('/(auth)/onboarding'); // Redirect to login if not logged in
+        router.push("/(auth)/onboarding"); // Redirect to login if not logged in
       }
     }
   }, [session, isLoading]);
 
-  return (<View></View>);
+  return <View></View>;
 }

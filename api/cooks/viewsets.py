@@ -37,6 +37,15 @@ class FullDishListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 class DishViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.DishDetailSerializer
     lookup_field = "pk"
+    
+    def dispatch(self, *args, **kwargs):
+        response = super().dispatch(*args, **kwargs)
+        if isinstance(response, Response):
+            response['Cache-Control'] = "max-age=3600"
+            if self.action == "retrieve":
+                response["Last-Modified"] = self.get_object().last_update_at
+                
+        return response
 
     def get_queryset(self):
         # Get the cook_pk from the URL and only show their dishes
@@ -81,6 +90,13 @@ class DishViewSet(viewsets.ModelViewSet):
 class DishCategoryViewSet(viewsets.ModelViewSet):
     queryset = models.DishCategory.objects.all()
     serializer_class = serializers.DishCategoryDetailSerializer
+    
+    def dispatch(self, *args, **kwargs):    
+        response = super().dispatch(*args, **kwargs)
+        if isinstance(response, Response):
+            response['Cache-Control'] = "max-age=3600"
+           
+        return response
 
     def get_serializer_class(self):
         if self.action == "list":
