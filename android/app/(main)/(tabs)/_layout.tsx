@@ -5,7 +5,7 @@ import { Colors } from "@/constants/Colors";
 import { useEffect } from "react";
 import { Heading } from "@/components/ui/heading";
 import { useTranslation } from "react-i18next";
-import { Settings } from "lucide-react-native";
+import { FileClockIcon, Settings } from "lucide-react-native";
 import { Button, ButtonIcon } from "@/components/ui/button";
 
 const TabIcon = ({
@@ -99,13 +99,22 @@ export default function Layout() {
           },
           headerStyle: { backgroundColor: "#f2f2f2" },
           headerRight: () => (
-            <Button
-              variant="link"
-              className="pr-4"
-              onPress={() => router.push("/Settings")}
-            >
-              <ButtonIcon as={Settings} size="xl" />
-            </Button>
+            <View className="flex-row gap-2">
+              <Button
+                variant="link"
+                className="pr-4"
+                onPress={() => router.push("/history")}
+              >
+                <ButtonIcon as={FileClockIcon} size="xl" />
+              </Button>
+              <Button
+                variant="link"
+                className="pr-4"
+                onPress={() => router.push("/Settings")}
+              >
+                <ButtonIcon as={Settings} size="xl" />
+              </Button>
+            </View>
           ),
           tabBarIcon: ({ color, size, focused }) => (
             <TabIcon
