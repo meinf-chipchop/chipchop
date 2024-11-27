@@ -24,6 +24,7 @@
     "price": "Price",
     "next": "Next",
     "lets_start": "Get Started!",
+    "image_url": "Image URL",
     "loading": "Loading..."
   },
   "auth": {

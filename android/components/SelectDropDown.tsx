@@ -25,17 +25,19 @@ interface SelectProps extends ISelectProps {
   placeholder: string;
   empty: SelectItem;
   items: SelectItem[];
+  disabled?: boolean;
 }
 
 const SelectDropDown = ({
   size,
   placeholder,
   items,
+  disabled,
   empty,
   ...props
 }: SelectProps) => {
   return (
-    <Select {...props}>
+    <Select {...props} isDisabled={disabled}>
       <SelectTrigger variant="rounded" size={size}>
         <SelectInput placeholder={placeholder} />
         <SelectIcon className="mr-3" as={ChevronDownIcon} />

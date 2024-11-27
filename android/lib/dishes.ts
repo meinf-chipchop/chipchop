@@ -3,6 +3,8 @@ import fetchWrapper from "./fetchWrapper";
 import { getByURL } from "./utils";
 
 export interface Dish {
+  id: number;
+  user_id: number;
   name: string;
   description: string;
   category: number;
@@ -36,10 +38,9 @@ export async function getCookDishes(cook_id: number): Promise<Dish[]> {
     credentials: "include",
   }).then((response) => response.json() as Promise<DishList>);
 
-  let dishes: Dish[] = [];
-  for (let dish of dishList.results) {
-    dishes.push(await getByURL(dish.url));
-  }
+  let dishes = await Promise.all(
+    dishList.results.map((dish) => getByURL(dish.url)) as Promise<Dish>[]
+  );
 
   return dishes;
 }
@@ -67,11 +68,27 @@ export async function createCookDish(
 }
 
 export async function getDish(cook_id: number, dish_id: number): Promise<Dish> {
-  return fetchWrapper(`/api/cooks/${cook_id}/dishes/${dish_id}`, {
+  return fetchWrapper(`/api/cooks/${cook_id}/dishes/${dish_id}/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
+  }).then((response) => response.json() as Promise<Dish>);
+}
+
+export async function updateDish(
+  cook_id: number,
+  dish_id: number,
+  dish: Dish
+): Promise<Dish> {
+  return fetchWrapper(`/api/cooks/${cook_id}/dishes/${dish_id}/`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCsrfToken() ?? "",
+    },
+    body: JSON.stringify(dish),
     credentials: "include",
   }).then((response) => response.json() as Promise<Dish>);
 }
