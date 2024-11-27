@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status, response
 from django.contrib.auth import get_user_model
 from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from . import models, serializers
 
@@ -38,6 +39,15 @@ class OrderDishesViewSet(viewsets.ModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = models.Order.objects.all()
     serializer_class = serializers.OrderDetailSerializer
+    
+    def dispatch(self, *args, **kwargs):
+        response = super().dispatch(*args, **kwargs)
+        if isinstance(response, Response):
+            response['Cache-Control'] = "max-age=3600"
+            if self.action == "retrieve":
+                response["Last-Modified"] = self.get_object().last_updated
+                
+        return response
 
     def get_queryset(self):
         user_filter = models.Order.objects.filter(
