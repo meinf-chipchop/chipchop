@@ -14,6 +14,7 @@ export default function Layout() {
       } else {
         router.push("/(auth)/onboarding"); // Redirect to login if not logged in
       }
+      console.log("main: " + session);
     }
   }, [session, isLoading]);
 
