@@ -26,8 +26,10 @@ import { Bike, ChevronDownIcon } from "lucide-react-native";
 import { NewDeliver, Vehicle, createDeliver } from "@/lib/delivery";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useSession } from "@/auth/authContext";
 
 const DeliverySignUp = () => {
+  const { signUp } = useSession();
   const { t } = useTranslation();
   const [form, setForm] = useState<NewDeliver>({
     user: {
@@ -70,13 +72,12 @@ const DeliverySignUp = () => {
   const onSignUpPress = async () => {
     if (validateForm()) {
       setLoading(true);
-      createDeliver(form)
-        .then(() => {
-          setResponse({ ...response, ok: true });
-          router.push("/home");
-        })
-        .catch((errors) => {
-          setResponse({ ok: false, errors: errors });
+      signUp(form, "deliver")
+        .then((res) => {
+          if (res.length === 0) {
+            setResponse({ errors: "", ok: true });
+            router.push("/home");
+          } else setResponse({ ok: false, errors: res });
         })
         .finally(() => setLoading(false));
     }

@@ -4,7 +4,6 @@ import { Center } from "@/components/ui/center";
 import { Bike, ChefHat, User } from "lucide-react-native";
 import { Heading } from "@/components/ui/heading";
 import { VStack } from "@/components/ui/vstack";
-import { useRouter } from "expo-router";
 import { useState } from "react";
 import CustomerSignUp from "./CookSignUp";
 import CookSignUp from "./CookSignUp";

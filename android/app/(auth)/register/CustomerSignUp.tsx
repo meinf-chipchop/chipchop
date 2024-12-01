@@ -57,7 +57,7 @@ const UserSignUp = () => {
   const onSignUpPress = async () => {
     if (validateForm()) {
       setLoading(true);
-      signUp(form)
+      signUp(form, "customer")
         .then((res) => {
           if (res.length === 0) {
             setResponse({ ok: true, errors: "" });
