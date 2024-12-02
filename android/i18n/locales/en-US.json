@@ -1,5 +1,6 @@
 {
   "user": {
+    "public_name": "Public Name",
     "age": "Age",
     "email": "Email",
     "first_name": "First Name",
@@ -9,6 +10,7 @@
     "history": "History"
   },
   "labels": {
+    "cook": "Cook",
     "chef": "Chef",
     "deliver": "Deliver",
     "settings": "Settings",
