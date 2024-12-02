@@ -1,24 +1,15 @@
 import { create } from "zustand";
 
-type UserRole = "Customer" | "Chef" | "Delivery";
+type UserRole = "U" | "C" | "D";  // Match RoleEnum values
 
 interface StoreState {
-  user: {
-    role: UserRole;
-  };
+  userRole: UserRole | null;
   setUserRole: (role: UserRole) => void;
 }
 
 export const useStore = create<StoreState>((set) => ({
-  user: {
-    role: "Customer",
-  },
+  userRole: null,
   setUserRole: (role: UserRole) => {
-    set((state) => ({
-      user: {
-        ...state.user,
-        role,
-      },
-    }));
+    set(() => ({ userRole: role }));
   },
 }));

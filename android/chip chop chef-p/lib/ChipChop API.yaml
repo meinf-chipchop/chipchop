@@ -1,0 +1,2607 @@
+openapi: 3.0.3
+info:
+  title: ChipChop API
+  version: 1.0.0
+  description: ChipChop is THE local food delivery service
+paths:
+  /api/account-approvals/:
+    get:
+      operationId: account_approvals_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - account-approvals
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAccountUpgradePetitionListList'
+          description: ''
+    post:
+      operationId: account_approvals_create
+      tags:
+      - account-approvals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpgradePetition'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AccountUpgradePetition'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AccountUpgradePetition'
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountUpgradePetition'
+          description: ''
+  /api/account-approvals/{id}/:
+    get:
+      operationId: account_approvals_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - account-approvals
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountUpgradePetition'
+          description: ''
+    put:
+      operationId: account_approvals_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - account-approvals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpgradePetition'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AccountUpgradePetition'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AccountUpgradePetition'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountUpgradePetition'
+          description: ''
+    patch:
+      operationId: account_approvals_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - account-approvals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAccountUpgradePetition'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAccountUpgradePetition'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAccountUpgradePetition'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountUpgradePetition'
+          description: ''
+  /api/adresses/:
+    get:
+      operationId: adresses_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - adresses
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAddressListList'
+          description: ''
+    post:
+      operationId: adresses_create
+      tags:
+      - adresses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Address'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Address'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+          description: ''
+  /api/adresses/{id}/:
+    get:
+      operationId: adresses_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this address.
+        required: true
+      tags:
+      - adresses
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+          description: ''
+    put:
+      operationId: adresses_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this address.
+        required: true
+      tags:
+      - adresses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Address'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Address'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+          description: ''
+    patch:
+      operationId: adresses_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this address.
+        required: true
+      tags:
+      - adresses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAddress'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAddress'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAddress'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+          description: ''
+    delete:
+      operationId: adresses_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this address.
+        required: true
+      tags:
+      - adresses
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/cooks/:
+    get:
+      operationId: cooks_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - cooks
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCCCookListList'
+          description: ''
+    post:
+      operationId: cooks_create
+      tags:
+      - cooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CCCookCreation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CCCookCreation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CCCookCreation'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCCookCreation'
+          description: ''
+  /api/cooks/{cook_pk}/dishes/:
+    get:
+      operationId: cooks_dishes_list
+      parameters:
+      - in: path
+        name: cook_pk
+        schema:
+          type: string
+        required: true
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - cooks
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDishListList'
+          description: ''
+    post:
+      operationId: cooks_dishes_create
+      parameters:
+      - in: path
+        name: cook_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - cooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DishCreation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DishCreation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DishCreation'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DishCreation'
+          description: ''
+  /api/cooks/{cook_pk}/dishes/{id}/:
+    get:
+      operationId: cooks_dishes_retrieve
+      parameters:
+      - in: path
+        name: cook_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - cooks
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DishDetail'
+          description: ''
+    put:
+      operationId: cooks_dishes_update
+      parameters:
+      - in: path
+        name: cook_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - cooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DishDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DishDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DishDetail'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DishDetail'
+          description: ''
+    patch:
+      operationId: cooks_dishes_partial_update
+      parameters:
+      - in: path
+        name: cook_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - cooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDishDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDishDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDishDetail'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DishDetail'
+          description: ''
+    delete:
+      operationId: cooks_dishes_destroy
+      parameters:
+      - in: path
+        name: cook_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - cooks
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/cooks/{cook_pk}/dishes/{id}/rate/:
+    post:
+      operationId: cooks_dishes_rate_create
+      parameters:
+      - in: path
+        name: cook_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - cooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DishRating'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DishRating'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DishRating'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DishRating'
+          description: ''
+  /api/cooks/{user}/:
+    get:
+      operationId: cooks_retrieve
+      parameters:
+      - in: path
+        name: user
+        schema:
+          type: integer
+        description: A unique value identifying this cc cook.
+        required: true
+      tags:
+      - cooks
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCCookDetail'
+          description: ''
+  /api/deliverers/:
+    get:
+      operationId: deliverers_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - deliverers
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCCDelivererListList'
+          description: ''
+    post:
+      operationId: deliverers_create
+      tags:
+      - deliverers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CCDelivererCreation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CCDelivererCreation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CCDelivererCreation'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCDelivererCreation'
+          description: ''
+  /api/deliverers/{user}/:
+    get:
+      operationId: deliverers_retrieve
+      parameters:
+      - in: path
+        name: user
+        schema:
+          type: integer
+        description: A unique value identifying this cc deliverer.
+        required: true
+      tags:
+      - deliverers
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCDelivererDetail'
+          description: ''
+  /api/deliverers/{user}/ratings/:
+    get:
+      operationId: deliverers_ratings_retrieve
+      parameters:
+      - in: path
+        name: user
+        schema:
+          type: integer
+        description: A unique value identifying this cc deliverer.
+        required: true
+      tags:
+      - deliverers
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCDelivererDetail'
+          description: ''
+  /api/dish-categories/:
+    get:
+      operationId: dish_categories_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - dish-categories
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDishCategoryListList'
+          description: ''
+    post:
+      operationId: dish_categories_create
+      tags:
+      - dish-categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DishCategoryDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DishCategoryDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DishCategoryDetail'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DishCategoryDetail'
+          description: ''
+  /api/dish-categories/{id}/:
+    get:
+      operationId: dish_categories_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dish category.
+        required: true
+      tags:
+      - dish-categories
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DishCategoryDetail'
+          description: ''
+    put:
+      operationId: dish_categories_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dish category.
+        required: true
+      tags:
+      - dish-categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DishCategoryDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DishCategoryDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DishCategoryDetail'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DishCategoryDetail'
+          description: ''
+    patch:
+      operationId: dish_categories_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dish category.
+        required: true
+      tags:
+      - dish-categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDishCategoryDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDishCategoryDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDishCategoryDetail'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DishCategoryDetail'
+          description: ''
+    delete:
+      operationId: dish_categories_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dish category.
+        required: true
+      tags:
+      - dish-categories
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/dishes/:
+    get:
+      operationId: dishes_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - dishes
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDishListList'
+          description: ''
+  /api/login/:
+    post:
+      operationId: login_create
+      tags:
+      - login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+          description: ''
+  /api/logout/:
+    get:
+      operationId: logout_retrieve
+      tags:
+      - logout
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/orders/:
+    get:
+      operationId: orders_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - orders
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrderListList'
+          description: ''
+    post:
+      operationId: orders_create
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderCreation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderCreation'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderCreation'
+          description: ''
+  /api/orders/{order_pk}/dishes/:
+    get:
+      operationId: orders_dishes_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: path
+        name: order_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - orders
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrderDishListList'
+          description: ''
+    post:
+      operationId: orders_dishes_create
+      parameters:
+      - in: path
+        name: order_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderDishCreation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderDishCreation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderDishCreation'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDishCreation'
+          description: ''
+  /api/orders/{order_pk}/dishes/{id}/:
+    get:
+      operationId: orders_dishes_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order dish.
+        required: true
+      - in: path
+        name: order_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - orders
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDishDetail'
+          description: ''
+    put:
+      operationId: orders_dishes_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order dish.
+        required: true
+      - in: path
+        name: order_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderDishDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderDishDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderDishDetail'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDishDetail'
+          description: ''
+    patch:
+      operationId: orders_dishes_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order dish.
+        required: true
+      - in: path
+        name: order_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderDishDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderDishDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderDishDetail'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDishDetail'
+          description: ''
+    delete:
+      operationId: orders_dishes_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order dish.
+        required: true
+      - in: path
+        name: order_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - orders
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/orders/{id}/:
+    get:
+      operationId: orders_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDetail'
+          description: ''
+    put:
+      operationId: orders_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: orders_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderDetail'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDetail'
+          description: ''
+    delete:
+      operationId: orders_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/orders/{id}/accept/:
+    get:
+      operationId: orders_accept_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDetail'
+          description: ''
+  /api/orders/{id}/rate/:
+    get:
+      operationId: orders_rate_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryRatingDetail'
+          description: ''
+    post:
+      operationId: orders_rate_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliveryRatingCreation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DeliveryRatingCreation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DeliveryRatingCreation'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryRatingCreation'
+          description: ''
+    put:
+      operationId: orders_rate_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliveryRatingCreation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DeliveryRatingCreation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DeliveryRatingCreation'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryRatingCreation'
+          description: ''
+  /api/stats/:
+    get:
+      operationId: stats_retrieve
+      tags:
+      - stats
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/tokens/:
+    post:
+      operationId: tokens_create
+      tags:
+      - tokens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+          description: ''
+  /api/users/:
+    get:
+      operationId: users_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - users
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserListList'
+          description: ''
+    post:
+      operationId: users_create
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserCreation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserCreation'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreation'
+          description: ''
+  /api/users/{id}/:
+    get:
+      operationId: users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this cc user.
+        required: true
+      tags:
+      - users
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetail'
+          description: ''
+    put:
+      operationId: users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this cc user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserDetail'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetail'
+          description: ''
+    patch:
+      operationId: users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this cc user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserDetail'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetail'
+          description: ''
+    delete:
+      operationId: users_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this cc user.
+        required: true
+      tags:
+      - users
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/users/{id}/orders/:
+    get:
+      operationId: users_orders_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this cc user.
+        required: true
+      tags:
+      - users
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetail'
+          description: ''
+  /api/users/me/:
+    get:
+      operationId: users_me_retrieve
+      tags:
+      - users
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetail'
+          description: ''
+components:
+  schemas:
+    AccountUpgradePetition:
+      type: object
+      properties:
+        user:
+          allOf:
+          - $ref: '#/components/schemas/UserDetail'
+          readOnly: true
+        info:
+          type: string
+          readOnly: true
+        state:
+          $ref: '#/components/schemas/StateEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - created_at
+      - info
+      - updated_at
+      - user
+    AccountUpgradePetitionList:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        email:
+          type: string
+          format: email
+        state:
+          $ref: '#/components/schemas/StateEnum'
+        role:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - created_at
+      - email
+      - role
+      - updated_at
+      - url
+      - user_id
+    Address:
+      type: object
+      properties:
+        user:
+          type: string
+          format: uri
+          readOnly: true
+        street:
+          type: string
+        city:
+          type: string
+        zip_code:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        country_iso2:
+          type: string
+          maxLength: 2
+      required:
+      - city
+      - country_iso2
+      - street
+      - user
+      - zip_code
+    AddressList:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        street:
+          type: string
+        city:
+          type: string
+        zip_code:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        country_iso2:
+          type: string
+          maxLength: 2
+      required:
+      - city
+      - country_iso2
+      - street
+      - url
+      - zip_code
+    CCCookCreation:
+      type: object
+      properties:
+        public_name:
+          type: string
+        user:
+          $ref: '#/components/schemas/UserCreation'
+      required:
+      - public_name
+      - user
+    CCCookDetail:
+      type: object
+      properties:
+        public_name:
+          type: string
+        user:
+          $ref: '#/components/schemas/UserDetail'
+        dishes:
+          type: string
+          format: uri
+          readOnly: true
+        rating_average:
+          type: string
+          readOnly: true
+        rating_count:
+          type: string
+          readOnly: true
+      required:
+      - dishes
+      - public_name
+      - rating_average
+      - rating_count
+      - user
+    CCCookList:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        public_name:
+          type: string
+        rating_average:
+          type: string
+          readOnly: true
+      required:
+      - public_name
+      - rating_average
+      - url
+    CCDelivererCreation:
+      type: object
+      properties:
+        transport:
+          $ref: '#/components/schemas/TransportEnum'
+        user:
+          $ref: '#/components/schemas/UserCreation'
+      required:
+      - user
+    CCDelivererDetail:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserDetail'
+        transport:
+          $ref: '#/components/schemas/TransportEnum'
+        rating_average:
+          type: string
+          readOnly: true
+        rating_count:
+          type: string
+          readOnly: true
+      required:
+      - rating_average
+      - rating_count
+      - user
+    CCDelivererList:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        email:
+          type: string
+          format: email
+        transport:
+          $ref: '#/components/schemas/TransportEnum'
+        rating_average:
+          type: string
+          readOnly: true
+      required:
+      - email
+      - rating_average
+      - url
+    DeliveryRatingCreation:
+      type: object
+      properties:
+        rating:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,2})?$
+        note:
+          type: string
+          maxLength: 300
+      required:
+      - rating
+    DeliveryRatingDetail:
+      type: object
+      properties:
+        rating:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,2})?$
+        note:
+          type: string
+          maxLength: 300
+      required:
+      - rating
+    DishCategoryDetail:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 50
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+      required:
+      - name
+    DishCategoryList:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+      required:
+      - name
+      - url
+    DishCreation:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+        category:
+          type: integer
+          nullable: true
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+        estimated_time:
+          type: string
+          nullable: true
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        discount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+      required:
+      - category
+      - description
+      - name
+      - price
+    DishDetail:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+        category:
+          type: string
+          readOnly: true
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+        rating_average:
+          type: string
+          readOnly: true
+        rating_count:
+          type: string
+          readOnly: true
+        estimated_time:
+          type: string
+          nullable: true
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        discount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        last_update_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - category
+      - created_at
+      - description
+      - last_update_at
+      - name
+      - price
+      - rating_average
+      - rating_count
+    DishList:
+      type: object
+      description: |-
+        A type of `ModelSerializer` that uses hyperlinked relationships with compound keys instead
+        of primary key relationships.  Specifically:
+
+        * A 'url' field is included instead of the 'id' field.
+        * Relationships to other instances are hyperlinks, instead of primary keys.
+
+        NOTE: this only works with DRF 3.1.0 and above.
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        rating_average:
+          type: string
+          readOnly: true
+        category:
+          type: string
+      required:
+      - category
+      - rating_average
+      - url
+    DishRating:
+      type: object
+      properties:
+        rating:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,2})?$
+      required:
+      - rating
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - password
+    OrderCreation:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        order_type:
+          $ref: '#/components/schemas/OrderTypeEnum'
+        address:
+          type: string
+          format: uri
+      required:
+      - address
+      - url
+    OrderDetail:
+      type: object
+      properties:
+        user:
+          type: string
+          format: uri
+          readOnly: true
+        deliverer:
+          type: string
+          format: uri
+          readOnly: true
+        address:
+          type: string
+          format: uri
+          readOnly: true
+        dishes:
+          type: string
+          format: uri
+          readOnly: true
+        order_type:
+          $ref: '#/components/schemas/OrderTypeEnum'
+        order_status:
+          $ref: '#/components/schemas/OrderStatusEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        last_updated:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - address
+      - created_at
+      - deliverer
+      - dishes
+      - last_updated
+      - user
+    OrderDishCreation:
+      type: object
+      properties:
+        dish:
+          type: integer
+        amount:
+          type: integer
+          default: 1
+          minimum: 1
+          maximum: 1000
+        note:
+          type: string
+      required:
+      - dish
+      - note
+    OrderDishDetail:
+      type: object
+      properties:
+        order:
+          type: string
+          format: uri
+          readOnly: true
+        dish:
+          type: string
+          format: uri
+          readOnly: true
+        amount:
+          type: integer
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        note:
+          type: string
+      required:
+      - amount
+      - dish
+      - note
+      - order
+      - price
+    OrderDishList:
+      type: object
+      description: |-
+        A type of `ModelSerializer` that uses hyperlinked relationships with compound keys instead
+        of primary key relationships.  Specifically:
+
+        * A 'url' field is included instead of the 'id' field.
+        * Relationships to other instances are hyperlinks, instead of primary keys.
+
+        NOTE: this only works with DRF 3.1.0 and above.
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+      required:
+      - url
+    OrderList:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        dishes:
+          type: string
+          format: uri
+          readOnly: true
+        address:
+          type: string
+          format: uri
+          readOnly: true
+        deliverer:
+          type: string
+          format: uri
+          readOnly: true
+        first_name:
+          type: string
+        order_type:
+          $ref: '#/components/schemas/OrderTypeEnum'
+        order_status:
+          $ref: '#/components/schemas/OrderStatusEnum'
+      required:
+      - address
+      - deliverer
+      - dishes
+      - first_name
+      - url
+    OrderStatusEnum:
+      enum:
+      - P
+      - A
+      - R
+      - C
+      - B
+      - K
+      - D
+      - T
+      - S
+      - F
+      type: string
+      description: |-
+        * `P` - Pending
+        * `A` - Approved
+        * `R` - Rejected
+        * `C` - Cooking
+        * `B` - Burnt Kitchen
+        * `K` - Cooked
+        * `D` - Delivering
+        * `T` - Traffic Accident
+        * `S` - Atracao
+        * `F` - Finished
+    OrderTypeEnum:
+      enum:
+      - D
+      - P
+      type: string
+      description: |-
+        * `D` - Delivery
+        * `P` - Pickup
+    PaginatedAccountUpgradePetitionListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountUpgradePetitionList'
+    PaginatedAddressListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressList'
+    PaginatedCCCookListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CCCookList'
+    PaginatedCCDelivererListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CCDelivererList'
+    PaginatedDishCategoryListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DishCategoryList'
+    PaginatedDishListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DishList'
+    PaginatedOrderDishListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderDishList'
+    PaginatedOrderListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderList'
+    PaginatedUserListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserList'
+    PatchedAccountUpgradePetition:
+      type: object
+      properties:
+        user:
+          allOf:
+          - $ref: '#/components/schemas/UserDetail'
+          readOnly: true
+        info:
+          type: string
+          readOnly: true
+        state:
+          $ref: '#/components/schemas/StateEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+    PatchedAddress:
+      type: object
+      properties:
+        user:
+          type: string
+          format: uri
+          readOnly: true
+        street:
+          type: string
+        city:
+          type: string
+        zip_code:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        country_iso2:
+          type: string
+          maxLength: 2
+    PatchedDishCategoryDetail:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 50
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+    PatchedDishDetail:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+        category:
+          type: string
+          readOnly: true
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+        rating_average:
+          type: string
+          readOnly: true
+        rating_count:
+          type: string
+          readOnly: true
+        estimated_time:
+          type: string
+          nullable: true
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        discount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        last_update_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+    PatchedOrderDetail:
+      type: object
+      properties:
+        user:
+          type: string
+          format: uri
+          readOnly: true
+        deliverer:
+          type: string
+          format: uri
+          readOnly: true
+        address:
+          type: string
+          format: uri
+          readOnly: true
+        dishes:
+          type: string
+          format: uri
+          readOnly: true
+        order_type:
+          $ref: '#/components/schemas/OrderTypeEnum'
+        order_status:
+          $ref: '#/components/schemas/OrderStatusEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        last_updated:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedOrderDishDetail:
+      type: object
+      properties:
+        order:
+          type: string
+          format: uri
+          readOnly: true
+        dish:
+          type: string
+          format: uri
+          readOnly: true
+        amount:
+          type: integer
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        note:
+          type: string
+    PatchedUserDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        phone:
+          type: string
+          maxLength: 15
+        age:
+          type: integer
+          maximum: 32767
+          minimum: -32768
+        banned:
+          type: boolean
+    RoleEnum:
+      enum:
+      - U
+      - C
+      - D
+      type: string
+      description: |-
+        * `U` - User
+        * `C` - Cook
+        * `D` - Deliverer
+    StateEnum:
+      enum:
+      - P
+      - A
+      - R
+      type: string
+      description: |-
+        * `P` - Pending
+        * `A` - Accepted
+        * `R` - Rejected
+    TransportEnum:
+      enum:
+      - C
+      - B
+      - S
+      type: string
+      description: |-
+        * `C` - Car
+        * `B` - Bicycle
+        * `S` - Scooter
+    UserCreation:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+        phone:
+          type: string
+          maxLength: 15
+        age:
+          type: integer
+          maximum: 32767
+          minimum: -32768
+      required:
+      - age
+      - email
+      - password
+      - phone
+    UserDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        phone:
+          type: string
+          maxLength: 15
+        age:
+          type: integer
+          maximum: 32767
+          minimum: -32768
+        banned:
+          type: boolean
+      required:
+      - age
+      - email
+      - id
+      - phone
+    UserList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        banned:
+          type: boolean
+        total_orders:
+          type: string
+          readOnly: true
+      required:
+      - email
+      - id
+      - total_orders
+      - url
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

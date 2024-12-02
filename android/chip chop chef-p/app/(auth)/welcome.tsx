@@ -1,9 +1,9 @@
 import { router } from "expo-router";
 import { useRef, useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Swiper from "react-native-swiper";
-
+import React from "react";
 import CustomButton from "@/components/CustomButton";
 import { onboarding } from "@/constants";
 
@@ -36,11 +36,12 @@ const Home = () => {
         onIndexChanged={(index) => setActiveIndex(index)}
       >
         {onboarding.map((item) => (
-          <View key={item.id} className="flex items-center justify-center p-5">
+          <View key={item.id} className="flex flex-1 items-center justify-center p-5">
             <Image
               source={item.image}
-              className="w-full h-[300px]"
+              // className="w-full h-[300px]"
               resizeMode="contain"
+              style={styles.image}
             />
             <View className="flex flex-row items-center justify-center w-full mt-14">
               <Text className="text-primary-500 text-3xl font-bold mx-6 text-center whitespace-nowrap">
@@ -68,3 +69,15 @@ const Home = () => {
 };
 
 export default Home;
+
+const styles = StyleSheet.create({
+  image: {
+    flex: 0.7,
+    width: 100,
+    height: 200,
+    maxWidth: "80%",
+    maxHeight: "20%"
+  }
+})
+
+

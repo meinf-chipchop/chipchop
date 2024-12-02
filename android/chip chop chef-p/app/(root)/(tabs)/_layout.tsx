@@ -1,64 +1,47 @@
 import { Tabs } from "expo-router";
 import { icons } from "@/constants";
-import TabIcon from "@/components/TabIcon";
+import { Image } from "react-native";
 
-export default function Layout() {
+export default function TabLayout() {
   return (
     <Tabs
-      initialRouteName="index"
       screenOptions={{
-        tabBarActiveTintColor: "white",
-        tabBarInactiveTintColor: "white",
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          shadowColor: "transparent",
-          backgroundColor: "#CED1DD",
-          borderRadius: 50,
-          paddingBottom: 0,
-          paddingHorizontal: 0,
-          overflow: "hidden",
-          marginHorizontal: 20,
-          marginBottom: 20,
-          height: 54,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexDirection: "row",
-          position: "absolute",
-        },
+        headerShown: false,
       }}
     >
       <Tabs.Screen
+        name="index"
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={icons.home}
+              style={{
+                width: 24,
+                height: 24,
+                tintColor: focused ? "#E7D4B5" : "#898989",
+              }}
+            />
+          ),
+          tabBarLabel: "Home",
+        }}
+      />
+      <Tabs.Screen
         name="home"
         options={{
-          title: "Home",
-          headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <TabIcon source={icons.home} focused={focused} />
+            <Image
+              source={icons.home}
+              style={{
+                width: 24,
+                height: 24,
+                tintColor: focused ? "#E7D4B5" : "#898989",
+              }}
+            />
           ),
+          tabBarLabel: "Home",
         }}
       />
-      <Tabs.Screen
-        name="dishes"
-        options={{
-          title: "Dishes",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon source={icons.dish} focused={focused} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon source={icons.user} focused={focused} />
-          ),
-        }}
-      />
+      {/* Add other tab screens here */}
     </Tabs>
   );
 }

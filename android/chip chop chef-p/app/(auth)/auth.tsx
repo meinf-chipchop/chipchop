@@ -5,11 +5,12 @@ import SignIn from "@/components/auth/sign-in";
 import CustomButton from "@/components/CustomButton";
 import { icons, images } from "@/constants";
 import { useState } from "react";
-import { Text, Image, View, ScrollView, TouchableOpacity } from "react-native";
+import { Text, Image, View, ScrollView, TouchableOpacity, Dimensions } from "react-native";
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState("signup");
   const [signUpType, setSignUpType] = useState("");
+  const screenWidth = Dimensions.get('window').width;
 
   const renderSignUpComponent = () => {
     switch (signUpType) {
@@ -69,7 +70,11 @@ const Auth = () => {
     <ScrollView className="flex-1 bg-white pt-4">
       <View className="flex-1 px-6">
         <View className="relative w-full flex justify-center items-center">
-          <Image source={images.auth} className="z-0 w-60 h-60" />
+          <Image 
+            source={images.auth} 
+            style={{ width: screenWidth * 0.8, height: screenWidth * 0.8 }} 
+            className="z-0" 
+          />
           <View className="flex-row justify-center w-full mb-4">
             <TouchableOpacity
               className={`px-4 py-2 ${activeTab === "login" ? "border-b-2 border-primary-500" : ""}`}

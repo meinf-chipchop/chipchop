@@ -53,3 +53,13 @@ export enum OrderStatus {
   APPROVED = "APPROVED",
   REJECTED = "REJECTED",
 }
+
+export async function getByURL<T>(url: string): Promise<T> {
+  return fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  }).then((response) => response.json() as Promise<T>);
+}
