@@ -1,22 +1,9 @@
-import NotFoundScreen from "@/app/+not-found";
 import { Button, ButtonIcon } from "@/components/ui/button";
-import { Dish, getDish, updateDish } from "@/lib/dishes";
+
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { t } from "i18next";
-import {
-  AlertCircleIcon,
-  ChevronLeftIcon,
-  PencilIcon,
-  SaveIcon,
-} from "lucide-react-native";
-import {
-  Image,
-  ImageSourcePropType,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { ChevronLeftIcon } from "lucide-react-native";
+import { SafeAreaView, ScrollView, Text, View } from "react-native";
 
 import { useEffect, useState } from "react";
 
@@ -65,34 +52,44 @@ export default function DetailsScreen() {
 
 function OrderComponent({ order }: { order: Order }) {
   const orderStatusDict = {
-    P: t("order_status.P"),
-    A: t("order_status.A"),
-    R: t("order_status.R"),
-    C: t("order_status.C"),
-    B: t("order_status.B"),
-    K: t("order_status.K"),
-    D: t("order_status.D"),
-    T: t("order_status.T"),
-    S: t("order_status.S"),
-    F: t("order_status.F"),
+    P: { text: t("order_status.P"), color: "bg-yellow-500" },
+    A: { text: t("order_status.A"), color: "bg-green-500" },
+    R: { text: t("order_status.R"), color: "bg-red-500" },
+    C: { text: t("order_status.C"), color: "bg-yellow-500" },
+    B: { text: t("order_status.B"), color: "bg-red-500" },
+    K: { text: t("order_status.K"), color: "bg-green-500" },
+    D: { text: t("order_status.D"), color: "bg-yellow-500" },
+    T: { text: t("order_status.T"), color: "bg-red-500" },
+    S: { text: t("order_status.S"), color: "bg-red-500" },
+    F: { text: t("order_status.F"), color: "bg-green-500" },
   };
-
   const orderTypeDict = {
     D: t("order_type.D"),
     P: t("order_type.P"),
   };
 
+  const orderStatusColor =
+    orderStatusDict[order.order_status as keyof typeof orderStatusDict].color;
+
   return (
-    <View className="flex-col gap-2 bg-yellow-600  rounded p-2">
-      <Text className="text-[14pt]">
-        {new Date(order.created_at).toLocaleDateString()}
-      </Text>
+    <View className="flex-col gap-2  rounded p-2 shadow border-[1.5px] border-gray-500">
       <View className="flex-row gap-2 ">
-        <Text className="bg-white px-2 py-2 rounded  font-bold">
+        <Text className="text-[14pt]">
+          {new Date(order.created_at).toLocaleDateString()}
+        </Text>
+        <Text className="text-[14pt] h-full w-full text-end font-bold">
+          {order.total_price} €
+        </Text>
+      </View>
+      <View className="flex-row gap-2 w-full justify-between">
+        <Text className="bg-white  p-2 rounded  font-bold">
           {orderTypeDict[order.order_type as keyof typeof orderTypeDict]}
         </Text>
-        <Text className="bg-white px-2 py-2 rounded  font-bold">
-          {orderStatusDict[order.order_status as keyof typeof orderStatusDict]}
+        <Text className={`${orderStatusColor}  p-2 rounded  font-bold`}>
+          {
+            orderStatusDict[order.order_status as keyof typeof orderStatusDict]
+              .text
+          }
         </Text>
       </View>
     </View>
