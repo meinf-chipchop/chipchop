@@ -14,12 +14,18 @@ import {
   getCsrfToken,
   Me,
   me,
+  userType,
 } from "@/lib/auth";
 import { router } from "expo-router";
+import { NewCook } from "@/lib/cook";
+import { NewDeliver } from "@/lib/delivery";
 
 const AuthContext = createContext<{
   signIn: (email: string, password: string) => Promise<string>;
-  signUp: (user: NewUser) => Promise<string>;
+  signUp: (
+    user: NewUser | NewCook | NewDeliver,
+    type: userType
+  ) => Promise<string>;
   signOut: () => void;
   handleForgotPassword: () => void;
   user?: Me | null;
@@ -98,9 +104,12 @@ export function SessionProvider({ children }: PropsWithChildren) {
     }
   };
 
-  const signUp = async (user: NewUser): Promise<string> => {
+  const signUp = async (
+    user: NewUser | NewCook | NewDeliver,
+    type: userType
+  ): Promise<string> => {
     try {
-      const response = await register(user);
+      const response = await register(user, type);
 
       if (!response.ok) {
         const error = await response.json().catch(() => ({}));

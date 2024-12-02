@@ -1,3 +1,5 @@
+import { NewCook, createCook } from "./cook";
+import { NewDeliver, createDeliver } from "./delivery";
 import fetchWrapper from "./fetchWrapper";
 
 export interface User {
@@ -27,6 +29,7 @@ export interface NewUser {
   phone: string;
   birth_date: string;
 }
+export type userType = "customer" | "cook" | "deliver";
 
 export function getCsrfToken() {
   return document.cookie
@@ -66,7 +69,21 @@ export function login(email: string, password: string) {
   });
 }
 
-export function register(user: NewUser) {
+export function register(
+  user: NewUser | NewCook | NewDeliver,
+  type: userType
+): Promise<Response> {
+  switch (type) {
+    case "customer":
+      return registerCostumer(user as NewUser);
+    case "cook":
+      return registerCook(user as NewCook);
+    case "deliver":
+      return registerDeliver(user as NewDeliver);
+  }
+}
+
+export function registerCostumer(user: NewUser) {
   return fetchWrapper("/api/users/", {
     method: "POST",
     headers: {
@@ -74,4 +91,12 @@ export function register(user: NewUser) {
     },
     body: JSON.stringify(user),
   });
+}
+
+export function registerCook(user: NewCook) {
+  return createCook(user);
+}
+
+export function registerDeliver(user: NewDeliver) {
+  return createDeliver(user);
 }

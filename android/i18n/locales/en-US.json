@@ -33,7 +33,8 @@
     "sign_up": "Sign Up",
     "sign_in": "Sign In",
     "sign_out": "Sign out",
-    "forgot_password": "Forgot password?"
+    "forgot_password": "Forgot password?",
+    "register_as": "Register as"
   },
   "onboarding": {
     "homemade_delights": "Homemade Delights",
@@ -67,6 +68,13 @@
     "no_dishes_found": "No dishes found",
     "become_chef": "Become a chef and start selling your own dishes !!",
     "select_category": "Select a category"
+  },
+  "vehicle": {
+    "type": "Vehicle type",
+    "select": "Select a vehicle",
+    "car": "Car",
+    "scooter": "Scooter",
+    "bycicle": "Bycicle"
   },
   "settings": {
     "work_with_us": "Work with us"
