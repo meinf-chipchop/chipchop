@@ -5,7 +5,8 @@
     "first_name": "First Name",
     "password": "Password",
     "phone_number": "Phone Number",
-    "second_name": "Second Name"
+    "second_name": "Second Name",
+    "history": "History"
   },
   "labels": {
     "chef": "Chef",
@@ -69,5 +70,21 @@
   },
   "settings": {
     "work_with_us": "Work with us"
+  },
+  "order_status": {
+    "P": "Pending",
+    "A": "Approved",
+    "R": "Rejected",
+    "C": "Cooking",
+    "B": "Burnt Kitchen",
+    "K": "Cooked",
+    "D": "Delivering",
+    "T": "Traffic Accident",
+    "S": "Robbed",
+    "F": "Finished"
+  },
+  "order_type": {
+    "D": "Delivery",
+    "P": "Pickup"
   }
 }
