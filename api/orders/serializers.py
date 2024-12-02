@@ -123,6 +123,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Order
         fields = [
+            "id",
             "user",
             "deliverer",
             "address",

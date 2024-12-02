@@ -21,6 +21,12 @@ User = get_user_model()
 class OrderDishesViewSet(viewsets.ModelViewSet):
     queryset = models.OrderDish.objects.all()
     serializer_class = serializers.OrderDishDetailSerializer
+    
+    def dispatch(self, *args, **kwargs):
+        response = super().dispatch(*args, **kwargs)
+        if isinstance(response, Response):
+            response['Cache-Control'] = "max-age=3600"
+        return response
 
     def get_serializer_class(self):
         if self.action == "create":
