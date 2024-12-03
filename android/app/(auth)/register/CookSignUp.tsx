@@ -28,7 +28,7 @@ const CookSignUp = () => {
   const { signUp } = useSession();
 
   const signUpValidationSchema = z.object({
-    public_name: z.string().min(1, t("validation_form.first_name_required")),
+    public_name: z.string().min(1, t("validation_form.public_name_required")),
   });
 
   const validateForm = () => {
@@ -90,6 +90,7 @@ const CookSignUp = () => {
               error={errors.public_name}
             />
           }
+          additionalFieldsValidation={validateForm}
         />
       </View>
     </ScrollView>

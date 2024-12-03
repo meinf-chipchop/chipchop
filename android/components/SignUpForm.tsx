@@ -14,6 +14,7 @@ interface UserFormProps {
   onSignUpPress: () => void;
   response: { errors: string };
   additionalFields?: React.ReactNode;
+  additionalFieldsValidation?: () => boolean
 }
 
 const SignUpForm = ({
@@ -23,6 +24,7 @@ const SignUpForm = ({
   onSignUpPress,
   response,
   additionalFields,
+  additionalFieldsValidation
 }: UserFormProps) => {
   const { t } = useTranslation();
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -124,7 +126,10 @@ const SignUpForm = ({
         <Button
           disabled={loading}
           onPress={() => {
-            if (validateForm()) onSignUpPress();
+            let validation = true;
+            if (additionalFieldsValidation)
+              validation = additionalFieldsValidation();
+            if (validateForm() && validation) onSignUpPress();
           }}
           className="rounded-full mt-6"
         >

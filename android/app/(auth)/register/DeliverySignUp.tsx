@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { ScrollView, View, Text } from "react-native";
+import { ScrollView, View } from "react-native";
 import { z } from "zod";
-import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
-import InputField from "@/components/InputField";
 import { Heading } from "@/components/ui/heading";
 import {
   FormControl,
+  FormControlError,
+  FormControlErrorIcon,
+  FormControlErrorText,
   FormControlLabel,
   FormControlLabelText,
 } from "@/components/ui/form-control";
@@ -22,7 +23,7 @@ import {
   SelectPortal,
   SelectTrigger,
 } from "@/components/ui/select";
-import { Bike, ChevronDownIcon } from "lucide-react-native";
+import { AlertCircleIcon, Bike, ChevronDownIcon } from "lucide-react-native";
 import { NewDeliver, Vehicle } from "@/lib/delivery";
 import { router } from "expo-router";
 import { useSession } from "@/auth/authContext";
@@ -47,7 +48,7 @@ const DeliverySignUp = () => {
   const [loading, setLoading] = useState(false);
 
   const signUpValidationSchema = z.object({
-    vehicle: z.string(). min(1, t("validation_form.first_name_required")),
+    vehicle: z.string().min(1, t("validation_form.vehicle_required")),
   });
 
   const validateForm = () => {
@@ -123,8 +124,13 @@ const DeliverySignUp = () => {
                   </SelectContent>
                 </SelectPortal>
               </Select>
+              <FormControlError className="pl-3">
+                <FormControlErrorIcon as={AlertCircleIcon} />
+                <FormControlErrorText className="text-sm">{errors.vehicle}</FormControlErrorText>
+              </FormControlError>
             </FormControl>
           }
+          additionalFieldsValidation={validateForm}
         />
       </View>
     </ScrollView>
