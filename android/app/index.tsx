@@ -12,7 +12,7 @@ export default function Index() {
   useEffect(() => {
     me()
       .then((user) => console.log("User->", user))
-      .catch(() => router?.push("/(auth)/signin"));
+      .catch(() => router?.push("/(auth)/"));
   }, [router]);
 
   useEffect(() => {

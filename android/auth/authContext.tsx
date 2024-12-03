@@ -122,10 +122,29 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
       const token = getCsrfToken();
       if (!token) {
-        console.error("[signUp] CSRF token missing or invalid.");
+        console.error(
+          "[signUp] CSRF token missing or invalid. Trying to login"
+        );
+        let email, password;
+        switch (type) {
+          case "customer":
+            email = (user as NewUser).email;
+            password = (user as NewUser).password;
+            break;
+          case "cook":
+            email = (user as NewCook).user.email;
+            password = (user as NewCook).user.password;
+            break;
+          case "deliver":
+            email = (user as NewDeliver).user.email;
+            password = (user as NewDeliver).user.password;
+            break;
+        }
+        return signIn(email, password);
+      } else {
+        setSession(token ?? "");
       }
 
-      setSession(token ?? "");
       return ""; // Success, no error message
     } catch (error) {
       console.error("[signUp] Unexpected error:", error);

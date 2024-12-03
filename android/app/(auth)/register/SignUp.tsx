@@ -5,7 +5,7 @@ import { Bike, ChefHat, User } from "lucide-react-native";
 import { Heading } from "@/components/ui/heading";
 import { VStack } from "@/components/ui/vstack";
 import { useState } from "react";
-import CustomerSignUp from "./CookSignUp";
+import CustomerSignUp from "./CustomerSignUp";
 import CookSignUp from "./CookSignUp";
 import DeliverySignUp from "./DeliverySignUp";
 
