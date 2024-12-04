@@ -35,3 +35,13 @@ Some passthrough have been configured like
 Email: admin@chipchop.es
 
 Passwd: admin
+
+# Android
+
+## How to use notifications
+
+1. Set up an account in onesignal.com
+2. Configure a new Android app in the OneSignal portal.
+3. Obtain your Firebase Cloud Messaging (FCM) API key from the Firebase console and configure it in OneSignal.
+4. Add your OneSignal key to the `.env` file following the `.env-template`.
+5. Ensure that your app is built and emulated on an Android device. Note that notifications will not work on Expo Go or web.
