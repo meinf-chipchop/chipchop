@@ -85,6 +85,7 @@ class Dish(models.Model):
     )
     image_url = models.URLField(
         null=True,
+        max_length=None
     )
     estimated_time = models.DurationField(
         null=True,
