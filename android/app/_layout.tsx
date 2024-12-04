@@ -9,6 +9,7 @@ import "react-native-reanimated";
 import { SessionProvider } from "@/auth/authContext";
 import "@/i18n";
 import { initI18n } from "@/i18n";
+import { initOneSignal } from "@/lib/onesignal/main";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -32,6 +33,7 @@ export default function RootLayout() {
       setIsI18nInitialized(true);
     };
     initializeI18N();
+    initOneSignal();
   }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
