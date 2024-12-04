@@ -100,7 +100,7 @@ class LoginViewSet(viewsets.ViewSet):
                     if AccountUpgradePetition.objects.get(user=user).state != AccountUpgradePetition.PetitionState.ACCEPTED or user.is_banned:
                         return Response(
                             {"Message": "Your account is not accepted yet."},
-                            status=status.HTTP_403_UNAUTHORIZED,
+                            status=status.HTTP_403_FORBIDDEN,
                         )
                 
                 login(request, user)
