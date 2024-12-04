@@ -1,7 +1,8 @@
 import { Platform } from "react-native";
 import fetchWrapper from "./fetchWrapper";
 
-import CookieManager from "@react-native-cookies/cookies";
+const CookieManager =
+  Platform.OS !== "web" && require("@react-native-cookies/cookies");
 
 export interface User {
   first_name: string;

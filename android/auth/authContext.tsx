@@ -16,7 +16,8 @@ import {
   me,
 } from "@/lib/auth";
 import { router } from "expo-router";
-import CookieManager from "@react-native-cookies/cookies";
+const CookieManager =
+  Platform.OS !== "web" && require("@react-native-cookies/cookies");
 import { Platform } from "react-native";
 
 const AuthContext = createContext<{
