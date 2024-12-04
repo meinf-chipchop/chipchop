@@ -53,7 +53,7 @@ export async function createCookDish(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-CSRFToken": getCsrfToken() ?? "",
+      "X-CSRFToken": (await getCsrfToken()) ?? "",
     },
     credentials: "include",
     body: JSON.stringify(dish),
@@ -86,7 +86,7 @@ export async function updateDish(
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      "X-CSRFToken": getCsrfToken() ?? "",
+      "X-CSRFToken": (await getCsrfToken()) ?? "",
     },
     body: JSON.stringify(dish),
     credentials: "include",

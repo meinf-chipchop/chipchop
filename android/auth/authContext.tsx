@@ -16,6 +16,8 @@ import {
   me,
 } from "@/lib/auth";
 import { router } from "expo-router";
+import CookieManager from "@react-native-cookies/cookies";
+import { Platform } from "react-native";
 
 const AuthContext = createContext<{
   signIn: (email: string, password: string) => Promise<string>;
@@ -70,32 +72,31 @@ export function SessionProvider({ children }: PropsWithChildren) {
   }, [session]);
 
   const signIn = async (email: string, password: string): Promise<string> => {
-    try {
-      const response = await login(email, password);
+    const response = await login(email, password);
 
-      if (!response.ok) {
-        const error = await response.json().catch(() => ({}));
-        const errorMessage = error?.Message || "Unknown error occurred.";
-        console.error(
-          `[signIn] Login failed with status ${response.status}: ${errorMessage}`
-        );
-        return `Login failed: ${errorMessage}`;
-      }
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      const errorMessage = error?.Message || "Unknown error occurred.";
+      console.error(
+        `[signIn] Login failed with status ${response.status}: ${errorMessage}`
+      );
+      return `Login failed: ${errorMessage}`;
+    }
+    if (process.env.EXPO_PUBLIC_API_URL && Platform.OS !== "web") {
+      CookieManager.setFromResponse(
+        process.env.EXPO_PUBLIC_API_URL,
+        response.headers.get("set-cookie") || ""
+      );
 
-      const csrfToken = getCsrfToken();
+      const csrfToken = await getCsrfToken();
       if (!csrfToken) {
         console.error("[signIn] CSRF token missing or invalid.");
         return "Login failed: Unable to retrieve session token.";
       }
 
       setSession(csrfToken);
-      return ""; // Success, no error message
-    } catch (error) {
-      console.error("[signIn] Unexpected error:", error);
-      return `Error: ${
-        error instanceof Error ? error.message : "Unknown error occurred."
-      }`;
     }
+    return "";
   };
 
   const signUp = async (user: NewUser): Promise<string> => {
@@ -111,7 +112,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
         return `Sign up failed: ${errorMessage}`;
       }
 
-      const token = getCsrfToken();
+      const token = await getCsrfToken();
       if (!token) {
         console.error("[signUp] CSRF token missing or invalid.");
       }
