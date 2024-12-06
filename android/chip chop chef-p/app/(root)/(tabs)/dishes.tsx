@@ -1,17 +1,18 @@
 import DishCard from "@/components/DishCard";
 import { allDishes } from "@/constants";
 import React from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Text, View, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Dishes = () => {
   const loading = false;
+  const { width, height } = Dimensions.get('window');
 
   return (
-    <SafeAreaView className="flex gap-4 px-2 flex-col h-full bg-gray-100">
+    <SafeAreaView style={{ flex: 1, paddingHorizontal: width * 0.05, backgroundColor: '#f3f4f6' }}>
       {/* Title Section */}
-      <View className=" bg-general-100 rounded-sm p-2">
-        <Text className="text-2xl py-1 font-bold text-center text-white">
+      <View style={{ backgroundColor: '#e5e7eb', borderRadius: 4, padding: 8 }}>
+        <Text style={{ fontSize: 24, paddingVertical: 4, fontWeight: 'bold', textAlign: 'center', color: '#ffffff' }}>
           Recipes
         </Text>
       </View>
@@ -19,22 +20,22 @@ const Dishes = () => {
         data={allDishes?.slice(0, 5)}
         renderItem={({ item }) => <DishCard dish={item} />}
         keyExtractor={(item, index) => index.toString()}
-        className="px-5"
+        style={{ paddingHorizontal: width * 0.05 }}
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
-          paddingBottom: 100,
+          paddingBottom: height * 0.1,
         }}
         ListEmptyComponent={() => (
-          <View className="flex flex-col items-center justify-center">
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             {!loading ? (
               <>
                 {/* <Image
                   source={images.onboarding1}
-                  className="w-40 h-40"
+                  style={{ width: width * 0.4, height: width * 0.4 }}
                   alt="No dishes found"
                   resizeMode="contain"
                 /> */}
-                <Text className="text-sm rounded-full  p-4 bg-primary-800 text-white">
+                <Text style={{ fontSize: 14, borderRadius: 50, padding: 16, backgroundColor: '#1f2937', color: '#ffffff' }}>
                   No Recipe found
                 </Text>
               </>
