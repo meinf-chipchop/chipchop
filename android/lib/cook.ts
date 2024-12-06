@@ -30,15 +30,6 @@ export function getCook(cookId: number): Promise<Cook> {
   }).then((response) => response.json() as Promise<Cook>);
 }
 
-export function getCookByURL(cookURL: string): Promise<Cook> {
-  return fetch(cookURL, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((response) => response.json() as Promise<Cook>);
-}
-
 export async function getCooks(): Promise<Cook[]> {
   const cookList = await fetchWrapper("/api/cooks/", {
     method: "GET",
@@ -55,3 +46,13 @@ export async function getCooks(): Promise<Cook[]> {
 
   return cooks;
 }
+
+export function getCookByURL(cookURL: string): Promise<Cook> {
+  return fetch(cookURL, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => response.json() as Promise<Cook>);
+}
+

@@ -16,7 +16,7 @@
   "dependencies": {
     "@babel/plugin-transform-export-namespace-from": "^7.25.9",
     "@expo/html-elements": "^0.4.2",
-    "@expo/vector-icons": "^14.0.2",
+    "@expo/vector-icons": "^14.0.4",
     "@gluestack-ui/actionsheet": "^0.2.46",
     "@gluestack-ui/alert-dialog": "^0.1.31",
     "@gluestack-ui/avatar": "^0.1.18",

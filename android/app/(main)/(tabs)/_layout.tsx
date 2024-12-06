@@ -87,7 +87,9 @@ export default function Layout() {
             />
           ),
         }}
+
       />
+
       <Tabs.Screen
         name="profile"
         options={{
@@ -115,6 +117,21 @@ export default function Layout() {
           ),
         }}
       />
+{/* //=================== Change the location of display of the list ===================// */}
+      <Tabs.Screen
+        name="orders"
+        options={{
+          title: "Orders",
+          headerShown: false,
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabIcon
+              icon={<Ionicons name="book" color={color} size={size} />}
+              focused={focused}
+            />
+          ),
+        }}
+      />
     </Tabs>
+    // =================== Change the location of display of the list =================== //
   );
 }
