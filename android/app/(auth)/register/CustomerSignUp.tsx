@@ -9,7 +9,7 @@ import { useSession } from "@/auth/authContext";
 import { NewUser } from "@/lib/auth";
 import { useTranslation } from "react-i18next";
 
-const UserSignUp = () => {
+const CustomerSignUp = () => {
   const { t } = useTranslation();
   const [form, setForm] = useState<NewUser>({
     first_name: "",
@@ -151,4 +151,4 @@ const UserSignUp = () => {
   );
 };
 
-export default UserSignUp;
+export default CustomerSignUp;

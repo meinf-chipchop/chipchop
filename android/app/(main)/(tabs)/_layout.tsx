@@ -39,7 +39,7 @@ export default function Layout() {
 
   return (
     <Tabs
-      initialRouteName="index"
+      initialRouteName="home"
       screenOptions={{
         tabBarActiveTintColor: Colors.chestnut[100],
         tabBarInactiveTintColor: Colors.chestnut[900],
