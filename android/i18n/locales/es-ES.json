@@ -69,13 +69,15 @@
     "save_price": "Ahorra",
     "added_on": "Añadido el",
     "top_rated": "Lo mejor valorado",
-    "all": "Otros aperitivos"
+    "all": "Otros aperitivos",
+    "uncategorized": "Sin categoría"
   },
   "cart": {
     "add": "Añadir al carrito"
   },
   "rating": {
-    "ratings": "Valoracion(es)"
+    "ratings": "Valoracion(es)",
+    "no_ratings": "Sin valoraciones"
   },
   "settings": {
     "work_with_us": "Trabaja con nosotros"

@@ -1,53 +1,104 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, ImageSourcePropType } from 'react-native';
 import { formatDate } from '@/lib/utils';
 import { Dish, getDiscountedPrice } from '@/lib/dishes';
 import RatingCard from './RatingCard';
 import { Button, ButtonIcon, ButtonText } from './ui/button';
 import { useTranslation } from 'react-i18next';
-import { ShoppingCartIcon } from 'lucide-react-native';
+import { ArrowDown, ArrowUp, ShoppingCartIcon } from 'lucide-react-native';
+import { HR } from '@expo/html-elements';
 
 
-export const CookProfileSimpleDishCard = ({ dish }: { dish: Dish }) => {
+export const CookProfileExpandableDishCard = ({ dish }: { dish: Dish }) => {
   const discountedPrice = getDiscountedPrice(dish);
+  const [isExpanded, setExpanded] = useState(false);
+
+  const { t } = useTranslation();
 
   return (
-    <View className="flex flex-row items-center bg-white p-3 mb-2 shadow-sm rounded-md gap-x-2 w-full">
-      {/* Dish Image */}
-      <View className="w-16 h-16 mr-4">
-        <Image
-          source={dish.image_url as ImageSourcePropType}
-          className="w-full h-full object-cover rounded-md"
-        />
-      </View>
-
-      {/* Dish Details */}
-      <View className="flex-1 mx-2">
-        <View className="flex flex-row gap-x-2">
-          <Text className="font-bold text-md text-gray-800 align-baseline">{dish.name}</Text>
-          {dish.rating_average && <Text className="text-sm text-gray-500">{dish.rating_average}/5 ({dish.rating_count})</Text>}
+    <View className="flex flex-col w-full bg-white rounded-md px-3 py-1 shadow-sm">
+      <View className="flex flex-row items-center gap-x-2 w-full mb-2">
+        {/* Dish Image */}
+        <View className="w-16 h-16 mr-4">
+          <Image
+            source={dish.image_url as ImageSourcePropType}
+            className="w-full h-full object-cover rounded-md"
+          />
         </View>
-        <View className="flex flex-row gap-x-2">
-          <Text className="text-primary-500 font-semibold align-baseline">
-            ${discountedPrice ? discountedPrice.toFixed(2) : dish.price.toFixed(2)}
-          </Text>
-          {discountedPrice && (
-            <Text className="line-through text-red-900 text-sm">
-              ${dish.price.toFixed(2)}
+
+        {/* Dish Details */}
+        <View className="flex-1 mx-2">
+          <View className="flex flex-row gap-x-2">
+            <Text className="font-bold text-md text-gray-800 align-baseline">{dish.name}</Text>
+            {!isExpanded && dish.rating_average && <Text className="text-sm text-gray-500">{dish.rating_average}/5 ({dish.rating_count})</Text>}
+          </View>
+          <View className="flex flex-row gap-x-2">
+            <Text className="text-primary-500 font-semibold align-baseline">
+              ${discountedPrice ? discountedPrice.toFixed(2) : dish.price.toFixed(2)}
             </Text>
-          )}
+            {discountedPrice && (
+              <Text className="line-through text-red-900 text-sm">
+                ${dish.price.toFixed(2)}
+              </Text>
+            )}
+          </View>
         </View>
+
+        {/* Add to Cart Button */}
+        <Button
+          className="pl-4 bg-secondary-500 rounded w-auto shadow-lg border-primary-500 border-solid border-2"
+          variant="link"
+          onPress={() => console.log("Add to Cart")}
+        >
+          <ButtonIcon as={ShoppingCartIcon} size="md" color='white' className="w-auto pr-4" />
+        </Button>
       </View>
 
-      {/* Add to Cart Button */}
-      <Button
-        className="pl-4 bg-secondary-500 rounded w-auto"
-        variant="link"
-        onPress={() => console.log("Add to Cart")}
-      >
-        <ButtonIcon as={ShoppingCartIcon} size="md" color='white' className="w-auto pr-4" />
-      </Button>
-    </View >
+      {
+        isExpanded && (
+          <View className="flex flex-col gap-2 mb-2">
+            {/* Dish Description */}
+
+            {/* Rating */}
+            <View className="w-auto align-center items-center bg-gradient-to-br from-primary-500 to-primary-700 rounded-md py-2">
+              {(dish.rating_average !== undefined && Number(dish.rating_average) != 0) ? (
+                <RatingCard
+                  rating_average={Number(dish.rating_average)}
+                  rating_count={Number(dish.rating_count)}
+                />
+              ) : (
+                <Text className="text-white text-center">{t('rating.no_ratings')}</Text>
+              )}
+            </View>
+
+            <Text className="text-gray-600 text-sm">{dish.description}</Text>
+            <View className="flex flex-row gap-x-2 m-auto">
+              <Button className="w-auto h-6 mt-1">
+                <ButtonText className="text-primary-200 text-xs">
+                  {dish.category ?? t('dish.uncategorized')}
+                </ButtonText>
+              </Button>
+              {dish.estimated_time && (
+                <Text className="text-xs italic">
+                  {t('dish.estimated_time')}: <b className="text-md">{dish.estimated_time}</b>
+                </Text>
+              )}
+            </View>
+          </View>
+        )
+      }
+
+      <HR className="pt-2" />
+      <View className="w-full m-auto align-center">
+        <Button
+          className="w-auto"
+          variant="link"
+          onPress={() => setExpanded(!isExpanded)}
+        >
+          <ButtonIcon as={isExpanded ? ArrowUp : ArrowDown} />
+        </Button>
+      </View>
+    </View>
   );
 };
 
@@ -118,7 +169,7 @@ export const CookProfileDishCard = ({ dish }: { dish: Dish }) => {
           )}
           <Button className="w-auto h-6 mt-1">
             <ButtonText className="text-primary-200 text-xs align-baseline">
-              {dish.category ?? 'Uncategorized'}
+              {dish.category ?? t('dish.uncategorized')}
             </ButtonText>
           </Button>
           <br />
@@ -131,7 +182,7 @@ export const CookProfileDishCard = ({ dish }: { dish: Dish }) => {
         {/* Add to Cart Button */}
         <View className="flex justify-end items-end mt-4">
           <Button
-            className="pl-4 bg-secondary-500 rounded w-auto"
+            className="pl-4 bg-secondary-500 rounded w-auto border-white border-solid border-2"
             variant="link"
             onPress={() => console.log("Add to Cart")}
           >

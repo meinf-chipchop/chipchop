@@ -69,13 +69,15 @@
     "save_price": "Save",
     "added_on": "Added on",
     "top_rated": "Top rated",
-    "all": "Other appetizers"
+    "all": "Other appetizers",
+    "uncategorized": "Uncategorized"
   },
   "cart": {
     "add": "Add to Cart"
   },
   "rating": {
-    "ratings": "Rating(s)"
+    "ratings": "Rating(s)",
+    "no_ratings": "No ratings"
   },
   "settings": {
     "work_with_us": "Work with us"

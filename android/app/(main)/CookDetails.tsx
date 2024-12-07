@@ -5,7 +5,7 @@ import { ChevronLeftIcon } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import { Dish, getCookDishes } from "@/lib/dishes";
-import { CookProfileDishCard, CookProfileSimpleDishCard } from "@/components/CookProfileDishCard";
+import { CookProfileDishCard, CookProfileExpandableDishCard } from "@/components/CookProfileDishCard";
 import RatingCard from "@/components/RatingCard";
 import { ScrollView, View, Text } from "react-native";
 import { useTranslation } from "react-i18next";
@@ -62,11 +62,14 @@ function CookDetails() {
                     {topDish && <View className="my-2 w-screen shadow-xl">
                         <CookProfileDishCard key={`top-rated-dish`} dish={topDish} />
                     </View>}
-                    <View className="bg-grey-200 w-auto items-center align-center text-md">
+                    <View className="bg-grey-200 w-full items-center align-center text-md">
                         <Text className="w-auto underline p-2">{t('dish.all')}</Text>
-                        {dishes?.map((dish, index) => (
-                            <CookProfileSimpleDishCard key={index} dish={dish} />
-                        ))}
+                        <View className="flex flex-col gap-y-2 w-auto">
+
+                            {dishes?.map((dish, index) => (
+                                <CookProfileExpandableDishCard key={index} dish={dish} />
+                            ))}
+                        </View>
                     </View>
                 </View>
             </ScrollView>
