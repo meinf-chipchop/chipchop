@@ -34,3 +34,7 @@ export async function getDishCategories(): Promise<DishCategory[]> {
 
   return dishCategories;
 }
+
+export async function getDishCategory(id: number): Promise<DishCategory> {
+  return getByURL(`/api/dish-categories/${id}/`);
+}

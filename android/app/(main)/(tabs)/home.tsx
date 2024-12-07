@@ -1,11 +1,16 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { SafeAreaView, View, Text, Image, TextInput, Button, StyleSheet, ScrollView, Dimensions, Animated } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
 
+import { Cook, getCooks } from '@/lib/cook';
+import CooksList from "@/components/CooksList";
+
 const { width } = Dimensions.get('window');
+
 
 const Home = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity value of 0
+  let [cooks, setCooks] = useState<Cook[]>([]);
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -14,6 +19,14 @@ const Home = () => {
       useNativeDriver: true, // Use native driver for better performance
     }).start();
   }, [fadeAnim]);
+
+  useEffect(() => {
+    const fetchCooks = async () => {
+      const cooks = await getCooks();
+      setCooks(cooks);
+    };
+    fetchCooks();
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -47,7 +60,7 @@ const Home = () => {
           </View>
           <View style={styles.locationBox}>
             <FontAwesome name="map" size={20} color="gray" />
-            <Text style={styles.locationText}>12530 Borriana, Castellón, Spain</Text> 
+            <Text style={styles.locationText}>12530 Borriana, Castellón, Spain</Text>
           </View>
           <View style={styles.categoryBox}>
             <Text style={styles.categoryText}>Categories</Text>
@@ -79,7 +92,10 @@ const Home = () => {
 
         <Text style={styles.chefsTitle}>Top Chefs</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chefsScroll}>
-          {[
+
+          <CooksList cooks={cooks} />
+
+          {/* {[
             { name: 'Gordon Ramsay', image: 'https://randomuser.me/api/portraits/men/1.jpg' },
             { name: 'Jamie Oliver', image: 'https://randomuser.me/api/portraits/men/2.jpg' },
             { name: 'Nigella Lawson', image: 'https://randomuser.me/api/portraits/women/1.jpg' },
@@ -90,7 +106,7 @@ const Home = () => {
               <Image source={{ uri: chef.image }} style={styles.chefImage} />
               <Text style={styles.chefText}>{chef.name}</Text>
             </View>
-          ))}
+          ))} */}
         </ScrollView>
 
         <Animated.View style={{ opacity: fadeAnim }}>

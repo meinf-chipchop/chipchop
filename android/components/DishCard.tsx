@@ -33,9 +33,11 @@ const DishCard = ({ dish }: { dish: Dish }) => {
           </View>
         </View>
 
-        <Text className="text-primary-900 text-right">
-          {formatDate(dish.created_at)}
-        </Text>
+        {dish.created_at ?
+          <Text className="text-primary-900 text-right">
+            {formatDate(dish.created_at)}
+          </Text>
+          : null}
       </View>
     </View>
   );

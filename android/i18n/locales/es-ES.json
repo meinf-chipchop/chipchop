@@ -23,7 +23,8 @@
     "name": "Nombre",
     "price": "Precio",
     "next": "Siguiente",
-    "lets_start": "¡Comencemos!"
+    "lets_start": "¡Comencemos!",
+    "loading": "Cargando..."
   },
   "auth": {
     "log_in": "Iniciar sesión",
@@ -63,7 +64,18 @@
     "no_categories": "No hay categorías",
     "no_dishes_found": "No se han encontrado platos",
     "become_chef": "¡Conviértete en chef y empieza a vender tus propios platos!",
-    "select_category": "Selecciona una categoría"
+    "select_category": "Selecciona una categoría",
+    "estimated_time": "Tiempo estimado",
+    "save_price": "Ahorra",
+    "added_on": "Añadido el",
+    "top_rated": "Lo mejor valorado",
+    "all": "Otros aperitivos"
+  },
+  "cart": {
+    "add": "Añadir al carrito"
+  },
+  "rating": {
+    "ratings": "Valoracion(es)"
   },
   "settings": {
     "work_with_us": "Trabaja con nosotros"

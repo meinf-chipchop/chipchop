@@ -5,7 +5,7 @@ import { getByURL } from "./utils";
 export interface Dish {
   name: string;
   description: string;
-  category: number;
+  category: string;
   image_url?: string;
   rating_average?: string;
   rating_count?: string;
@@ -38,7 +38,9 @@ export async function getCookDishes(cook_id: number): Promise<Dish[]> {
 
   let dishes: Dish[] = [];
   for (let dish of dishList.results) {
-    dishes.push(await getByURL(dish.url));
+    let data = await getByURL(dish.url) as Dish;
+    data.price = parseFloat(data.price as any);
+    dishes.push(data);
   }
 
   return dishes;

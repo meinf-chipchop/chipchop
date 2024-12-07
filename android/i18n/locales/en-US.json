@@ -23,7 +23,8 @@
     "name": "Name",
     "price": "Price",
     "next": "Next",
-    "lets_start": "Get Started!"
+    "lets_start": "Get Started!",
+    "loading": "Cargando..."
   },
   "auth": {
     "log_in": "Log In",
@@ -63,7 +64,18 @@
     "no_categories": "No categories",
     "no_dishes_found": "No dishes found",
     "become_chef": "Become a chef and start selling your own dishes !!",
-    "select_category": "Select a category"
+    "select_category": "Select a category",
+    "estimated_time": "Estimated time",
+    "save_price": "Save",
+    "added_on": "Added on",
+    "top_rated": "Top rated",
+    "all": "Other appetizers"
+  },
+  "cart": {
+    "add": "Add to Cart"
+  },
+  "rating": {
+    "ratings": "Rating(s)"
   },
   "settings": {
     "work_with_us": "Work with us"
