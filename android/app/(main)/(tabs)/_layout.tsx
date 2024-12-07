@@ -16,14 +16,12 @@ const TabIcon = ({
   focused: boolean;
 }) => (
   <View
-    className={`flex flex-row justify-center items-center rounded-full ${
-      focused ? "bg-general-300" : ""
-    }`}
+    className={`flex flex-row justify-center items-center rounded-full ${focused ? "bg-general-300" : ""
+      }`}
   >
     <View
-      className={`rounded-full w-fit px-6 h-11 items-center justify-center ${
-        focused ? "bg-primary-700" : ""
-      }`}
+      className={`rounded-full w-fit px-6 h-11 items-center justify-center ${focused ? "bg-primary-700" : ""
+        }`}
     >
       {icon}
     </View>
@@ -94,7 +92,7 @@ export default function Layout() {
           title: "Profile",
           headerShown: true,
           headerTitleAlign: "left",
-          headerTitle: ({}) => {
+          headerTitle: ({ }) => {
             return <Heading>{t("labels.profile")}</Heading>;
           },
           headerStyle: { backgroundColor: "#f2f2f2" },

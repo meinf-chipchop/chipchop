@@ -21,33 +21,29 @@ const AuthForms = () => {
           />
           <View className="flex-row justify-center w-full mb-4">
             <TouchableOpacity
-              className={`px-4 py-2 ${
-                activeTab === "login" ? "border-b-2 border-primary-500" : ""
-              }`}
+              className={`px-4 py-2 ${activeTab === "login" ? "border-b-2 border-primary-500" : ""
+                }`}
               onPress={() => {
                 setActiveTab("login");
               }}
             >
               <Text
-                className={`text-lg font-JakartaSemiBold ${
-                  activeTab === "login" ? "text-primary-500" : "text-black"
-                }`}
+                className={`text-lg font-JakartaSemiBold ${activeTab === "login" ? "text-primary-500" : "text-black"
+                  }`}
               >
                 {t("auth.log_in")}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className={`px-4 py-2 ${
-                activeTab === "signup" ? "border-b-2 border-primary-500" : ""
-              }`}
+              className={`px-4 py-2 ${activeTab === "signup" ? "border-b-2 border-primary-500" : ""
+                }`}
               onPress={() => {
                 setActiveTab("signup");
               }}
             >
               <Text
-                className={`text-lg font-JakartaSemiBold ${
-                  activeTab === "signup" ? "text-primary-500" : "text-black"
-                }`}
+                className={`text-lg font-JakartaSemiBold ${activeTab === "signup" ? "text-primary-500" : "text-black"
+                  }`}
               >
                 {t("auth.sign_up")}
               </Text>

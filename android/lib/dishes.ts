@@ -7,7 +7,7 @@ export interface Dish {
   user_id: number;
   name: string;
   description: string;
-  category: number;
+  category: string;
   image_url?: string;
   rating_average?: string;
   rating_count?: string;
@@ -29,6 +29,10 @@ export interface DishList {
   }[];
 }
 
+export function getDiscountedPrice(dish: Dish): number | null {
+  return dish.discount && dish.discount != 0 ? dish.price * (100 - dish.discount) / 100 : null;
+}
+
 export async function getCookDishes(cook_id: number): Promise<Dish[]> {
   let dishList = await fetchWrapper(`/api/cooks/${cook_id}/dishes/`, {
     method: "GET",
@@ -38,9 +42,12 @@ export async function getCookDishes(cook_id: number): Promise<Dish[]> {
     credentials: "include",
   }).then((response) => response.json() as Promise<DishList>);
 
-  let dishes = await Promise.all(
-    dishList.results.map((dish) => getByURL(dish.url)) as Promise<Dish>[]
-  );
+  let dishes: Dish[] = [];
+  for (let dish of dishList.results) {
+    let data = await getByURL(dish.url) as Dish;
+    data.price = parseFloat(data.price as any);
+    dishes.push(data);
+  }
 
   return dishes;
 }
