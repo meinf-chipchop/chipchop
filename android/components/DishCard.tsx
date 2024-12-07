@@ -55,7 +55,8 @@ const DishCard = ({ dish }: { dish: Dish }) => {
             : null}
         </View>
       </View>
-      );
+    </Pressable>
+  );
 };
 
-      export default DishCard;
+export default DishCard;
