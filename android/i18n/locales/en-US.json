@@ -1,13 +1,16 @@
 {
   "user": {
+    "public_name": "Public Name",
     "age": "Age",
     "email": "Email",
     "first_name": "First Name",
     "password": "Password",
     "phone_number": "Phone Number",
-    "second_name": "Second Name"
+    "second_name": "Second Name",
+    "history": "History"
   },
   "labels": {
+    "cook": "Cook",
     "chef": "Chef",
     "deliver": "Deliver",
     "settings": "Settings",
@@ -24,14 +27,16 @@
     "price": "Price",
     "next": "Next",
     "lets_start": "Get Started!",
-    "loading": "Cargando..."
+    "image_url": "Image URL",
+    "loading": "Loading..."
   },
   "auth": {
     "log_in": "Log In",
     "sign_up": "Sign Up",
     "sign_in": "Sign In",
     "sign_out": "Sign out",
-    "forgot_password": "Forgot password?"
+    "forgot_password": "Forgot password?",
+    "register_as": "Register as"
   },
   "onboarding": {
     "homemade_delights": "Homemade Delights",
@@ -49,7 +54,9 @@
     "invalid_email": "Invalid email address",
     "invalid_phone_number": "Invalid phone number",
     "password_min_length": "Password must be at least 8 characters",
-    "password_required": "Password is required"
+    "password_required": "Password is required",
+    "vehicle_required": "Vehicle is required",
+    "public_name_required": "Public name is required"
   },
   "errors": {
     "user_not_found": "User not found"
@@ -79,7 +86,30 @@
     "ratings": "Rating(s)",
     "no_ratings": "No ratings"
   },
+  "vehicle": {
+    "type": "Vehicle type",
+    "select": "Select a vehicle",
+    "car": "Car",
+    "scooter": "Scooter",
+    "bycicle": "Bycicle"
+  },
   "settings": {
     "work_with_us": "Work with us"
+  },
+  "order_status": {
+    "P": "Pending",
+    "A": "Approved",
+    "R": "Rejected",
+    "C": "Cooking",
+    "B": "Burnt Kitchen",
+    "K": "Cooked",
+    "D": "Delivering",
+    "T": "Traffic Accident",
+    "S": "Robbed",
+    "F": "Finished"
+  },
+  "order_type": {
+    "D": "Delivery",
+    "P": "Pickup"
   }
 }

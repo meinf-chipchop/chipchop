@@ -21,6 +21,7 @@ interface TextAreaProps extends TextInputProps {
   className?: string;
   isInvalid?: boolean;
   error?: string;
+  disabled?: boolean;
 }
 
 const TextArea = ({
@@ -34,6 +35,7 @@ const TextArea = ({
   inputStyle,
   className,
   isInvalid,
+  disabled,
   error,
   ...props
 }: TextAreaProps) => {
@@ -44,7 +46,7 @@ const TextArea = ({
           <FormControlLabelText className="">{label}</FormControlLabelText>
         </FormControlLabel>
       )}
-      <Textarea className={`bg-background-50 `}>
+      <Textarea className={`bg-background-50 `} isDisabled={disabled}>
         <TextareaInput
           className={`w-full ${inputStyle}`}
           placeholder={placeholder}

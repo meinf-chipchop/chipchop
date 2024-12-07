@@ -5,7 +5,7 @@ import { Colors } from "@/constants/Colors";
 import { useEffect } from "react";
 import { Heading } from "@/components/ui/heading";
 import { useTranslation } from "react-i18next";
-import { Settings } from "lucide-react-native";
+import { FileClockIcon, Settings } from "lucide-react-native";
 import { Button, ButtonIcon } from "@/components/ui/button";
 
 const TabIcon = ({
@@ -16,14 +16,12 @@ const TabIcon = ({
   focused: boolean;
 }) => (
   <View
-    className={`flex flex-row justify-center items-center rounded-full ${
-      focused ? "bg-general-300" : ""
-    }`}
+    className={`flex flex-row justify-center items-center rounded-full ${focused ? "bg-general-300" : ""
+      }`}
   >
     <View
-      className={`rounded-full w-fit px-6 h-11 items-center justify-center ${
-        focused ? "bg-primary-700" : ""
-      }`}
+      className={`rounded-full w-fit px-6 h-11 items-center justify-center ${focused ? "bg-primary-700" : ""
+        }`}
     >
       {icon}
     </View>
@@ -94,18 +92,27 @@ export default function Layout() {
           title: "Profile",
           headerShown: true,
           headerTitleAlign: "left",
-          headerTitle: ({}) => {
+          headerTitle: ({ }) => {
             return <Heading>{t("labels.profile")}</Heading>;
           },
           headerStyle: { backgroundColor: "#f2f2f2" },
           headerRight: () => (
-            <Button
-              variant="link"
-              className="pr-4"
-              onPress={() => router.push("/Settings")}
-            >
-              <ButtonIcon as={Settings} size="xl" />
-            </Button>
+            <View className="flex-row gap-2">
+              <Button
+                variant="link"
+                className="pr-4"
+                onPress={() => router.push("/history")}
+              >
+                <ButtonIcon as={FileClockIcon} size="xl" />
+              </Button>
+              <Button
+                variant="link"
+                className="pr-4"
+                onPress={() => router.push("/Settings")}
+              >
+                <ButtonIcon as={Settings} size="xl" />
+              </Button>
+            </View>
           ),
           tabBarIcon: ({ color, size, focused }) => (
             <TabIcon

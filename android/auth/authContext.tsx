@@ -14,12 +14,18 @@ import {
   getCsrfToken,
   Me,
   me,
+  userType,
 } from "@/lib/auth";
 import { router } from "expo-router";
+import { NewCook } from "@/lib/cook";
+import { NewDeliver } from "@/lib/delivery";
 
 const AuthContext = createContext<{
   signIn: (email: string, password: string) => Promise<string>;
-  signUp: (user: NewUser) => Promise<string>;
+  signUp: (
+    user: NewUser | NewCook | NewDeliver,
+    type: userType
+  ) => Promise<string>;
   signOut: () => void;
   handleForgotPassword: () => void;
   user?: Me | null;
@@ -92,15 +98,17 @@ export function SessionProvider({ children }: PropsWithChildren) {
       return ""; // Success, no error message
     } catch (error) {
       console.error("[signIn] Unexpected error:", error);
-      return `Error: ${
-        error instanceof Error ? error.message : "Unknown error occurred."
-      }`;
+      return `Error: ${error instanceof Error ? error.message : "Unknown error occurred."
+        }`;
     }
   };
 
-  const signUp = async (user: NewUser): Promise<string> => {
+  const signUp = async (
+    user: NewUser | NewCook | NewDeliver,
+    type: userType
+  ): Promise<string> => {
     try {
-      const response = await register(user);
+      const response = await register(user, type);
 
       if (!response.ok) {
         const error = await response.json().catch(() => ({}));
@@ -113,16 +121,34 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
       const token = getCsrfToken();
       if (!token) {
-        console.error("[signUp] CSRF token missing or invalid.");
+        console.error(
+          "[signUp] CSRF token missing or invalid. Trying to login"
+        );
+        let email, password;
+        switch (type) {
+          case "customer":
+            email = (user as NewUser).email;
+            password = (user as NewUser).password;
+            break;
+          case "cook":
+            email = (user as NewCook).user.email;
+            password = (user as NewCook).user.password;
+            break;
+          case "deliver":
+            email = (user as NewDeliver).user.email;
+            password = (user as NewDeliver).user.password;
+            break;
+        }
+        return signIn(email, password);
+      } else {
+        setSession(token ?? "");
       }
 
-      setSession(token ?? "");
       return ""; // Success, no error message
     } catch (error) {
       console.error("[signUp] Unexpected error:", error);
-      return `Error: ${
-        error instanceof Error ? error.message : "Unknown error occurred."
-      }`;
+      return `Error: ${error instanceof Error ? error.message : "Unknown error occurred."
+        }`;
     }
   };
 

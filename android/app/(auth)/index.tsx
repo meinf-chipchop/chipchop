@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Text, View, ScrollView, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { Images } from "@/constants/Images";
-import SignUp from "./signup";
 import SignIn from "./signin";
 import { useTranslation } from "react-i18next";
+import SignUp from "./register/SignUp";
 
 const AuthForms = () => {
   const { t } = useTranslation();

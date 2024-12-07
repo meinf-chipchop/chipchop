@@ -5,7 +5,8 @@
     "first_name": "Nombre",
     "password": "Contraseña",
     "phone_number": "Número de teléfono",
-    "second_name": "Apellido"
+    "second_name": "Apellido",
+    "history": "Historial"
   },
   "labels": {
     "chef": "Chef",
@@ -24,6 +25,7 @@
     "price": "Precio",
     "next": "Siguiente",
     "lets_start": "¡Comencemos!",
+    "image_url": "URL de la imagen",
     "loading": "Cargando..."
   },
   "auth": {
@@ -81,5 +83,21 @@
   },
   "settings": {
     "work_with_us": "Trabaja con nosotros"
+  },
+  "order_status": {
+    "P": "Pendiente",
+    "A": "Aprobado",
+    "R": "Rechazado",
+    "C": "Cocinando",
+    "B": "Cocina quemada",
+    "K": "Cocinado",
+    "D": "En reparto",
+    "T": "Accidente de tráfico",
+    "S": "Atraco",
+    "F": "Finalizado"
+  },
+  "order_type": {
+    "D": "Entrega",
+    "P": "Recogida"
   }
 }
