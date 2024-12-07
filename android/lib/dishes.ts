@@ -27,6 +27,10 @@ export interface DishList {
   }[];
 }
 
+export function getDiscountedPrice(dish: Dish): number | null {
+  return dish.discount && dish.discount != 0 ? dish.price * (100 - dish.discount) / 100 : null;
+}
+
 export async function getCookDishes(cook_id: number): Promise<Dish[]> {
   let dishList = await fetchWrapper(`/api/cooks/${cook_id}/dishes/`, {
     method: "GET",

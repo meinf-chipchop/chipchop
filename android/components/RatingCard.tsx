@@ -7,7 +7,7 @@ interface RatingCardProps {
     rating_count: number | null;
 }
 
-const RatingCard = ({ rating_average, rating_count }: RatingCardProps ) => {
+const RatingCard = ({ rating_average, rating_count }: RatingCardProps) => {
 
     const { t } = useTranslation();
 
@@ -25,9 +25,9 @@ const RatingCard = ({ rating_average, rating_count }: RatingCardProps ) => {
                     ))}
                     {rating_average % 1 !== 0 && <StarHalf fill="yellow" strokeWidth={0} />}
                 </View>
-                { rating_count ?? <View className="mx-2 flex">
-                        <Text className="italic text-primary-200 drop-shadow-lg">{rating_count} {t('rating.ratings')}</Text>
-                    </View>
+                {rating_count ? <View className="mx-2 flex w-auto align-center">
+                    <Text className="italic text-primary-200 drop-shadow-lg text-center w-full">{rating_count} {t('rating.ratings')}</Text>
+                </View> : null
                 }
             </View>
         </View>
