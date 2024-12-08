@@ -1,4 +1,4 @@
-import { useSession } from "@/auth/authContext";
+import { useSession } from "@/context/authContext";
 import {
   Avatar,
   AvatarFallbackText,

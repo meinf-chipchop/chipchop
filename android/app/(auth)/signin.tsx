@@ -3,7 +3,7 @@ import { ScrollView, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { z } from "zod";
-import { useSession } from "@/auth/authContext";
+import { useSession } from "@/context/authContext";
 import { router } from "expo-router";
 import InputField from "@/components/InputField";
 import { useTranslation } from "react-i18next";

@@ -5,7 +5,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
-import { SessionProvider } from "@/auth/authContext";
+import { SessionProvider } from "@/context/authContext";
 import "@/i18n";
 import { initI18n } from "@/i18n";
 import { Slot } from "expo-router";

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/button";
 import TextArea from "@/components/TextArea";
 import { Dish, createCookDish } from "@/lib/dishes";
-import { useSession } from "@/auth/authContext";
+import { useSession } from "@/context/authContext";
 import { DishCategory, getDishCategories } from "@/lib/dishCategories";
 import SelectDropDown from "@/components/SelectDropDown";
 import {

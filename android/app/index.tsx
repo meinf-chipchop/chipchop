@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "expo-router";
-import { useSession } from "@/auth/authContext";
+import { useSession } from "@/context/authContext";
 import { View } from "react-native";
 import { me } from "@/lib/auth";
 

@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { Stack, useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
-import { useSession } from "@/auth/authContext";
+import { useSession } from "@/context/authContext";
+import { CartProvider } from "@/context/cartContext";
 
 export default function Layout() {
   const { session, isLoading } = useSession();
@@ -18,16 +19,18 @@ export default function Layout() {
   }, [session, isLoading]);
 
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: Colors.chestnut[50],
-        },
-        headerTintColor: Colors.chestnut[400],
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-      }}
-    />
+    <CartProvider>
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: Colors.chestnut[50],
+          },
+          headerTintColor: Colors.chestnut[400],
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      />
+    </CartProvider>
   );
 }

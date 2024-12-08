@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { SafeAreaView, View, Text, Image, TextInput, Button, StyleSheet, ScrollView, Dimensions, Animated } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
+import { router } from "expo-router";
 
 const { width } = Dimensions.get('window');
 
@@ -29,7 +30,7 @@ const Home = () => {
             <Text style={styles.title}>Chip Chop</Text>
           </View>
           <View style={styles.iconContainer}>
-            <FontAwesome.Button name="shopping-basket" backgroundColor="#415f63" iconStyle={styles.icon}>
+            <FontAwesome.Button onPress={() => router.push('/cart/Cart')} name="shopping-basket" backgroundColor="#415f63" iconStyle={styles.icon}>
               <Text style={styles.iconText}></Text>
             </FontAwesome.Button>
             <FontAwesome.Button name="user" backgroundColor="#415f63" iconStyle={styles.icon}>
