@@ -45,3 +45,6 @@ Passwd: admin
 3. Obtain your Firebase Cloud Messaging (FCM) API key from the Firebase console and configure it in OneSignal.
 4. Add your OneSignal key to the `.env` file following the `.env-template`.
 5. Ensure that your app is built and emulated on an Android device. Note that notifications will not work on Expo Go or web.
+6. Run using `npx expo prebuild ` and `npx expo run:android`
+
+\* Remember that localhost inside android emulator equivalent is 10.0.2.2
