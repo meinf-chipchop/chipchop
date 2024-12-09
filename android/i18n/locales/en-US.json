@@ -71,7 +71,20 @@
     "no_categories": "No categories",
     "no_dishes_found": "No dishes found",
     "become_chef": "Become a chef and start selling your own dishes !!",
-    "select_category": "Select a category"
+    "select_category": "Select a category",
+    "estimated_time": "Estimated time",
+    "save_price": "Save",
+    "added_on": "Added on",
+    "top_rated": "Top rated",
+    "all": "Other appetizers",
+    "uncategorized": "Uncategorized"
+  },
+  "cart": {
+    "add": "Add to cart"
+  },
+  "rating": {
+    "ratings": "Rating(s)",
+    "no_ratings": "No ratings"
   },
   "vehicle": {
     "type": "Vehicle type",
