@@ -1,6 +1,12 @@
+import { Platform } from "react-native";
+
 import { NewCook, createCook } from "./cook";
 import { NewDeliver, createDeliver } from "./delivery";
+
 import fetchWrapper from "./fetchWrapper";
+
+const CookieManager =
+  Platform.OS !== "web" && require("@react-native-cookies/cookies");
 
 export interface User {
   first_name: string;
@@ -31,11 +37,22 @@ export interface NewUser {
 }
 export type userType = "customer" | "cook" | "deliver";
 
-export function getCsrfToken() {
-  return document.cookie
+function extractCsrfToken(cookies: string) {
+  return cookies
     .split("; ")
     .find((row) => row.startsWith("csrftoken"))
     ?.split("=")[1];
+}
+
+export async function getCsrfToken() {
+  if (Platform.OS === "web") {
+    return extractCsrfToken(document.cookie);
+  }
+  if (process.env.EXPO_PUBLIC_API_URL) {
+    let cookies = await CookieManager.get(process.env.EXPO_PUBLIC_API_URL);
+    console.log("Cookies", cookies);
+    return cookies["csrftoken"].value;
+  }
 }
 
 export function logout() {
@@ -58,7 +75,8 @@ export function me(): Promise<Me> {
   }).then((response) => response.json() as Promise<Me>);
 }
 
-export function login(email: string, password: string) {
+export async function login(email: string, password: string) {
+  await logout();
   return fetchWrapper("/api/login/", {
     method: "POST",
     headers: {

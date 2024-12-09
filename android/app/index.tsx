@@ -11,19 +11,13 @@ export default function Index() {
   // Check if me works, if error go to auth page
   useEffect(() => {
     me()
-      .then((user) => console.log("User->", user))
+      .then((user) => {
+        console.log("User->", user);
+        console.log("Redirecting to home, user is logged in");
+        router?.push("/(main)/(tabs)/home");
+      })
       .catch(() => router?.push("/(auth)/"));
   }, [router]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      if (session) {
-        router.push("/(main)/(tabs)/home"); // Redirect to home if logged in
-      } else {
-        router.push("/(auth)/onboarding"); // Redirect to login if not logged in
-      }
-    }
-  }, [session, isLoading]);
 
   return <View></View>;
 }

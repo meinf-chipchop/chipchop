@@ -2,6 +2,7 @@ import NotFoundScreen from "@/app/+not-found";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import { Dish, getDish, updateDish } from "@/lib/dishes";
 import { router, Stack, useLocalSearchParams } from "expo-router";
+import { Alert, AlertIcon, AlertText } from "@/components/ui/alert";
 import { t } from "i18next";
 import {
   AlertCircleIcon,
@@ -73,9 +74,12 @@ export default function DetailsScreen() {
 
   function handleUpdate() {
     if (!dish) return;
-    updateDish(Number(cook_id), Number(dish_id), dish).then(() =>
-      setEditMode(false)
-    );
+    updateDish(Number(cook_id), Number(dish_id), dish)
+      .then(() => setEditMode(false))
+      .catch((error) => {
+        console.error(error);
+        setAlert(error.message);
+      });
   }
 
   const isOwner = selfUser?.id === Number(cook_id);
@@ -88,8 +92,16 @@ export default function DetailsScreen() {
     estimated_time: "",
   });
 
+  const [alert, setAlert] = useState("");
+
   return (
     <>
+      {alert && (
+        <Alert action="error" variant="solid">
+          <AlertIcon />
+          <AlertText>{alert}</AlertText>
+        </Alert>
+      )}
       <Stack.Screen
         options={{
           headerTitle: dish?.name ?? t("labels.loading"),
@@ -132,7 +144,7 @@ export default function DetailsScreen() {
           <Image
             source={
               (dish?.image_url ??
-                "https://www.freeiconspng.com/uploads/no-image-icon-15.png") as ImageSourcePropType
+                require("../../../../../assets/images/no-dish-image.png")) as ImageSourcePropType
             }
             className="w-screen aspect-video drop-shadow"
           />
