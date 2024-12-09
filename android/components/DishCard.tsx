@@ -56,6 +56,8 @@ const DishCard = ({ dish }: { dish: Dish }) => {
         </View>
       </View>
       );
+    </Pressable>
+  );
 };
 
       export default DishCard;
