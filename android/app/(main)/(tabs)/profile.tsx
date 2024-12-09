@@ -9,11 +9,6 @@ import { Text } from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";
 import { ScrollView } from "react-native";
 import { Divider } from "@/components/ui/divider";
-import { HStack } from "@/components/ui/hstack";
-import { Pressable } from "@/components/ui/pressable";
-import { Heading } from "@/components/ui/heading";
-import { Center } from "@/components/ui/center";
-import { Bike, ChefHat } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
 
 const Profile = () => {
@@ -40,24 +35,6 @@ const Profile = () => {
           <ButtonText className="color-white">{t("auth.sign_out")}</ButtonText>
         </Button>
         <Divider />
-
-        <Heading>{t("settings.work_with_us")}</Heading>
-        <Center>
-          <HStack space="xl">
-            <Pressable className="p-6 bg-primary-200 rounded-xl">
-              <Center>
-                <ChefHat size={48} />
-                <Text>{t("labels.chef")}</Text>
-              </Center>
-            </Pressable>
-            <Pressable className="p-6 bg-primary-200 rounded-xl">
-              <Center>
-                <Bike size={48} />
-                <Text>{t("labels.deliver")}</Text>
-              </Center>
-            </Pressable>
-          </HStack>
-        </Center>
       </VStack>
     </ScrollView>
   );

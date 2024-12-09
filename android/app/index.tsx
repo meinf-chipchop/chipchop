@@ -16,7 +16,7 @@ export default function Index() {
         console.log("Redirecting to home, user is logged in");
         router?.push("/(main)/(tabs)/home");
       })
-      .catch(() => router?.push("/(auth)/signin"));
+      .catch(() => router?.push("/(auth)/"));
   }, [router]);
 
   return <View></View>;
