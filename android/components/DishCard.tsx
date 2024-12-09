@@ -11,6 +11,11 @@ import {
 } from "react-native";
 
 const DishCard = ({ dish }: { dish: Dish }) => {
+  let imageSrc: ImageSourcePropType = dish?.image_url as ImageSourcePropType;
+  if (dish?.image_url === null) {
+    imageSrc = require("../assets/images/no-dish-image.png");
+  }
+
   return (
     <Pressable
       onPress={() => {
@@ -21,10 +26,7 @@ const DishCard = ({ dish }: { dish: Dish }) => {
         {/* Large circular dish image */}
         <View className="absolute -top-10 translate-x-1 right-0 z-10">
           <Image
-            source={
-              (dish?.image_url ??
-                "https://www.freeiconspng.com/uploads/no-image-icon-15.png") as ImageSourcePropType
-            }
+            source={imageSrc}
             className="w-32 h-32 rounded-full border-4 border-white bg-gray-200"
           />
         </View>
