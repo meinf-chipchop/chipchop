@@ -67,5 +67,11 @@
   },
   "settings": {
     "work_with_us": "Trabaja con nosotros"
+  },
+  "status": {
+    "delivered": "Entregado",
+    "pending": "Pendiente",
+    "missing": "Ausente",
+    "order_title": "Orden"
   }
 }

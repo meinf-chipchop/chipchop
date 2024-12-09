@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Order, getOrdersWithDishesAndUser } from "@/lib/orders";
+import { useTranslation } from "react-i18next";
 
 const { width } = Dimensions.get("window");
 
@@ -22,17 +23,18 @@ if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const Orders = () => {
+const OrdersCook = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const ordersResponse = await getOrdersWithDishesAndUser();
         setOrders(ordersResponse);
-        // console.log( ordersResponse);
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
@@ -68,11 +70,11 @@ const Orders = () => {
   const getName = (status: string) => {
     switch (status.toLowerCase()) {
       case "d":
-        return "Delivered";
+        return t("status.delivered");
       case "p":
-        return "Pending";
+        return t("status.pending");
       default:
-        return "";
+        return t("status.missing");
     }
   };
 
@@ -80,7 +82,7 @@ const Orders = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.title}>Orders</Text>
+        <Text style={styles.title}>{t("status.order_title")}</Text>
         <Animated.View style={{ ...styles.orderGrid, opacity: fadeAnim }}>
 
           {orders.map((order, index) => (
@@ -269,4 +271,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Orders;
+export default OrdersCook;
