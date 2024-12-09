@@ -27,6 +27,7 @@ interface AddDishAction {
 interface RemoveItemAction {
   type: "REMOVE_ITEM";
   payload: number;
+  units?: number;
 }
 
 interface ClearCartAction {
@@ -70,9 +71,19 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
         cook_id: action.payload.user_id,
       };
     case "REMOVE_ITEM":
+      const updatedCartRemove = state.cart
+        .map((item) =>
+          item.id === action.payload && action.units
+            ? { ...item, units: item.units - action.units }
+            : item
+        )
+        .filter((item) =>
+          action.units ? item.units > 0 : item.id !== action.payload
+        );
+
       return {
         ...state,
-        cart: state.cart.filter((item) => item.id !== action.payload),
+        cart: updatedCartRemove,
       };
     case "CLEAR_CART":
       return { ...state, cart: [], cook_id: undefined };
@@ -103,14 +114,14 @@ export const useCart = () => {
   const { state, dispatch } = context;
 
   const addItem = (item: Dish) => {
-    if (state.cook_id != item.user_id) return false;
+    if (state.cook_id && state.cook_id !== item.user_id) return false;
 
     dispatch({ type: "ADD_DISH", payload: item });
     return true;
   };
 
-  const removeItem = (id: number) => {
-    dispatch({ type: "REMOVE_ITEM", payload: id });
+  const removeItem = (id: number, units?: number) => {
+    dispatch({ type: "REMOVE_ITEM", payload: id, units: units });
   };
 
   const clearCart = () => {
