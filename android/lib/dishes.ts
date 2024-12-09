@@ -42,6 +42,10 @@ export async function getCookDishes(cook_id: number): Promise<Dish[]> {
     dishList.results.map((dish) => getByURL(dish.url)) as Promise<Dish>[]
   );
 
+  dishes.forEach((dish) => {
+    dish.price = Number(dish.price);
+  });
+
   return dishes;
 }
 
@@ -91,4 +95,8 @@ export async function updateDish(
     body: JSON.stringify(dish),
     credentials: "include",
   }).then((response) => response.json() as Promise<Dish>);
+}
+
+export function getDiscountedPrice(dish: Dish): number | null {
+  return dish.discount && dish.discount != 0 ? dish.price * (100 - dish.discount) / 100 : null;
 }

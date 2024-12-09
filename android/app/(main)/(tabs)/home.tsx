@@ -1,3 +1,6 @@
+import { CooksPage, getCooks } from '@/lib/cook';
+import CookList from '@/components/CooksList';
+
 import React, { useRef, useEffect } from "react";
 import { SafeAreaView, View, Text, Image, TextInput, Button, StyleSheet, ScrollView, Dimensions, Animated } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
@@ -7,6 +10,8 @@ const { width } = Dimensions.get('window');
 const Home = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity value of 0
 
+  const [cooks, setCooks] = React.useState<CooksPage>();
+
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1, // Animate to opacity value of 1
@@ -14,6 +19,14 @@ const Home = () => {
       useNativeDriver: true, // Use native driver for better performance
     }).start();
   }, [fadeAnim]);
+
+  useEffect(() => {
+    const fetchCooks = async () => {
+      const cooks = await getCooks();
+      setCooks(cooks);
+    };
+    fetchCooks();
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -79,18 +92,7 @@ const Home = () => {
 
         <Text style={styles.chefsTitle}>Top Chefs</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chefsScroll}>
-          {[
-            { name: 'Gordon Ramsay', image: 'https://randomuser.me/api/portraits/men/1.jpg' },
-            { name: 'Jamie Oliver', image: 'https://randomuser.me/api/portraits/men/2.jpg' },
-            { name: 'Nigella Lawson', image: 'https://randomuser.me/api/portraits/women/1.jpg' },
-            { name: 'Wolfgang Puck', image: 'https://randomuser.me/api/portraits/men/3.jpg' },
-            { name: 'Alice Waters', image: 'https://randomuser.me/api/portraits/women/2.jpg' }
-          ].map((chef, index) => (
-            <View key={index} style={styles.chefCard}>
-              <Image source={{ uri: chef.image }} style={styles.chefImage} />
-              <Text style={styles.chefText}>{chef.name}</Text>
-            </View>
-          ))}
+          <CookList cooks={cooks} />
         </ScrollView>
 
         <Animated.View style={{ opacity: fadeAnim }}>
