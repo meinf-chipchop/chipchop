@@ -43,7 +43,7 @@ const OrdersCook = () => {
       try {
         const ordersResponse = await getOrdersWithDishesAndUser();
         setOrders(ordersResponse);
-        console.log(ordersResponse)
+        // console.log(ordersResponse)
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
@@ -87,10 +87,10 @@ const OrdersCook = () => {
         order.id === orderId ? { ...order, order_status: newStatus } : order
       );
       setOrders(updatedOrders);
-      showStatusUpdateModal(true, t("status.order_positivefeedback"));
+      showStatusUpdateModal(true, t("order_text.order_positive_feedback"));
     } catch (error) {
       console.error("Error updating order status:", error);
-      showStatusUpdateModal(false, t("status.order_negativefeedback"));
+      showStatusUpdateModal(false, t("order_text.order_negative_feedback"));
     }
   };
 
@@ -108,11 +108,11 @@ const OrdersCook = () => {
   const getName = (status: string) => {
     switch (status.toLowerCase()) {
       case "d":
-        return t("status.delivered");
+        return t("order_status.D");
       case "p":
-        return t("status.pending");
+        return t("order_status.P");
       default:
-        return t("status.missing");
+        return t("order_status.M");
     }
   };
 
@@ -126,7 +126,7 @@ const OrdersCook = () => {
     <View style={styles.modalOverlay}>
       <View style={styles.modalContent}>
         <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>{t("status.order_details")}</Text>
+          <Text style={styles.modalTitle}>{t("order_text.order_details")}</Text>
           <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
             <FontAwesome name="close" size={24} color="#333" />
           </TouchableOpacity>
@@ -136,7 +136,7 @@ const OrdersCook = () => {
             <View style={styles.customerInfo}>
               <Text style={styles.customerName}>{selectedOrder.firstName}</Text>
               <Text style={styles.orderDate}>
-                {t("status.order_date")}: {new Date(selectedOrder.created_at).toLocaleDateString()}
+                {t("order_text.order_date")}: {new Date(selectedOrder.created_at).toLocaleDateString()}
               </Text>
             </View>
             <ScrollView style={styles.modalScrollView}>
@@ -157,7 +157,7 @@ const OrdersCook = () => {
               </Text>
             </View>
             <View style={styles.statusSituation}>
-              <Text style={styles.statusLabel}>{t("status.order_status")}:</Text>
+              <Text style={styles.statusLabel}>{t("order_text.order_status")}:</Text>
                 <Picker
                   selectedValue={selectedStatus}
                   style={styles.statusPicker}
@@ -166,8 +166,8 @@ const OrdersCook = () => {
                     changeOrderStatus(selectedOrder.id, itemValue);
                   }}
                 >
-                  <Picker.Item label={t("status.pending")} value="p" />
-                  <Picker.Item label={t("status.delivered")} value="d" />
+                  <Picker.Item label={t("order_status.P")} value= {t("order_type_description.Pickup")} />
+                  <Picker.Item label={t("order_status.D")} value= {t("order_type_description.Delivery")} />
                 </Picker>
             </View>
           </>
@@ -197,7 +197,7 @@ const OrdersCook = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.title}>{t("status.order_title")}</Text>
+        <Text style={styles.title}>{t("order_text.order_title")}</Text>
         <Animated.View style={{ ...styles.orderGrid, opacity: fadeAnim }}>
           {orders.map((order, index) => (
             <Animated.View key={order.id || index} style={styles.orderCard}>

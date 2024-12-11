@@ -4,20 +4,21 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useSession } from "@/auth/authContext";
 import { useRouter } from "expo-router";
 
+import { CooksPage, getCooks } from '@/lib/cook';
+
 
 const { width } = Dimensions.get('window');
 
 const Home = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
   const { user } = useSession();
   const router = useRouter();
+  const [cooks, setCooks] = React.useState<CooksPage>();
 
   const [showOrdersButton, setShowOrdersButton] = useState(false);
   useEffect(() => {
     setShowOrdersButton(user?.role == "U");
   }, [user]);
-
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -27,6 +28,13 @@ const Home = () => {
     }).start();
   }, [fadeAnim]);
 
+  useEffect(() => {
+    const fetchCooks = async () => {
+      const cooks = await getCooks();
+      setCooks(cooks);
+    };
+    fetchCooks();
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>

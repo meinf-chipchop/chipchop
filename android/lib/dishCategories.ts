@@ -28,11 +28,11 @@ export async function getDishCategories(): Promise<DishCategory[]> {
     credentials: "include",
   }).then((response) => response.json() as Promise<DishCategoryList>);
 
-  let dishCategories: DishCategory[] = [];
-  for (let dishCategory of dishCategoryList.results) {
-    
-    dishCategories.push(await getByURL(dishCategory.url));
-  }
+  let dishCategories = await Promise.all(
+    dishCategoryList.results.map((dish) =>
+      getByURL(dish.url)
+    ) as Promise<DishCategory>[]
+  );
 
   return dishCategories;
 }
