@@ -11,10 +11,13 @@ import {
   LayoutAnimation,
   Platform,
   UIManager,
+  Modal,
+  Alert
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { Order, getOrdersWithDishesAndUser } from "@/lib/orders";
+import { Order, getOrdersWithDishesAndUser, updateOrderStatus } from "@/lib/orders";
 import { useTranslation } from "react-i18next";
+import { Picker } from "@react-native-picker/picker";
 
 const { width } = Dimensions.get("window");
 
@@ -27,6 +30,11 @@ const OrdersCook = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [statusUpdateModal, setStatusUpdateModal] = useState({ visible: false, success: false, message: "" });
+
 
   const { t } = useTranslation();
 
@@ -35,6 +43,7 @@ const OrdersCook = () => {
       try {
         const ordersResponse = await getOrdersWithDishesAndUser();
         setOrders(ordersResponse);
+        console.log(ordersResponse)
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
@@ -46,14 +55,43 @@ const OrdersCook = () => {
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 1000,
+      duration: 100,
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
 
-  const toggleOrder = (orderId: number) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
+  const openOrderDetails = (order: Order) => {
+    setSelectedOrder(order);
+    setSelectedStatus(order.order_status);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedOrder(null);
+  };
+
+  const showStatusUpdateModal = (success: boolean, message: string) => {
+    setStatusUpdateModal({ visible: true, success, message });
+    setTimeout(() => {
+      setStatusUpdateModal({ visible: false, success: false, message: "" });
+      setModalVisible(false);
+
+    }, 1200);
+  };
+
+  const changeOrderStatus = async (orderId: number, newStatus: string) => {
+    try {
+      await updateOrderStatus(orderId, newStatus.toUpperCase());
+      const updatedOrders = orders.map(order =>
+        order.id === orderId ? { ...order, order_status: newStatus } : order
+      );
+      setOrders(updatedOrders);
+      showStatusUpdateModal(true, t("status.order_positivefeedback"));
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      showStatusUpdateModal(false, t("status.order_negativefeedback"));
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -78,18 +116,94 @@ const OrdersCook = () => {
     }
   };
 
+  const renderOrderModal = () => (
+    <Modal
+    animationType="slide"
+    transparent={true}
+    visible={modalVisible}
+    onRequestClose={closeModal}
+  >
+    <View style={styles.modalOverlay}>
+      <View style={styles.modalContent}>
+        <View style={styles.modalHeader}>
+          <Text style={styles.modalTitle}>{t("status.order_details")}</Text>
+          <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+            <FontAwesome name="close" size={24} color="#333" />
+          </TouchableOpacity>
+        </View>
+        {selectedOrder && (
+          <>
+            <View style={styles.customerInfo}>
+              <Text style={styles.customerName}>{selectedOrder.firstName}</Text>
+              <Text style={styles.orderDate}>
+                {t("status.order_date")}: {new Date(selectedOrder.created_at).toLocaleDateString()}
+              </Text>
+            </View>
+            <ScrollView style={styles.modalScrollView}>
+              {selectedOrder.dishesDetails.map((dish: { dishDetails: { name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }; amount: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined; price: number; }, index: React.Key | null | undefined) => (
+                <View key={index} style={styles.dishItem}>
+                  <View style={styles.dishInfo}>
+                    <Text style={styles.dishName}>{dish.dishDetails?.name}</Text>
+                    <Text style={styles.dishQuantity}>  x{dish.amount}</Text>
+                  </View>
+                  <Text style={styles.dishPrice}>${(dish.price * Number(dish.amount)).toFixed(2)}</Text>
+                </View>
+              ))}
+            </ScrollView>
+            <View style={styles.totalContainer}>
+              <Text style={styles.totalText}>Total:</Text>
+              <Text style={styles.totalAmount}>
+                ${selectedOrder.dishesDetails.reduce((sum: number, dish: { price: number; amount: number; }) => sum + dish.price * dish.amount, 0).toFixed(2)}
+              </Text>
+            </View>
+            <View style={styles.statusSituation}>
+              <Text style={styles.statusLabel}>{t("status.order_status")}:</Text>
+                <Picker
+                  selectedValue={selectedStatus}
+                  style={styles.statusPicker}
+                  onValueChange={(itemValue) => {
+                    setSelectedStatus(itemValue);
+                    changeOrderStatus(selectedOrder.id, itemValue);
+                  }}
+                >
+                  <Picker.Item label={t("status.pending")} value="p" />
+                  <Picker.Item label={t("status.delivered")} value="d" />
+                </Picker>
+            </View>
+          </>
+        )}
+      </View>
+    </View>
+  </Modal>
+);
+
+  const renderStatusUpdateModal = () => (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={statusUpdateModal.visible}
+    >
+      <View style={styles.statusUpdateModalOverlay}>
+        <View style={[
+          styles.statusUpdateModalContent,
+          { backgroundColor: statusUpdateModal.success ? '#4CAF50' : '#F44336' }
+        ]}>
+          <Text style={styles.statusUpdateModalText}>{statusUpdateModal.message}</Text>
+        </View>
+      </View>
+    </Modal>
+  );
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.title}>{t("status.order_title")}</Text>
         <Animated.View style={{ ...styles.orderGrid, opacity: fadeAnim }}>
-
           {orders.map((order, index) => (
             <Animated.View key={order.id || index} style={styles.orderCard}>
               <TouchableOpacity
                 style={styles.orderHeader}
-                onPress={() => toggleOrder(order.id)}
+                onPress={() => openOrderDetails(order)}
                 activeOpacity={0.7}
               >
                 <View style={styles.orderInfo}>
@@ -100,48 +214,19 @@ const OrdersCook = () => {
                   <Text style={styles.orderTotal}>
                     Total: ${order.dishesDetails.reduce((sum: number, dish: { price: number; amount: number; }) => sum + dish.price * dish.amount, 0).toFixed(2)}
                   </Text>
-                  <View style={styles.statusContainer}>
+                  <View style={[styles.statusContainer]}>
                     <View style={[styles.statusDot, { backgroundColor: getStatusColor(order.order_status) }]} />
                     <Text style={styles.statusText}>{getName(order.order_status)}</Text>
                   </View>
                 </View>
-                <Animated.View
-                  style={{
-                    transform: [
-                      {
-                        rotate: expandedOrderId === order.id ? "180deg" : "0deg",
-                      },
-                    ],
-                  }}
-                >
-                  <FontAwesome name="chevron-down" size={16} color="#333" />
-                </Animated.View>
+                <FontAwesome name="chevron-right" size={16} color="#333" />
               </TouchableOpacity>
-
-
-              {expandedOrderId === order.id && (
-                <View style={styles.orderDetails}>
-                  <Text style={styles.dishesTitle}>Order Details:</Text>
-
-
-                  {order.dishesDetails.map((dish: { dishDetails: { name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }; amount: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined; price: number; }, index: React.Key | null | undefined) => (
-                    <View key={index} style={styles.dishItem}>
-                      <View style={styles.dishInfo}>
-                        <Text style={styles.dishName}>{dish.dishDetails?.name}</Text>
-                        <Text style={styles.dishQuantity}>x{dish.amount}</Text>
-                      </View>
-
-                    </View>
-                  ))}
-
-                </View>
-              )}
-              
             </Animated.View>
           ))}
-
         </Animated.View>
       </ScrollView>
+      {renderOrderModal()}
+      {renderStatusUpdateModal()}
     </SafeAreaView>
   );
 };
@@ -204,8 +289,13 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   statusContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingTop: 8,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
   },
   statusDot: {
     width: 8,
@@ -236,11 +326,12 @@ const styles = StyleSheet.create({
   dishInfo: {
     flexDirection: "row",
     alignItems: "center",
+    paddingTop: 2
+
   },
   dishName: {
     fontSize: 16,
     color: "#333",
-    marginRight: 8,
   },
   dishQuantity: {
     fontSize: 14,
@@ -250,14 +341,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
     fontWeight: "600",
+    marginLeft: 8,
   },
   totalContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 16,
-    paddingTop: 16,
-    borderTopWidth: 1,
-    borderTopColor: "#e0e0e0",
+    alignItems: "center",
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e0e0e0",
   },
   totalText: {
     fontSize: 18,
@@ -269,6 +361,89 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333",
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    width: '90%',
+    maxHeight: '80%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  closeButton: {
+    padding: 5,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  modalScrollView: {
+    maxHeight: 300,
+    paddingHorizontal: 20,
+  },
+  statusLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginRight: 8,
+    justifyContent: 'space-around'
+  },
+
+  statusSituation:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingTop: 8,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    justifyContent: 'space-around'  
+  },
+
+
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    overflow: 'hidden',
+    width: 150,
+  },
+  statusPicker: {
+    height: 40,
+    width: 150,
+  },
+  customerInfo: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  statusUpdateModalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  statusUpdateModalContent: {
+    width: '100%',
+    padding: 20,
+    alignItems: 'center',
+  },
+  statusUpdateModalText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
 export default OrdersCook;
+

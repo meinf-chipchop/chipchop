@@ -72,6 +72,12 @@
     "delivered": "Entregado",
     "pending": "Pendiente",
     "missing": "Ausente",
-    "order_title": "Orden"
+    "order_title": "Orden",
+    "order_status": "Orden Status",
+    "order_date": "fecha del pedido",
+    "order_positivefeedback": "Estado del pedido actualizado con éxito",
+    "order_negativefeedback": "No se pudo actualizar el estado del pedido",
+    "order_details": "Detalles del pedido"
+
   }
 }

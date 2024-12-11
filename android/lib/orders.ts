@@ -1,6 +1,8 @@
 import fetchWrapper from "./fetchWrapper";
 import { getByURL } from "./utils";
 import {Dish} from "./dishes"
+import { getCsrfToken } from "./auth";
+
 
 export interface OrdersList {
   count: number;
@@ -67,23 +69,25 @@ export async function getOrdersWithDishesAndUser(): Promise<(Order & { dishesDet
 
   const ordersWithDetails = await Promise.all(
     orderList.results.map(async (orderItem) => {
-
-      // Request the order
+      // Busca o pedido usando a URL
       const order = await getByURL(orderItem.url) as Order;
 
-      // Search details from the user
+      // Garante que o ID seja recuperado
+      const id = order.id ?? parseInt(orderItem.url.split('/').filter(Boolean).pop() || '0', 10);
+
+      // Busca os detalhes do usuário
       let firstName = "";
       if (order.user) {
         const user = await getByURL(order.user) as { first_name: string };
         firstName = user.first_name;
       }
 
-      // Search details from the dishes
+      // Busca os detalhes dos pratos
       const dishesDetails = await getDishesFromOrder(order);
 
       return {
         ...order,
-        id: order.id, 
+        id, // Garante que o ID seja único
         firstName, 
         dishesDetails,
       };
@@ -92,6 +96,7 @@ export async function getOrdersWithDishesAndUser(): Promise<(Order & { dishesDet
 
   return ordersWithDetails;
 }
+
 
 
 
@@ -129,6 +134,29 @@ export async function getDishesFromOrder(order: Order): Promise<(OrderDishesInst
   );
 
   return resultsWithDetails;
+}
+
+
+export async function updateOrderStatus(id: number, order_status: string): Promise<Order> {
+  const url = `/api/orders/${id}/`;
+
+  const updatedOrder = await fetchWrapper(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCsrfToken() ?? ""
+
+    },
+    credentials: "include",
+    body: JSON.stringify({ order_status }),
+  }).then((response) => {
+    if (!response.ok) {
+      throw new Error(`Failed to update order status. Status: ${response.status}`);
+    }
+    return response.json() as Promise<Order>;
+  });
+
+  return updatedOrder;
 }
 
 

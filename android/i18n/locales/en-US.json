@@ -72,6 +72,12 @@
     "delivered": "Delivered",
     "pending": "Pending",
     "missing": "Missing",
-    "order_title": "Orders"
+    "order_title": "Orders",
+    "order_status": "Order Status",
+    "order_date": "Order Date",
+    "order_positivefeedback": "Order status updated successfully",
+    "order_negativefeedback": "Failed to update order status",
+    "order_details": "Order Details"
+
   }
 }

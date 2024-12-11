@@ -15,7 +15,7 @@ const Home = () => {
 
   const [showOrdersButton, setShowOrdersButton] = useState(false);
   useEffect(() => {
-    setShowOrdersButton(user?.role == "C");
+    setShowOrdersButton(user?.role == "U");
   }, [user]);
 
 
