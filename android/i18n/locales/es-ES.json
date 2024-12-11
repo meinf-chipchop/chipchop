@@ -77,6 +77,7 @@
   "settings": {
     "work_with_us": "Trabaja con nosotros"
   },
+
   "order_status": {
     "P": "Pendiente",
     "A": "Aprobado",
@@ -87,10 +88,41 @@
     "D": "En reparto",
     "T": "Accidente de tráfico",
     "S": "Atraco",
-    "F": "Finalizado"
+    "F": "Finalizado",
+    "M": "Desaparecido"
+
   },
+
   "order_type": {
     "D": "Entrega",
     "P": "Recogida"
+  },
+
+  "order_status_description": {
+    "Pending": "P",
+    "Approved": "A",
+    "Rejected": "R",
+    "Cooking": "C",
+    "Burnt Kitchen": "B",
+    "Cooked": "K",
+    "Delivering": "D",
+    "Traffic Accident": "T",
+    "Robbed": "S",
+    "Finished": "F",
+    "Missing": "M"
+  },
+
+  "order_type_description": {
+    "Delivery": "D",
+    "Pickup": "P"
+  },
+
+  "order_text": {
+    "order_title": "Orden",
+    "order_status": "Orden Status",
+    "order_date": "Fecha del pedido",
+    "order_details": "Detalles del pedido",
+    "order_positive_feedback": "Estado del pedido actualizado con éxito",
+    "order_negative_feedback": "No se pudo actualizar el estado del pedido"
   }
 }

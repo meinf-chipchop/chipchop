@@ -39,6 +39,7 @@ const DishForm = () => {
     discount: 0,
     estimated_time: "",
   });
+  
   const [errors, setErrors] = useState({
     name: "",
     description: "",
