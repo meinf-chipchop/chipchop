@@ -7,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { getDishCategories } from "@/lib/dishCategories";
 import { useTranslation } from "react-i18next";
 import { VStack } from "@/components/ui/vstack";
-import { Button, ButtonText } from "@/components/ui/button";
+import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { CookingPot } from "lucide-react-native";
 import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
@@ -37,6 +37,17 @@ const Dishes = () => {
 
   return (
     <SafeAreaView className="bg-general-500 flex-1">
+      {dishes && dishes.length > 0 && (
+        <Button
+          className="mx-2 my-5"
+          variant="outline"
+          onPress={() => {
+            router.push("/DishForm");
+          }}
+        >
+          <ButtonText>{t("dish.create")}</ButtonText>
+        </Button>
+      )}
       <FlatList
         data={dishes}
         renderItem={({ item }) => <DishCard dish={item} />}

@@ -5,7 +5,8 @@
     "first_name": "Nombre",
     "password": "Contraseña",
     "phone_number": "Número de teléfono",
-    "second_name": "Apellido"
+    "second_name": "Apellido",
+    "history": "Historial"
   },
   "labels": {
     "chef": "Chef",
@@ -23,7 +24,9 @@
     "name": "Nombre",
     "price": "Precio",
     "next": "Siguiente",
-    "lets_start": "¡Comencemos!"
+    "lets_start": "¡Comencemos!",
+    "image_url": "URL de la imagen",
+    "loading": "Cargando..."
   },
   "auth": {
     "log_in": "Iniciar sesión",
@@ -63,7 +66,13 @@
     "no_categories": "No hay categorías",
     "no_dishes_found": "No se han encontrado platos",
     "become_chef": "¡Conviértete en chef y empieza a vender tus propios platos!",
-    "select_category": "Selecciona una categoría"
+    "select_category": "Selecciona una categoría",
+    "estimated_time": "Tiempo estimado",
+    "save_price": "Ahorra",
+    "added_on": "Añadido el",
+    "top_rated": "Lo mejor valorado",
+    "all": "Otros aperitivos",
+    "uncategorized": "Sin categoría"
   },
   "settings": {
     "work_with_us": "Trabaja con nosotros"

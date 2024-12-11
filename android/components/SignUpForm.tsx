@@ -1,27 +1,33 @@
-import { useState } from "react";
 import { ScrollView, View, Text } from "react-native";
 import { z } from "zod";
 import InputField from "@/components/InputField";
-import { router } from "expo-router";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Ionicons } from "@expo/vector-icons";
-import { useSession } from "@/auth/authContext";
 import { NewUser } from "@/lib/auth";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
-const CustomerSignUp = () => {
+interface UserFormProps {
+  user: NewUser;
+  onChange: (user: NewUser) => void;
+  loading: boolean;
+  onSignUpPress: () => void;
+  response: { errors: string };
+  additionalFields?: React.ReactNode;
+  additionalFieldsValidation?: () => boolean
+}
+
+const SignUpForm = ({
+  user,
+  onChange,
+  loading,
+  onSignUpPress,
+  response,
+  additionalFields,
+  additionalFieldsValidation
+}: UserFormProps) => {
   const { t } = useTranslation();
-  const [form, setForm] = useState<NewUser>({
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
-    phone: "",
-    birth_date: "",
-  });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
-  const { signUp } = useSession();
 
   const signUpValidationSchema = z.object({
     first_name: z.string().min(1, t("validation_form.first_name_required")),
@@ -39,7 +45,7 @@ const CustomerSignUp = () => {
   const validateForm = () => {
     try {
       setErrors({});
-      signUpValidationSchema.parse(form);
+      signUpValidationSchema.parse(user);
       return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -53,23 +59,6 @@ const CustomerSignUp = () => {
     }
   };
 
-  const [response, setResponse] = useState({ ok: true, errors: "" });
-  const onSignUpPress = async () => {
-    if (validateForm()) {
-      setLoading(true);
-      signUp(form)
-        .then((res) => {
-          if (res.length === 0) {
-            setResponse({ ok: true, errors: "" });
-            router.push("/");
-          } else setResponse({ ok: false, errors: res });
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  };
-
   return (
     <ScrollView className="flex-1 bg-white pt-4">
       <View className="flex-1 bg-white mb-10 gap-2">
@@ -77,9 +66,9 @@ const CustomerSignUp = () => {
           label={t("user.first_name")}
           placeholder={t("user.first_name")}
           leftIcon={<Ionicons name="person" size={14} />}
-          value={form.first_name}
+          value={user.first_name}
           onChangeText={(value: string) =>
-            setForm({ ...form, first_name: value })
+            onChange({ ...user, first_name: value })
           }
           error={errors.first_name}
         />
@@ -87,9 +76,9 @@ const CustomerSignUp = () => {
           label={t("user.second_name")}
           placeholder={t("user.second_name")}
           leftIcon={<Ionicons name="person" size={14} />}
-          value={form.last_name}
+          value={user.last_name}
           onChangeText={(value: string) =>
-            setForm({ ...form, last_name: value })
+            onChange({ ...user, last_name: value })
           }
         />
         <InputField
@@ -97,8 +86,8 @@ const CustomerSignUp = () => {
           placeholder={t("user.email")}
           leftIcon={<Ionicons name="mail" size={14} />}
           textContentType="emailAddress"
-          value={form.email}
-          onChangeText={(value: string) => setForm({ ...form, email: value })}
+          value={user.email}
+          onChangeText={(value: string) => onChange({ ...user, email: value })}
           error={errors.email}
         />
         <InputField
@@ -107,9 +96,9 @@ const CustomerSignUp = () => {
           leftIcon={<Ionicons name="lock-closed" size={14} />}
           secureTextEntry={true}
           textContentType="password"
-          value={form.password}
+          value={user.password}
           onChangeText={(value: string) =>
-            setForm({ ...form, password: value })
+            onChange({ ...user, password: value })
           }
           error={errors.password}
         />
@@ -118,8 +107,8 @@ const CustomerSignUp = () => {
           placeholder={t("user.phone_number")}
           leftIcon={<Ionicons name="call" size={14} />}
           textContentType="telephoneNumber"
-          value={form.phone}
-          onChangeText={(value: string) => setForm({ ...form, phone: value })}
+          value={user.phone}
+          onChangeText={(value: string) => onChange({ ...user, phone: value })}
           error={errors.phone}
         />
         <InputField
@@ -127,15 +116,21 @@ const CustomerSignUp = () => {
           placeholder={t("user.age")}
           leftIcon={<Ionicons name="calendar" size={14} />}
           textContentType="birthdateDay"
-          value={form.birth_date}
+          value={user.birth_date}
           onChangeText={(value: string) =>
-            setForm({ ...form, birth_date: value })
+            onChange({ ...user, birth_date: value })
           }
           error={errors.birth_date}
         />
+        {additionalFields}
         <Button
           disabled={loading}
-          onPress={onSignUpPress}
+          onPress={() => {
+            let validation = true;
+            if (additionalFieldsValidation)
+              validation = additionalFieldsValidation();
+            if (validateForm() && validation) onSignUpPress();
+          }}
           className="rounded-full mt-6"
         >
           {loading && <ButtonSpinner />}
@@ -151,4 +146,4 @@ const CustomerSignUp = () => {
   );
 };
 
-export default CustomerSignUp;
+export default SignUpForm;

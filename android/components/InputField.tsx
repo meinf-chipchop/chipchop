@@ -23,6 +23,7 @@ interface InputFieldProps extends TextInputProps {
   rightIcon?: React.ReactNode;
   isInvalid?: boolean;
   error?: string;
+  disabled?: boolean;
 }
 
 const TextField = ({
@@ -36,6 +37,7 @@ const TextField = ({
   inputStyle,
   leftIcon,
   rightIcon,
+  disabled,
   error,
 }: InputFieldProps) => {
   return (
@@ -45,7 +47,7 @@ const TextField = ({
           <FormControlLabelText className="pl-1">{label}</FormControlLabelText>
         </FormControlLabel>
       )}
-      <Input className="rounded-full bg-background-50">
+      <Input className="rounded-full bg-background-50" isDisabled={disabled}>
         {leftIcon && <InputSlot className="pl-3">{leftIcon}</InputSlot>}
         <InputField
           className={`w-full ${inputStyle}`}
@@ -61,9 +63,7 @@ const TextField = ({
       </Input>
       <FormControlError className="pl-3">
         <FormControlErrorIcon as={AlertCircleIcon} />
-        <FormControlErrorText className="text-sm">
-          {error}
-        </FormControlErrorText>
+        <FormControlErrorText className="text-sm">{error}</FormControlErrorText>
       </FormControlError>
     </FormControl>
   );

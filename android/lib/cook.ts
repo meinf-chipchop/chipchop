@@ -11,6 +11,19 @@ export interface Cook {
   user: User;
 }
 
+export interface CookOverall {
+  url: string;
+  public_name: string;
+  rating_average: number;
+}
+
+export interface CooksPage {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: CookOverall[];
+}
+
 export function createCook(cook: NewCook) {
   return fetchWrapper("/api/cooks/", {
     method: "POST",

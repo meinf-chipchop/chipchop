@@ -7,9 +7,9 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import { SessionProvider } from "@/auth/authContext";
-import "../global.css";
 import "@/i18n";
 import { initI18n } from "@/i18n";
+import { initOneSignal } from "@/lib/onesignal/main";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -33,6 +33,7 @@ export default function RootLayout() {
       setIsI18nInitialized(true);
     };
     initializeI18N();
+    initOneSignal();
   }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
@@ -53,14 +54,6 @@ export default function RootLayout() {
 
   return (
     <GluestackUIProvider mode="light">
-      <RootLayoutNav />
-    </GluestackUIProvider>
-  );
-}
-
-function RootLayoutNav() {
-  return (
-    <GluestackUIProvider mode="system">
       <SessionProvider>
         <Slot />
       </SessionProvider>

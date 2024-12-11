@@ -140,12 +140,14 @@ export async function getDishesFromOrder(order: Order): Promise<(OrderDishesInst
 export async function updateOrderStatus(id: number, order_status: string): Promise<Order> {
   const url = `/api/orders/${id}/`;
 
+  // Aguarda a resolução do token CSRF
+  const csrfToken = await getCsrfToken();
+
   const updatedOrder = await fetchWrapper(url, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      "X-CSRFToken": getCsrfToken() ?? ""
-
+      "X-CSRFToken": csrfToken ?? "",
     },
     credentials: "include",
     body: JSON.stringify({ order_status }),
@@ -158,6 +160,7 @@ export async function updateOrderStatus(id: number, order_status: string): Promi
 
   return updatedOrder;
 }
+
 
 
 

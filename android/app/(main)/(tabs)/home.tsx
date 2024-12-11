@@ -36,6 +36,14 @@ const Home = () => {
     fetchCooks();
   }, []);
 
+  useEffect(() => {
+    const fetchCooks = async () => {
+      const cooks = await getCooks();
+      setCooks(cooks);
+    };
+    fetchCooks();
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -122,18 +130,7 @@ const Home = () => {
 
         <Text style={styles.chefsTitle}>Top Chefs</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chefsScroll}>
-          {[
-            { name: 'Gordon Ramsay', image: 'https://randomuser.me/api/portraits/men/1.jpg' },
-            { name: 'Jamie Oliver', image: 'https://randomuser.me/api/portraits/men/2.jpg' },
-            { name: 'Nigella Lawson', image: 'https://randomuser.me/api/portraits/women/1.jpg' },
-            { name: 'Wolfgang Puck', image: 'https://randomuser.me/api/portraits/men/3.jpg' },
-            { name: 'Alice Waters', image: 'https://randomuser.me/api/portraits/women/2.jpg' }
-          ].map((chef, index) => (
-            <View key={index} style={styles.chefCard}>
-              <Image source={{ uri: chef.image }} style={styles.chefImage} />
-              <Text style={styles.chefText}>{chef.name}</Text>
-            </View>
-          ))}
+          <CookList cooks={cooks} />
         </ScrollView>
 
         <Animated.View style={{ opacity: fadeAnim }}>
