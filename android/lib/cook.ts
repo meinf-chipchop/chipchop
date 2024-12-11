@@ -43,7 +43,7 @@ export function getCook(cookId: number): Promise<Cook> {
   }).then((response) => response.json() as Promise<Cook>);
 }
 
-export async function getCooks(): Promise<Cook[]> {
+export async function getCooks(): Promise<CooksPage> {
   const cookList = await fetchWrapper("/api/cooks/", {
     method: "GET",
     headers: {
@@ -51,13 +51,7 @@ export async function getCooks(): Promise<Cook[]> {
     },
   }).then((response) => response.json());
 
-  const cooks: Cook[] = [];
-
-  cookList.forEach(async (cook: { url: string }) => {
-    cooks.push(await getCookByURL(cook.url));
-  });
-
-  return cooks;
+  return cookList as CooksPage;
 }
 
 export function getCookByURL(cookURL: string): Promise<Cook> {

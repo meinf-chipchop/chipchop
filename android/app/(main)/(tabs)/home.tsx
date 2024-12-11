@@ -3,9 +3,8 @@ import { SafeAreaView, View, Text, Image, TextInput, Button, StyleSheet, ScrollV
 import { FontAwesome } from '@expo/vector-icons';
 import { useSession } from "@/auth/authContext";
 import { useRouter } from "expo-router";
-
 import { CooksPage, getCooks } from '@/lib/cook';
-
+import CookList from '@/components/CooksList';
 
 const { width } = Dimensions.get('window');
 
@@ -17,7 +16,7 @@ const Home = () => {
 
   const [showOrdersButton, setShowOrdersButton] = useState(false);
   useEffect(() => {
-    setShowOrdersButton(user?.role == "U");
+    setShowOrdersButton(user?.role == "C"); // ======= Set C to acess orders interface =======//
   }, [user]);
 
   useEffect(() => {
@@ -27,14 +26,6 @@ const Home = () => {
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
-
-  useEffect(() => {
-    const fetchCooks = async () => {
-      const cooks = await getCooks();
-      setCooks(cooks);
-    };
-    fetchCooks();
-  }, []);
 
   useEffect(() => {
     const fetchCooks = async () => {
@@ -61,7 +52,7 @@ const Home = () => {
           <View
             style={[
               styles.iconContainer,
-              !showOrdersButton && { justifyContent: "space-around", flexDirection: "row", alignItems: "center"},
+              !showOrdersButton && { justifyContent: "space-around", flexDirection: "row", alignItems: "center" },
             ]}
           >
             {showOrdersButton && (
@@ -130,8 +121,9 @@ const Home = () => {
 
         <Text style={styles.chefsTitle}>Top Chefs</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chefsScroll}>
-          <CookList cooks={cooks} />
+          {cooks && <CookList cooks={cooks} />}
         </ScrollView>
+
 
         <Animated.View style={{ opacity: fadeAnim }}>
           <Text style={styles.chipChopTitle}>New On Chip Chop</Text>
@@ -206,7 +198,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between", // Comportamento padrão
     width: 150, // Ajuste se necessário para a largura total
   },
-  
+
   icon: {
     color: '#e3d6ab',
   },
