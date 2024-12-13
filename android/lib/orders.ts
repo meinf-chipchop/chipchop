@@ -1,23 +1,9 @@
-import { getCsrfToken } from "./auth";
+import { getCsrfToken, Me } from "./auth";
 import { DishList } from "./dishes";
 
 import fetchWrapper from "./fetchWrapper";
+import { Address, UserDetail } from "./users";
 import { getByURL } from "./utils";
-
-export interface OrderList {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: Array<{
-    url: string;
-    dishes: string;
-    address: string;
-    deliverer: string | null;
-    first_name: string;
-    order_type: string;
-    order_status: string;
-  }>;
-}
 
 export interface genericPaging {
   count: number;
@@ -32,6 +18,7 @@ export interface Order {
   id: number;
   user: string;
   deliverer: string | null;
+  deliverer_id: number | null;
   address: string;
   dishes: string;
   order_type: string;
@@ -48,6 +35,13 @@ export interface OrderDish {
   amount: number;
   price: string;
   note: string;
+}
+
+export interface OrderList {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Order[];
 }
 
 export async function getOrderHistory(): Promise<Order[]> {
@@ -81,11 +75,76 @@ export async function getOrderDishes(order_id: number): Promise<OrderDish[]> {
       "Content-Type": "application/json",
     },
     credentials: "include",
-  }).then((response) => response.json() as Promise<DishList>);
+  }).then((response) => response.json() as Promise<genericPaging>);
 
   let dishes = await Promise.all(
     dishList.results.map((dish) => getByURL(dish.url)) as Promise<OrderDish>[]
   );
 
   return dishes;
+}
+
+export async function getOrderDishesByUrl(dishes_url: string): Promise<OrderDish[]> {
+  let dishPaging = await getByURL<genericPaging>(dishes_url);
+
+  let dishes = await Promise.all(
+    dishPaging.results.map((dish) => getByURL(dish.url)) as Promise<OrderDish>[]
+  );
+
+  return dishes;
+}
+
+export async function getOrders(): Promise<OrderList> {
+  let orders = await fetchWrapper(`/api/orders/`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  }).then((response) => response.json() as Promise<OrderList>);
+
+  return orders;
+}
+
+export async function getFullOrders(): Promise<Order[]> {
+  let orders = await fetchWrapper(`/api/orders/`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  }).then((response) => response.json() as Promise<genericPaging>);
+
+  const results = [];
+  const normalize_order = async (order_url: string): Promise<Order> => {
+    const order = await getByURL<Order>(order_url);
+    const user = await getByURL<UserDetail>(order.user);
+    const address = await getByURL<Address>(order.address);
+    const dishes = await getOrderDishesByUrl(order.dishes);
+
+    order.user = user.first_name + " " + user.last_name;
+    order.address = address.street + ", " + address.city + ", " + address.zip_code;
+    order.dish_list = dishes;
+    return order;
+  }
+
+  for (let i = 0; i < orders.results.length; i++) {
+    const order = orders.results[i];
+    results.push(await normalize_order(order.url));
+  }
+
+  return results;
+}
+
+export async function acceptOrder(order_id: number, deliverer: Me): Promise<Boolean> {
+  const res = fetchWrapper(`/api/orders/${order_id}/accept`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCsrfToken(),
+    },
+    credentials: "include",
+  });
+  
+  return res.then((response) => response.ok);
 }

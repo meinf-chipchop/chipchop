@@ -77,6 +77,18 @@
   "settings": {
     "work_with_us": "Trabaja con nosotros"
   },
+  "orders": {
+    "title": "Pedidos a domicilio",
+    "items": "artículo(s)",
+    "mark_pickup": "Marcar como recogido",
+    "assign_deliverer": "Asignarme como repartidor",
+    "assigned": "Órdenes asignadas",
+    "no_assigned_orders": "Todavía no te has asignado órdenes",
+    "unassigned": "Órdenes sin asignar",
+    "no_unassigned_orders": "Todavía no hay órdenes",
+    "waiting_cook": "Esperando al chef",
+    "waiting_deliverer": "Recoger"
+  },
   "order_status": {
     "P": "Pendiente",
     "A": "Aprobado",

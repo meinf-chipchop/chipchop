@@ -33,6 +33,7 @@ const TabIcon = ({
 export default function Layout() {
   const { t } = useTranslation();
   const navigation = useNavigation();
+
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
@@ -83,6 +84,19 @@ export default function Layout() {
           tabBarIcon: ({ color, size, focused }) => (
             <TabIcon
               icon={<Ionicons name="restaurant" color={color} size={size} />}
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="deliverer"
+        options={{
+          title: "Orders",
+          headerShown: false,
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabIcon
+              icon={<Ionicons name="bicycle" color={color} size={size} />}
               focused={focused}
             />
           ),
