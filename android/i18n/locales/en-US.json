@@ -98,6 +98,7 @@
   },
   "orders": {
     "title": "Orders to Pick up",
+    "picked_up_title": "Picked up",
     "items": "Item(s)",
     "mark_pickup": "Mark as picked up",
     "assign_deliverer": "Assign as deliverer",
@@ -106,7 +107,9 @@
     "unassigned": "Unassigned orders",
     "no_unassigned_orders": "There are no orders yet",
     "waiting_cook": "Waiting for cook to finish",
-    "waiting_deliverer": "Pickup"
+    "waiting_deliverer": "Pickup",
+    "no_picked_up_orders": "You have not picked up any orders yet",
+    "delivered": "Mark as delivered"
   },
   "order_status": {
     "P": "Pending",

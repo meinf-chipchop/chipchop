@@ -1,6 +1,5 @@
 import { me, Me } from "@/lib/auth";
-import { acceptOrder, getFullOrders, getOrderDishesByUrl, getOrders, Order } from "@/lib/orders";
-import { useRouter } from "expo-router";
+import { acceptOrder, getFullOrders, Order, updateStatus } from "@/lib/orders";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Animated, View, Text, Pressable } from "react-native";
@@ -15,8 +14,11 @@ const DelivererOrders = () => {
 
     const [selfUser, setSelfUser] = useState<Me>();
     const [orders, setOrders] = useState<Order[]>();
+    const [pickedUpOrders, setPickedUpOrders] = useState<Order[]>();
     const [assignedOrders, setAssignedOrders] = useState<Order[]>();
     const [freeOrders, setFreeOrders] = useState<Order[]>();
+
+    const notFinished = (order: Order) => { return order.order_status !== 'F' };
 
     useEffect(() => {
         Animated.timing(fadeAnim, {
@@ -36,11 +38,26 @@ const DelivererOrders = () => {
     }, []);
 
     useEffect(() => {
-        setAssignedOrders(orders?.filter((order) => order.deliverer_id === selfUser?.id ));
+        setPickedUpOrders(orders?.filter((order) => order.deliverer_id === selfUser?.id && order.order_status === 'D'));
+    }, [orders, selfUser]);
+
+    useEffect(() => {
+        const assignedOrders = orders?.filter((order) => order.deliverer_id === selfUser?.id && notFinished(order));
+        // Sort by cooked and then the rest
+        assignedOrders?.sort((a, b) => {
+            if (a.order_status === 'K' && b.order_status !== 'K') {
+                return -1;
+            } else if (a.order_status !== 'K' && b.order_status === 'K') {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+        setAssignedOrders(assignedOrders);
     }, [orders, selfUser]);
     
     useEffect(() => {
-        setFreeOrders(orders?.filter((order) => !order.deliverer));
+        setFreeOrders(orders?.filter((order) => !order.deliverer && notFinished(order)));
     }, [orders]);
 
     useEffect(() => {
@@ -50,52 +67,96 @@ const DelivererOrders = () => {
         fetchOrders();
     }, []);
 
+    // Could be abstracted, but won't :))
     const assignOrder = async (orderId: number) => {
         freeOrders?.filter((order) => order.id === orderId).map(async (order) => {
-            const res = await acceptOrder(order.id, selfUser!);
-            if (res) {
-                const newAssigned = [order];
-                if (assignedOrders) {
-                    newAssigned.push(...assignedOrders);
-                }
+            acceptOrder(order.id, selfUser!).then(res => {
+                if (!res) return;
+                order.deliverer_id = selfUser!.id;
+                const newAssigned = assignedOrders ? [...assignedOrders, order] : [order];
                 const newFree = freeOrders?.filter((order) => order.id !== orderId);
                 setAssignedOrders(newAssigned);
                 setFreeOrders(newFree);
-            }
+            });
         });
     }
 
+    const pickUpOrder = async (order: Order) => {
+        const state = newState(order.order_status);
+        updateStatus(order, state).then((newOrder) => {
+            const newPickedUp = pickedUpOrders ? [...pickedUpOrders, newOrder] : [newOrder];
+            setPickedUpOrders(newPickedUp);
+            setAssignedOrders(assignedOrders?.filter((o) => o.id !== newOrder.id));
+        });
+    }
+
+    const finishOrder = async (order: Order) => {
+        const state = newState(order.order_status);
+        updateStatus(order, state).then((newOrder) => {
+            setPickedUpOrders(pickedUpOrders?.filter((o) => o.id !== newOrder.id));
+        });
+    }
+
+    const newState = (currentState: string): string => {
+        switch (currentState) {
+            case 'K':
+                return 'D';
+            case 'D':
+                return 'F';
+            case 'F':
+                return 'F';
+        }
+        return 'P';        
+    }
+
     return (
-        <ScrollView className="bg-general-500 flex-1">
+        <ScrollView className="bg-general-500 flex-1 w-full pb-40">
             <View className="my-8 items-center">
                 <Text className="text-3xl font-bold">{t("orders.title")}</Text>
             </View>
-            <View className="my-4 items-center flex flex-col gap-y-2">
+            <View className="my-4 items-center flex flex-col gap-y-2 w-full">
+                <Text className="text-3xl my-4">{t('orders.picked_up_title')}</Text>
+                {pickedUpOrders && pickedUpOrders.length > 0 
+                    ? (pickedUpOrders.map((order, index) => (
+                        <View key={"pickedup-" + index} className="w-full">
+                            <HR className="pt-2" />
+                            <Pressable key={"press-" + index}>
+                                <OrderListItem key={"order-" + index} order={order} callback={() => finishOrder(order)}></OrderListItem>
+                            </Pressable>
+                        </View>)
+                    )) : (
+                        <View className="w-75 h-25 items-center">
+                            <Text className="text-md italic">{t('orders.no_picked_up_orders')}</Text>
+                        </View>
+                    )}
+            </View>
+
+            <View className="my-4 items-center flex flex-col gap-y-2 w-full">
                 <Text className="text-3xl my-4">{t("orders.assigned")}</Text>
                 {assignedOrders && assignedOrders.length > 0
                     ? (assignedOrders.map((order, index) => (
-                        <>
-                            <HR />
-                            <Pressable key={"press-" + index} className="w-full">
-                                <OrderListItem key={"order-" + index} order={order} callback={() => console.log()}></OrderListItem>
+                        <View key={"assigned-" + index} className="w-full">
+                            <HR className="pt-2" />
+                            <Pressable key={"press-" + index}>
+                                <OrderListItem key={"order-" + index} order={order} callback={() => pickUpOrder(order)}></OrderListItem>
                             </Pressable>
-                        </>)
+                        </View>)
                     )) : ( 
                         <View className="w-75 h-25 items-center">
                             <Text className="text-md italic">{t('orders.no_assigned_orders')}</Text>
                         </View>
                     )}
             </View>
-            <View className="px-4 items-center">
+            <View className="px-4 items-center pb-50 w-full">
                 <Text className="text-3xl my-4">{t("orders.unassigned")}</Text>
                 {freeOrders && freeOrders.length > 0 
                     ? (freeOrders.map((order, index) => (
-                        <>
-                            <HR />
-                            <Pressable key={"press-" + index} className="w-full">
+                        <View key={"free-" + index} className="w-full">
+                            <HR className="pt-2" />
+                            <Pressable key={"press-" + index}>
                                 <OrderListItem key={"order-" + index} order={order} callback={() => assignOrder(order.id)}></OrderListItem>
                             </Pressable>
-                        </>)
+                        </View>)
                     )) : (
                         <View className="w-75 h-25 items-center">
                             <Text className="text-md italic">{t('orders.no_unassigned_orders')}</Text>

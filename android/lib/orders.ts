@@ -141,10 +141,25 @@ export async function acceptOrder(order_id: number, deliverer: Me): Promise<Bool
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "X-CSRFToken": getCsrfToken(),
     },
     credentials: "include",
   });
   
   return res.then((response) => response.ok);
+}
+
+export async function updateStatus(order: Order, newStatus: string): Promise<Order> {
+  const res = fetchWrapper(`/api/orders/${order.id}/`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": await getCsrfToken(),
+    },
+    credentials: "include",
+    body: JSON.stringify({ order_status: newStatus }),
+  });
+
+  order.order_status = newStatus;
+
+  return res.then(_ => {return order });
 }

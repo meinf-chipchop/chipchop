@@ -26,11 +26,12 @@ const OrderStatus = ({ order }: OrderStatusProps) => {
         P: t("order_type.P"),
     };
 
-    const orderStatusColor = orderStatusDict[order.order_status as keyof typeof orderStatusDict].color;
+    const orderStatus = orderStatusDict[order.order_status as keyof typeof orderStatusDict];
+    const orderStatusColor = orderStatus ? orderStatus.color : "bg-gray-500";
 
     return (
         <View className={`${orderStatusColor}  p-2 rounded-lg  font-bold`} >
-            <Text>{orderStatusDict[order.order_status as keyof typeof orderStatusDict].text}</Text>
+            <Text>{orderStatus?.text}</Text>
         </View >
     );
 };

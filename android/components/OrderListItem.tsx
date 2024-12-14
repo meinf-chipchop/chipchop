@@ -15,23 +15,42 @@ export const OrderListItem = ({ order, callback }: OrderListItemProps) => {
     const { t } = useTranslation();
 
     const orderButton = (): React.JSX.Element => {
+        const buttonActive = !order.deliverer_id || order.order_status == 'K' || order.order_status == 'D';
+        const buttonColor = order.order_status == 'D' ? 'bg-green-500' : 'bg-secondary-500';
+
+        return (
+            <Button className={`rounded-lg cursor-pointer ${buttonColor}`} onPress={buttonActive ? callback : null} isDisabled={!buttonActive}>
+                {orderButtonContent()}
+            </Button>
+        )
+    }
+
+    const orderButtonContent = (): React.JSX.Element => {
 
         if (order.deliverer_id) {
-            if (order.order_status != 'C') {
-                return (
-                    <>
-                        <ButtonIcon as={Package} className="mx-4 h-4 w-4" />
-                        <ButtonText>{t('orders.waiting_cook')}</ButtonText>
-                    </>
-                )
-            } else {
-                return (
-                    <>
-                        <ButtonIcon as={Boxes} className="mx-4 h-4 w-4" />
-                        <ButtonText>{t('orders.waiting_deliverer')}</ButtonText>
-                    </>
-                )
-            }
+            switch (order.order_status) {
+                case 'K':
+                    return (
+                        <>
+                            <ButtonIcon as={Boxes} className="mx-4 h-4 w-4" />
+                            <ButtonText>{t('orders.waiting_deliverer')}</ButtonText>
+                        </>
+                    )
+                case 'D':
+                    return (
+                        <>
+                            <ButtonIcon as={Package} className="mx-4 h-4 w-4" />
+                            <ButtonText>{t('orders.delivered')}</ButtonText>
+                        </>
+                    )
+                default:
+                    return (
+                        <>
+                            <ButtonIcon as={Package} className="mx-4 h-4 w-4" />
+                            <ButtonText>{t('orders.waiting_cook')}</ButtonText>
+                        </>
+                    )
+                }
         } else {
             if (order.order_status == 'P') {
                 return (
@@ -60,9 +79,7 @@ export const OrderListItem = ({ order, callback }: OrderListItemProps) => {
                     </View>
                 </View>
                 <View className="flex-2">
-                    <Button className="rounded-lg bg-secondary-500 cursor-pointer" onPress={callback}>
-                        {orderButton()}
-                    </Button>
+                    {orderButton()}
                 </View>
             </View>
         </View>
