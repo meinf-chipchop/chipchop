@@ -90,19 +90,6 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
-        name="deliverer"
-        options={{
-          title: "Orders",
-          headerShown: false,
-          tabBarIcon: ({ color, size, focused }) => (
-            <TabIcon
-              icon={<Ionicons name="bicycle" color={color} size={size} />}
-              focused={focused}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",

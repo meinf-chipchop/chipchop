@@ -66,14 +66,14 @@ export const OrderListItem = ({ order, callback }: OrderListItemProps) => {
     }
 
     return (
-        <View className="rounded-md shadow-md border-2 border-gray-200 w-full h-full gap-y-2">
+        <View className="rounded-md shadow-sm border-2 border-gray-200 w-full h-full">
             <View className="flex-1 flex-col gap-y-2 p-4">
                 <View className="flex flex-row justify-between gap-y-2">
-                    <View className="flex flex-col text-wrap">
+                    <View className="flex flex-col text-wrap gap-y-2">
                         <Text className="font-bold text-lg">{order.user}</Text>
                         <Text className="opacity-80">{order.address}</Text>
                     </View>
-                    <View className="flex flex-col items-end w-auto">
+                    <View className="flex flex-col items-end w-auto gap-y-2">
                         <OrderStatus order={order} />
                         {order.dish_list && <Text>{order.dish_list.length} {t('orders.items')}</Text>}
                     </View>

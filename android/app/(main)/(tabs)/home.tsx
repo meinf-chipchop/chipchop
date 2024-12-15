@@ -4,6 +4,10 @@ import CookList from '@/components/CooksList';
 import React, { useRef, useEffect } from "react";
 import { SafeAreaView, View, Text, Image, TextInput, Button, StyleSheet, ScrollView, Dimensions, Animated } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
+import { Button as GoodButton, ButtonIcon } from '@/components/ui/button';
+import { Truck } from "lucide-react-native";
+import { Me, me } from '@/lib/auth';
+import { useRouter } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
@@ -11,6 +15,18 @@ const Home = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity value of 0
 
   const [cooks, setCooks] = React.useState<CooksPage>();
+  const [selfUser, setSelfUser] = React.useState<Me>();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchSelfUser = async () => {
+      const user = await me();
+      setSelfUser(user);
+    };
+
+    fetchSelfUser();
+  }, []);
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -48,6 +64,13 @@ const Home = () => {
             <FontAwesome.Button name="user" backgroundColor="#415f63" iconStyle={styles.icon}>
               <Text style={styles.iconText}></Text>
             </FontAwesome.Button>
+            {selfUser?.role == 'D' && (< GoodButton
+              className="pl-4 bg-[#415f63] rounded w-auto"
+              variant="link"
+              onPress={() => router.push("/DelivererOrders")}
+            >
+              <ButtonIcon as={Truck} size="md" color='white' className="w-auto pr-4" />
+            </GoodButton>)}
           </View>
         </View>
         <View style={styles.searchContainer}>
@@ -165,7 +188,8 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 100,
+    width: 'auto',
+    gap: 5,
   },
   icon: {
     color: '#e3d6ab',

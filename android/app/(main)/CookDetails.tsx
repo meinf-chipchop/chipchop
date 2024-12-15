@@ -9,6 +9,7 @@ import { CookProfileDishCard, CookProfileExpandableDishCard } from "@/components
 import RatingCard from "@/components/RatingCard";
 import { ScrollView, View, Text } from "react-native";
 import { useTranslation } from "react-i18next";
+import React from "react";
 
 
 function CookDetails() {
