@@ -1,8 +1,11 @@
 import React, { useRef, useEffect, useState } from "react";
 import { SafeAreaView, View, Text, Image, TextInput, Button, StyleSheet, ScrollView, Dimensions, Animated } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
+import { Button as GoodButton, ButtonIcon } from '@/components/ui/button';
+import { Truck } from "lucide-react-native";
+import { Me, me } from '@/lib/auth';
+import { useRouter } from 'expo-router';
 import { useSession } from "@/auth/authContext";
-import { useRouter } from "expo-router";
 import { CooksPage, getCooks } from '@/lib/cook';
 import CookList from '@/components/CooksList';
 
@@ -13,6 +16,18 @@ const Home = () => {
   const { user } = useSession();
   const router = useRouter();
   const [cooks, setCooks] = React.useState<CooksPage>();
+  const [selfUser, setSelfUser] = React.useState<Me>();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchSelfUser = async () => {
+      const user = await me();
+      setSelfUser(user);
+    };
+
+    fetchSelfUser();
+  }, []);
 
   const [showOrdersButton, setShowOrdersButton] = useState(false);
   useEffect(() => {
@@ -73,6 +88,13 @@ const Home = () => {
             <FontAwesome.Button name="user" backgroundColor="#415f63" iconStyle={styles.icon}>
               <Text style={styles.iconText}></Text>
             </FontAwesome.Button>
+            {selfUser?.role == 'D' && (< GoodButton
+              className="pl-4 bg-[#415f63] rounded w-auto"
+              variant="link"
+              onPress={() => router.push("/DelivererOrders")}
+            >
+              <ButtonIcon as={Truck} size="md" color='white' className="w-auto pr-4" />
+            </GoodButton>)}
           </View>
 
         </View>
@@ -193,10 +215,10 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   iconContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between", // Comportamento padrão
-    width: 150, // Ajuste se necessário para a largura total
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 'auto',
+    gap: 5,
   },
 
   icon: {

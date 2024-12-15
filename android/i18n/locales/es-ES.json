@@ -77,7 +77,21 @@
   "settings": {
     "work_with_us": "Trabaja con nosotros"
   },
-
+  "orders": {
+    "title": "Pedidos a domicilio",
+    "picked_up_title": "Pedidos recogidos",
+    "items": "artículo(s)",
+    "mark_pickup": "Marcar como recogido",
+    "assign_deliverer": "Asignarme como repartidor",
+    "assigned": "Órdenes asignadas",
+    "no_assigned_orders": "Todavía no te has asignado órdenes",
+    "unassigned": "Órdenes sin asignar",
+    "no_unassigned_orders": "Todavía no hay órdenes",
+    "waiting_cook": "Esperando al chef",
+    "waiting_deliverer": "Recoger",
+    "no_picked_up_orders": "Todavía no has recogido órdenes",
+    "delivered": "Marcar como entregado"
+  },
   "order_status": {
     "P": "Pendiente",
     "A": "Aprobado",
@@ -90,14 +104,11 @@
     "S": "Atraco",
     "F": "Finalizado",
     "M": "Desaparecido"
-
   },
-
   "order_type": {
     "D": "Entrega",
     "P": "Recogida"
   },
-
   "order_status_description": {
     "Pending": "P",
     "Approved": "A",

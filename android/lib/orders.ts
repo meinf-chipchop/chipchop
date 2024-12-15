@@ -1,8 +1,18 @@
 import fetchWrapper from "./fetchWrapper";
+import { Address, UserDetail } from "./users";
 import { getByURL } from "./utils";
-import {Dish} from "./dishes"
-import { getCsrfToken } from "./auth";
+import { Dish, DishList} from "./dishes"
+import { getCsrfToken, Me } from "./auth";
 
+
+export interface genericPaging {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Array<{
+    url: string;
+  }>;
+}
 
 export interface OrdersList {
   count: number;
@@ -26,6 +36,7 @@ export interface Order {
   dishes: string;
   address: string;
   deliverer: string | null;
+  deliverer_id: number | null;
   firstName: string;
   order_type: string;
   order_status: string;
@@ -56,6 +67,52 @@ export interface OrderDishesInstance {
   note: string | null
 }
 
+export interface OrderList {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Order[];
+}
+
+export async function getOrderHistory(): Promise<Order[]> {
+  const orderList = await fetchWrapper(`/api/orders/`, {
+
+  method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  }).then((response) => response.json() as Promise<OrdersList>);
+
+  const ordersWithDetails = await Promise.all(
+    orderList.results.map(async (orderItem) => {
+      // Busca o pedido usando a URL
+      const order = await getByURL(orderItem.url) as Order;
+
+      // Garante que o ID seja recuperado
+      const id = order.id ?? parseInt(orderItem.url.split('/').filter(Boolean).pop() || '0', 10);
+
+      // Busca os detalhes do usuário
+      let firstName = "";
+      if (order.user) {
+        const user = await getByURL(order.user) as { first_name: string };
+        firstName = user.first_name;
+      }
+
+      // Busca os detalhes dos pratos
+      const dishesDetails = await getDishesFromOrder(order);
+
+      return {
+        ...order,
+        id, // Garante que o ID seja único
+        firstName, 
+        dishesDetails,
+      };
+    })
+  );
+
+  return ordersWithDetails;
+}
 
 
 export async function getOrdersWithDishesAndUser(): Promise<(Order & { dishesDetails: (OrderDishesInstance & { dishDetails: Dish | null, id: string })[], firstName: string })[]> {
@@ -97,10 +154,6 @@ export async function getOrdersWithDishesAndUser(): Promise<(Order & { dishesDet
   return ordersWithDetails;
 }
 
-
-
-
-
 export async function getDishesFromOrder(order: Order): Promise<(OrderDishesInstance & { dishDetails: Dish | null, id: string })[]> {
   if (!order.dishes) {
     throw new Error("No dishes URL provided in the order.");
@@ -112,7 +165,7 @@ export async function getDishesFromOrder(order: Order): Promise<(OrderDishesInst
       "Content-Type": "application/json",
     },
     credentials: "include",
-  }).then((response) => response.json() as Promise<OrderDishesList>);
+  }).then((response) => response.json() as Promise<genericPaging>);
 
   const resultsWithDetails = await Promise.all(
     dishesList.results.map(async (dishItem, index) => {
@@ -161,6 +214,82 @@ export async function updateOrderStatus(id: number, order_status: string): Promi
   return updatedOrder;
 }
 
+export async function getOrderDishesByUrl(dishes_url: string): Promise<OrderDish[]> {
+  let dishPaging = await getByURL<genericPaging>(dishes_url);
 
+  let dishes = await Promise.all(
+    dishPaging.results.map((dish) => getByURL(dish.url)) as Promise<OrderDish>[]
+  );
 
+  return dishes;
+}
 
+export async function getOrders(): Promise<OrderList> {
+  let orders = await fetchWrapper(`/api/orders/`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  }).then((response) => response.json() as Promise<OrderList>);
+
+  return orders;
+}
+
+export async function getFullOrders(): Promise<Order[]> {
+  let orders = await fetchWrapper(`/api/orders/`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  }).then((response) => response.json() as Promise<genericPaging>);
+
+  const results = [];
+  const normalize_order = async (order_url: string): Promise<Order> => {
+    const order = await getByURL<Order>(order_url);
+    const user = await getByURL<UserDetail>(order.user);
+    const address = await getByURL<Address>(order.address);
+    const dishes = await getOrderDishesByUrl(order.dishes);
+
+    order.user = user.first_name + " " + user.last_name;
+    order.address = address.street + ", " + address.city + ", " + address.zip_code;
+    order.dish_list = dishes;
+    return order;
+  }
+
+  for (let i = 0; i < orders.results.length; i++) {
+    const order = orders.results[i];
+    results.push(await normalize_order(order.url));
+  }
+
+  return results;
+}
+
+export async function acceptOrder(order_id: number, deliverer: Me): Promise<Boolean> {
+  const res = fetchWrapper(`/api/orders/${order_id}/accept`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  
+  return res.then((response) => response.ok);
+}
+
+export async function updateStatus(order: Order, newStatus: string): Promise<Order> {
+  const res = fetchWrapper(`/api/orders/${order.id}/`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": await getCsrfToken(),
+    },
+    credentials: "include",
+    body: JSON.stringify({ order_status: newStatus }),
+  });
+
+  order.order_status = newStatus;
+
+  return res.then(_ => {return order });
+}
