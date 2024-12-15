@@ -18,8 +18,6 @@ const Home = () => {
   const [cooks, setCooks] = React.useState<CooksPage>();
   const [selfUser, setSelfUser] = React.useState<Me>();
 
-  const router = useRouter();
-
   useEffect(() => {
     const fetchSelfUser = async () => {
       const user = await me();
