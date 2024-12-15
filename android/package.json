@@ -16,7 +16,7 @@
   "dependencies": {
     "@babel/plugin-transform-export-namespace-from": "^7.25.9",
     "@expo/html-elements": "^0.4.2",
-    "@expo/vector-icons": "^14.0.2",
+    "@expo/vector-icons": "^14.0.4",
     "@gluestack-ui/actionsheet": "^0.2.46",
     "@gluestack-ui/alert": "^0.1.16",
     "@gluestack-ui/alert-dialog": "^0.1.31",
@@ -33,6 +33,7 @@
     "@gluestack-ui/textarea": "^0.1.24",
     "@gluestack-ui/toast": "^1.0.7",
     "@legendapp/motion": "^2.4.0",
+    "@react-native-picker/picker": "^2.10.2",
     "@react-native-cookies/cookies": "^6.2.1",
     "@react-navigation/native": "^6.0.2",
     "babel-plugin-module-resolver": "^5.0.2",

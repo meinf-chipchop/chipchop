@@ -1,12 +1,6 @@
 import fetchWrapper from "./fetchWrapper";
 import { getByURL } from "./utils";
 
-export interface DishCategory {
-  id: number;
-  name: string;
-  image_url: string;
-}
-
 export interface DishCategoryList {
   count: number;
   next: string | null;
@@ -17,6 +11,13 @@ export interface DishCategoryList {
     image_url: string;
   }[];
 }
+
+export interface DishCategory {
+  id: number;
+  name: string;
+  image_url: string;
+}
+
 
 export async function getDishCategories(): Promise<DishCategory[]> {
   let dishCategoryList = await fetchWrapper(`/api/dish-categories/`, {

@@ -1,19 +1,20 @@
-import { CooksPage, getCooks } from '@/lib/cook';
-import CookList from '@/components/CooksList';
-
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { SafeAreaView, View, Text, Image, TextInput, Button, StyleSheet, ScrollView, Dimensions, Animated } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
 import { Button as GoodButton, ButtonIcon } from '@/components/ui/button';
 import { Truck } from "lucide-react-native";
 import { Me, me } from '@/lib/auth';
 import { useRouter } from 'expo-router';
+import { useSession } from "@/auth/authContext";
+import { CooksPage, getCooks } from '@/lib/cook';
+import CookList from '@/components/CooksList';
 
 const { width } = Dimensions.get('window');
 
 const Home = () => {
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity value of 0
-
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const { user } = useSession();
+  const router = useRouter();
   const [cooks, setCooks] = React.useState<CooksPage>();
   const [selfUser, setSelfUser] = React.useState<Me>();
 
@@ -28,11 +29,16 @@ const Home = () => {
     fetchSelfUser();
   }, []);
 
+  const [showOrdersButton, setShowOrdersButton] = useState(false);
+  useEffect(() => {
+    setShowOrdersButton(user?.role == "C"); // ======= Set C to acess orders interface =======//
+  }, [user]);
+
   useEffect(() => {
     Animated.timing(fadeAnim, {
-      toValue: 1, // Animate to opacity value of 1
-      duration: 1000, // Duration of the animation
-      useNativeDriver: true, // Use native driver for better performance
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
 
@@ -57,10 +63,28 @@ const Home = () => {
             </View>
             <Text style={styles.title}>Chip Chop</Text>
           </View>
-          <View style={styles.iconContainer}>
+
+          <View
+            style={[
+              styles.iconContainer,
+              !showOrdersButton && { justifyContent: "space-around", flexDirection: "row", alignItems: "center" },
+            ]}
+          >
+            {showOrdersButton && (
+              <FontAwesome.Button
+                name="list"
+                backgroundColor="#415f63"
+                iconStyle={styles.icon}
+                onPress={() => router.push("/ordersCook")}
+              >
+                <Text style={styles.iconText}></Text>
+              </FontAwesome.Button>
+            )}
+
             <FontAwesome.Button name="shopping-basket" backgroundColor="#415f63" iconStyle={styles.icon}>
               <Text style={styles.iconText}></Text>
             </FontAwesome.Button>
+
             <FontAwesome.Button name="user" backgroundColor="#415f63" iconStyle={styles.icon}>
               <Text style={styles.iconText}></Text>
             </FontAwesome.Button>
@@ -72,7 +96,9 @@ const Home = () => {
               <ButtonIcon as={Truck} size="md" color='white' className="w-auto pr-4" />
             </GoodButton>)}
           </View>
+
         </View>
+
         <View style={styles.searchContainer}>
           <View style={styles.searchBox}>
             <FontAwesome name="search" size={20} color="gray" />
@@ -81,10 +107,12 @@ const Home = () => {
               style={styles.searchInput}
             />
           </View>
+
           <View style={styles.locationBox}>
             <FontAwesome name="map" size={20} color="gray" />
-            <Text style={styles.locationText}>12530 Borriana, Castellón, Spain</Text> 
+            <Text style={styles.locationText}>12530 Borriana, Castellón, Spain</Text>
           </View>
+
           <View style={styles.categoryBox}>
             <Text style={styles.categoryText}>Categories</Text>
             <FontAwesome name="chevron-down" size={20} />
@@ -115,8 +143,9 @@ const Home = () => {
 
         <Text style={styles.chefsTitle}>Top Chefs</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chefsScroll}>
-          <CookList cooks={cooks} />
+          {cooks && <CookList cooks={cooks} />}
         </ScrollView>
+
 
         <Animated.View style={{ opacity: fadeAnim }}>
           <Text style={styles.chipChopTitle}>New On Chip Chop</Text>
@@ -191,6 +220,7 @@ const styles = StyleSheet.create({
     width: 'auto',
     gap: 5,
   },
+
   icon: {
     color: '#e3d6ab',
   },
@@ -204,6 +234,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   searchBox: {
+    color: "gray",
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#dfe1d5',

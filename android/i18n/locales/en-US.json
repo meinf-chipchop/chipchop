@@ -121,10 +121,41 @@
     "D": "Delivering",
     "T": "Traffic Accident",
     "S": "Robbed",
-    "F": "Finished"
+    "F": "Finished",
+    "M": "Missing"
   },
+  
   "order_type": {
     "D": "Delivery",
     "P": "Pickup"
+  },
+  
+  "order_status_description": {
+    "Pending": "P",
+    "Approved": "A",
+    "Rejected": "R",
+    "Cooking": "C",
+    "Burnt Kitchen": "B",
+    "Cooked": "K",
+    "Delivering": "D",
+    "Traffic Accident": "T",
+    "Robbed": "S",
+    "Finished": "F",
+    "Missing": "M"
+  },
+  
+  "order_type_description": {
+    "Delivery": "D",
+    "Pickup": "P"
+  },
+  
+
+  "order_text": {
+    "order_title": "Orders",
+    "order_status": "Order Status",
+    "order_date": "Order Date",
+    "order_details": "Order Details",
+    "order_positive_feedback": "Order status updated successfully",
+    "order_negative_feedback": "Failed to update order status"
   }
 }
