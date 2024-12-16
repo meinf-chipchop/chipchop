@@ -7,6 +7,7 @@ from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 
+from petitions.models import AccountUpgradePetition
 from orders.serializers import OrderListSerializer
 from orders.models import Order
 from . import serializers, models
@@ -18,6 +19,8 @@ User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserDetailSerializer
+   
+    permission_classes = [AllowAny]
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -93,6 +96,13 @@ class LoginViewSet(viewsets.ViewSet):
 
             user = authenticate(request=request, email=email, password=password)
             if user is not None:
+                if not user.is_staff:
+                    if AccountUpgradePetition.objects.get(user=user).state != AccountUpgradePetition.PetitionState.ACCEPTED or user.banned:
+                        return Response(
+                            {"Message": "Your account is not accepted yet."},
+                            status=status.HTTP_403_FORBIDDEN,
+                        )
+                
                 login(request, user)
                 return Response(serializers.UserDetailSerializer(user).data)
             return Response(

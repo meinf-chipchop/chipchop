@@ -31,12 +31,11 @@ SECRET_KEY = env("SECRET_KEY")
 
 DEV_MODE = env("DEV_MODE") in ["True", "true", "1"]
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+CORS_ORIGIN_ALLOW_ALL = True
 if DEV_MODE:
     print("Running in development mode")
-    CORS_ORIGIN_ALLOW_ALL = True
     CORS_ALLOW_CREDENTIALS = True
     CSRF_USE_SESSIONS = False
     CSRF_COOKIE_HTTPONLY = False  # Not accessible by client (not important)
@@ -47,6 +46,12 @@ if DEV_MODE:
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+    }
+}
 
 # Application definition
 
@@ -86,17 +91,14 @@ ROOT_URLCONF = "app.urls"
 # CSRF / CORS / Cookies
 ALLOWED_HOSTS = ["*"]
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
     "http://localhost:3000",
+    "http://localhost:8081",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8081",
     "http://194.164.171.6",
     "https://chipchop.mooo.com",
 ]
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://194.164.171.6",
-    "https://chipchop.mooo.com",
-]
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS.copy()
 
 
 TEMPLATES = [

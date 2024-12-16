@@ -1,0 +1,161 @@
+{
+  "user": {
+    "public_name": "Public Name",
+    "age": "Age",
+    "email": "Email",
+    "first_name": "First Name",
+    "password": "Password",
+    "phone_number": "Phone Number",
+    "second_name": "Second Name",
+    "history": "History"
+  },
+  "labels": {
+    "cook": "Cook",
+    "chef": "Chef",
+    "deliver": "Deliver",
+    "settings": "Settings",
+    "language": "Language",
+    "configuration": "Configuration",
+    "policy_and_privacy": "Policy and privacy",
+    "profile": "Profile",
+    "category": "Category",
+    "create": "Create",
+    "description": "Description",
+    "discount": "Discount",
+    "estimated_time": "Estimated time",
+    "name": "Name",
+    "price": "Price",
+    "next": "Next",
+    "lets_start": "Get Started!",
+    "image_url": "Image URL",
+    "loading": "Loading..."
+  },
+  "auth": {
+    "log_in": "Log In",
+    "sign_up": "Sign Up",
+    "sign_in": "Sign In",
+    "sign_out": "Sign out",
+    "forgot_password": "Forgot password?",
+    "register_as": "Register as"
+  },
+  "onboarding": {
+    "homemade_delights": "Homemade Delights",
+    "homemade_desc": "Home-cooked favorites, crafted by the chef and delivered fresh to you!",
+    "swift_service": "Swift Service",
+    "swift_desc": "Fast, fresh delivery right to your door—enjoy every meal with ease!",
+    "personalized_cusine": "Personalized Cuisine",
+    "personalized_desc": "Your favorite meals, delivered to you!"
+  },
+  "validation_form": {
+    "field_required": "{{field}} is required",
+    "age_invalid": "Invalid date. Should be in format YYYY-MM-DD",
+    "age_required": "Date is required",
+    "first_name_required": "First name is required",
+    "invalid_email": "Invalid email address",
+    "invalid_phone_number": "Invalid phone number",
+    "password_min_length": "Password must be at least 8 characters",
+    "password_required": "Password is required",
+    "vehicle_required": "Vehicle is required",
+    "public_name_required": "Public name is required"
+  },
+  "errors": {
+    "user_not_found": "User not found"
+  },
+  "dish": {
+    "create": "Create a Dish",
+    "enter_description": "Enter the description of the dish",
+    "enter_discount": "Enter a discount to apply to the dish",
+    "enter_estimated_time": "Enter the estimated time to prepare the dish",
+    "enter_name": "Enter the name of the dish",
+    "enter_price": "Enter the price of the dish",
+    "no_categories": "No categories",
+    "no_dishes_found": "No dishes found",
+    "become_chef": "Become a chef and start selling your own dishes !!",
+    "select_category": "Select a category",
+    "estimated_time": "Estimated time",
+    "save_price": "Save",
+    "added_on": "Added on",
+    "top_rated": "Top rated",
+    "all": "Other appetizers",
+    "uncategorized": "Uncategorized"
+  },
+  "cart": {
+    "add": "Add to cart"
+  },
+  "rating": {
+    "ratings": "Rating(s)",
+    "no_ratings": "No ratings"
+  },
+  "vehicle": {
+    "type": "Vehicle type",
+    "select": "Select a vehicle",
+    "car": "Car",
+    "scooter": "Scooter",
+    "bycicle": "Bycicle"
+  },
+  "settings": {
+    "work_with_us": "Work with us"
+  },
+  "orders": {
+    "title": "Orders to Pick up",
+    "picked_up_title": "Picked up",
+    "items": "Item(s)",
+    "mark_pickup": "Mark as picked up",
+    "assign_deliverer": "Assign as deliverer",
+    "assigned": "Assigned orders",
+    "no_assigned_orders": "You have no orders assigned yet",
+    "unassigned": "Unassigned orders",
+    "no_unassigned_orders": "There are no orders yet",
+    "waiting_cook": "Waiting for cook to finish",
+    "waiting_deliverer": "Pickup",
+    "no_picked_up_orders": "You have not picked up any orders yet",
+    "delivered": "Mark as delivered"
+  },
+  "order_status": {
+    "P": "Pending",
+    "A": "Approved",
+    "R": "Rejected",
+    "C": "Cooking",
+    "B": "Burnt Kitchen",
+    "K": "Cooked",
+    "D": "Delivering",
+    "T": "Traffic Accident",
+    "S": "Robbed",
+    "F": "Finished",
+    "M": "Missing"
+  },
+  
+  "order_type": {
+    "D": "Delivery",
+    "P": "Pickup"
+  },
+  
+  "order_status_description": {
+    "Pending": "P",
+    "Approved": "A",
+    "Rejected": "R",
+    "Cooking": "C",
+    "Burnt Kitchen": "B",
+    "Cooked": "K",
+    "Delivering": "D",
+    "Traffic Accident": "T",
+    "Robbed": "S",
+    "Finished": "F",
+    "Missing": "M"
+  },
+  
+  "order_type_description": {
+    "Delivery": "D",
+    "Pickup": "P"
+  },
+  
+
+  "order_text": {
+    "order_title": "Orders",
+    "order_status": "Order Status",
+    "order_date": "Order Date",
+    "order_details": "Order Details",
+    "order_positive_feedback": "Order status updated successfully",
+    "order_negative_feedback": "Failed to update order status"
+  }
+}
