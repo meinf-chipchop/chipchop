@@ -97,11 +97,18 @@ class LoginViewSet(viewsets.ViewSet):
             user = authenticate(request=request, email=email, password=password)
             if user is not None:
                 if not user.is_staff:
-                    if AccountUpgradePetition.objects.get(user=user).state != AccountUpgradePetition.PetitionState.ACCEPTED or user.banned:
+                    if user.banned:
                         return Response(
-                            {"Message": "Your account is not accepted yet."},
+                            {"Message": "Your account is banned."},
                             status=status.HTTP_403_FORBIDDEN,
                         )
+                    
+                    if AccountUpgradePetition.objects.filter(user=user).exists():
+                        if AccountUpgradePetition.objects.get(user=user).state != AccountUpgradePetition.PetitionState.ACCEPTED:
+                            return Response(
+                                {"Message": "Your account is not accepted yet."},
+                                status=status.HTTP_403_FORBIDDEN,
+                            )
                 
                 login(request, user)
                 return Response(serializers.UserDetailSerializer(user).data)
