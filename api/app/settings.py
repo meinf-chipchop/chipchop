@@ -31,12 +31,11 @@ SECRET_KEY = env("SECRET_KEY")
 
 DEV_MODE = env("DEV_MODE") in ["True", "true", "1"]
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+CORS_ORIGIN_ALLOW_ALL = True
 if DEV_MODE:
     print("Running in development mode")
-    CORS_ORIGIN_ALLOW_ALL = True
     CORS_ALLOW_CREDENTIALS = True
     CSRF_USE_SESSIONS = False
     CSRF_COOKIE_HTTPONLY = False  # Not accessible by client (not important)

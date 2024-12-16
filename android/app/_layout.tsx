@@ -2,13 +2,14 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import "@/global.css";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { useFonts } from "expo-font";
+import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import { SessionProvider } from "@/context/authContext";
 import "@/i18n";
 import { initI18n } from "@/i18n";
-import { Slot } from "expo-router";
+import { initOneSignal } from "@/lib/onesignal/main";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -32,6 +33,7 @@ export default function RootLayout() {
       setIsI18nInitialized(true);
     };
     initializeI18N();
+    initOneSignal();
   }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
@@ -49,6 +51,7 @@ export default function RootLayout() {
   if (!loaded || !isI18nInitialized) {
     return null;
   }
+
   return (
     <GluestackUIProvider mode="light">
       <SessionProvider>

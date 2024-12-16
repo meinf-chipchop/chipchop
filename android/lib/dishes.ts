@@ -42,6 +42,10 @@ export async function getCookDishes(cook_id: number): Promise<Dish[]> {
     dishList.results.map((dish) => getByURL(dish.url)) as Promise<Dish>[]
   );
 
+  dishes.forEach((dish) => {
+    dish.price = Number(dish.price);
+  });
+
   return dishes;
 }
 
@@ -53,7 +57,7 @@ export async function createCookDish(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-CSRFToken": getCsrfToken() ?? "",
+      "X-CSRFToken": (await getCsrfToken()) ?? "",
     },
     credentials: "include",
     body: JSON.stringify(dish),
@@ -83,12 +87,22 @@ export async function updateDish(
   dish: Dish
 ): Promise<Dish> {
   return fetchWrapper(`/api/cooks/${cook_id}/dishes/${dish_id}/`, {
-    method: "PATCH",
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "X-CSRFToken": getCsrfToken() ?? "",
+      "X-CSRFToken": (await getCsrfToken()) ?? "",
     },
     body: JSON.stringify(dish),
     credentials: "include",
-  }).then((response) => response.json() as Promise<Dish>);
+  }).then((response) => {
+    if (!response.ok) {
+      console.log(response);
+      throw new Error("Failed to update dish");
+    }
+    return response.json() as Promise<Dish>;
+  });
+}
+
+export function getDiscountedPrice(dish: Dish): number | null {
+  return dish.discount && dish.discount != 0 ? dish.price * (100 - dish.discount) / 100 : null;
 }

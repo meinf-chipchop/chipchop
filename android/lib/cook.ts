@@ -11,6 +11,19 @@ export interface Cook {
   user: User;
 }
 
+export interface CookOverall {
+  url: string;
+  public_name: string;
+  rating_average: number;
+}
+
+export interface CooksPage {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: CookOverall[];
+}
+
 export function createCook(cook: NewCook) {
   return fetchWrapper("/api/cooks/", {
     method: "POST",
@@ -30,6 +43,17 @@ export function getCook(cookId: number): Promise<Cook> {
   }).then((response) => response.json() as Promise<Cook>);
 }
 
+export async function getCooks(): Promise<CooksPage> {
+  const cookList = await fetchWrapper("/api/cooks/", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => response.json());
+
+  return cookList as CooksPage;
+}
+
 export function getCookByURL(cookURL: string): Promise<Cook> {
   return fetch(cookURL, {
     method: "GET",
@@ -39,19 +63,3 @@ export function getCookByURL(cookURL: string): Promise<Cook> {
   }).then((response) => response.json() as Promise<Cook>);
 }
 
-export async function getCooks(): Promise<Cook[]> {
-  const cookList = await fetchWrapper("/api/cooks/", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((response) => response.json());
-
-  const cooks: Cook[] = [];
-
-  cookList.forEach(async (cook: { url: string }) => {
-    cooks.push(await getCookByURL(cook.url));
-  });
-
-  return cooks;
-}

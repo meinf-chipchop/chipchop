@@ -71,7 +71,20 @@
     "no_categories": "No categories",
     "no_dishes_found": "No dishes found",
     "become_chef": "Become a chef and start selling your own dishes !!",
-    "select_category": "Select a category"
+    "select_category": "Select a category",
+    "estimated_time": "Estimated time",
+    "save_price": "Save",
+    "added_on": "Added on",
+    "top_rated": "Top rated",
+    "all": "Other appetizers",
+    "uncategorized": "Uncategorized"
+  },
+  "cart": {
+    "add": "Add to cart"
+  },
+  "rating": {
+    "ratings": "Rating(s)",
+    "no_ratings": "No ratings"
   },
   "vehicle": {
     "type": "Vehicle type",
@@ -83,6 +96,21 @@
   "settings": {
     "work_with_us": "Work with us"
   },
+  "orders": {
+    "title": "Orders to Pick up",
+    "picked_up_title": "Picked up",
+    "items": "Item(s)",
+    "mark_pickup": "Mark as picked up",
+    "assign_deliverer": "Assign as deliverer",
+    "assigned": "Assigned orders",
+    "no_assigned_orders": "You have no orders assigned yet",
+    "unassigned": "Unassigned orders",
+    "no_unassigned_orders": "There are no orders yet",
+    "waiting_cook": "Waiting for cook to finish",
+    "waiting_deliverer": "Pickup",
+    "no_picked_up_orders": "You have not picked up any orders yet",
+    "delivered": "Mark as delivered"
+  },
   "order_status": {
     "P": "Pending",
     "A": "Approved",
@@ -93,10 +121,41 @@
     "D": "Delivering",
     "T": "Traffic Accident",
     "S": "Robbed",
-    "F": "Finished"
+    "F": "Finished",
+    "M": "Missing"
   },
+  
   "order_type": {
     "D": "Delivery",
     "P": "Pickup"
+  },
+  
+  "order_status_description": {
+    "Pending": "P",
+    "Approved": "A",
+    "Rejected": "R",
+    "Cooking": "C",
+    "Burnt Kitchen": "B",
+    "Cooked": "K",
+    "Delivering": "D",
+    "Traffic Accident": "T",
+    "Robbed": "S",
+    "Finished": "F",
+    "Missing": "M"
+  },
+  
+  "order_type_description": {
+    "Delivery": "D",
+    "Pickup": "P"
+  },
+  
+
+  "order_text": {
+    "order_title": "Orders",
+    "order_status": "Order Status",
+    "order_date": "Order Date",
+    "order_details": "Order Details",
+    "order_positive_feedback": "Order status updated successfully",
+    "order_negative_feedback": "Failed to update order status"
   }
 }

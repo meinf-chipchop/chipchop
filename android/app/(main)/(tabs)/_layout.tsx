@@ -2,7 +2,7 @@ import { Tabs, router, useNavigation } from "expo-router";
 import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Heading } from "@/components/ui/heading";
 import { useTranslation } from "react-i18next";
 import { FileClockIcon, Settings } from "lucide-react-native";
@@ -16,14 +16,12 @@ const TabIcon = ({
   focused: boolean;
 }) => (
   <View
-    className={`flex flex-row justify-center items-center rounded-full ${
-      focused ? "bg-general-300" : ""
-    }`}
+    className={`flex flex-row justify-center items-center rounded-full ${focused ? "bg-general-300" : ""
+      }`}
   >
     <View
-      className={`rounded-full w-fit px-6 h-11 items-center justify-center ${
-        focused ? "bg-primary-700" : ""
-      }`}
+      className={`rounded-full w-fit px-6 h-11 items-center justify-center ${focused ? "bg-primary-700" : ""
+        }`}
     >
       {icon}
     </View>
@@ -33,6 +31,7 @@ const TabIcon = ({
 export default function Layout() {
   const { t } = useTranslation();
   const navigation = useNavigation();
+
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
@@ -45,7 +44,6 @@ export default function Layout() {
         tabBarInactiveTintColor: Colors.chestnut[900],
         tabBarShowLabel: false,
         tabBarStyle: {
-          // backgroundColor: "#5F544A",
           backgroundColor: Colors.chestnut[500],
           borderRadius: 50,
           paddingBottom: 0, // ios only
@@ -94,7 +92,7 @@ export default function Layout() {
           title: "Profile",
           headerShown: true,
           headerTitleAlign: "left",
-          headerTitle: ({}) => {
+          headerTitle: () => {
             return <Heading>{t("labels.profile")}</Heading>;
           },
           headerStyle: { backgroundColor: "#f2f2f2" },
@@ -124,6 +122,25 @@ export default function Layout() {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="ordersCook"
+        options={{
+          title: "Orders Cook",
+          href: null,
+          headerShown: false,
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabIcon
+              icon={<Ionicons name="storefront-sharp" color={color} size={size} />}
+              focused={focused}
+            />
+          ),
+        }}
+      />
     </Tabs>
+
+
+
   );
 }
+

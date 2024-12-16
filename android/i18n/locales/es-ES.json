@@ -66,10 +66,31 @@
     "no_categories": "No hay categorías",
     "no_dishes_found": "No se han encontrado platos",
     "become_chef": "¡Conviértete en chef y empieza a vender tus propios platos!",
-    "select_category": "Selecciona una categoría"
+    "select_category": "Selecciona una categoría",
+    "estimated_time": "Tiempo estimado",
+    "save_price": "Ahorra",
+    "added_on": "Añadido el",
+    "top_rated": "Lo mejor valorado",
+    "all": "Otros aperitivos",
+    "uncategorized": "Sin categoría"
   },
   "settings": {
     "work_with_us": "Trabaja con nosotros"
+  },
+  "orders": {
+    "title": "Pedidos a domicilio",
+    "picked_up_title": "Pedidos recogidos",
+    "items": "artículo(s)",
+    "mark_pickup": "Marcar como recogido",
+    "assign_deliverer": "Asignarme como repartidor",
+    "assigned": "Órdenes asignadas",
+    "no_assigned_orders": "Todavía no te has asignado órdenes",
+    "unassigned": "Órdenes sin asignar",
+    "no_unassigned_orders": "Todavía no hay órdenes",
+    "waiting_cook": "Esperando al chef",
+    "waiting_deliverer": "Recoger",
+    "no_picked_up_orders": "Todavía no has recogido órdenes",
+    "delivered": "Marcar como entregado"
   },
   "order_status": {
     "P": "Pendiente",
@@ -81,10 +102,38 @@
     "D": "En reparto",
     "T": "Accidente de tráfico",
     "S": "Atraco",
-    "F": "Finalizado"
+    "F": "Finalizado",
+    "M": "Desaparecido"
   },
   "order_type": {
     "D": "Entrega",
     "P": "Recogida"
+  },
+  "order_status_description": {
+    "Pending": "P",
+    "Approved": "A",
+    "Rejected": "R",
+    "Cooking": "C",
+    "Burnt Kitchen": "B",
+    "Cooked": "K",
+    "Delivering": "D",
+    "Traffic Accident": "T",
+    "Robbed": "S",
+    "Finished": "F",
+    "Missing": "M"
+  },
+
+  "order_type_description": {
+    "Delivery": "D",
+    "Pickup": "P"
+  },
+
+  "order_text": {
+    "order_title": "Orden",
+    "order_status": "Orden Status",
+    "order_date": "Fecha del pedido",
+    "order_details": "Detalles del pedido",
+    "order_positive_feedback": "Estado del pedido actualizado con éxito",
+    "order_negative_feedback": "No se pudo actualizar el estado del pedido"
   }
 }
