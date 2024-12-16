@@ -12,7 +12,7 @@ export default function Layout() {
       if (session) {
         router.push("/(main)/(tabs)/home"); // Redirect to home if logged in
       } else {
-        router.push("/(auth)/onboarding"); // Redirect to login if not logged in
+        // router.push("/(auth)/onboarding"); // Redirect to login if not logged in
       }
     }
   }, [session, isLoading]);

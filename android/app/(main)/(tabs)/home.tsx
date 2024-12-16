@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { SafeAreaView, View, Text, Image, TextInput, Button, StyleSheet, ScrollView, Dimensions, Animated } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
 import { Button as GoodButton, ButtonIcon } from '@/components/ui/button';
-import { Truck } from "lucide-react-native";
+import { Truck, ScrollText } from "lucide-react-native";
 import { Me, me } from '@/lib/auth';
 import { useRouter } from 'expo-router';
 import { useSession } from "@/auth/authContext";
@@ -26,11 +26,6 @@ const Home = () => {
 
     fetchSelfUser();
   }, []);
-
-  const [showOrdersButton, setShowOrdersButton] = useState(false);
-  useEffect(() => {
-    setShowOrdersButton(user?.role == "C"); // ======= Set C to acess orders interface =======//
-  }, [user]);
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -62,36 +57,26 @@ const Home = () => {
             <Text style={styles.title}>Chip Chop</Text>
           </View>
 
-          <View
-            style={[
-              styles.iconContainer,
-              !showOrdersButton && { justifyContent: "space-around", flexDirection: "row", alignItems: "center" },
-            ]}
-          >
-            {showOrdersButton && (
-              <FontAwesome.Button
-                name="list"
-                backgroundColor="#415f63"
-                iconStyle={styles.icon}
-                onPress={() => router.push("/ordersCook")}
-              >
-                <Text style={styles.iconText}></Text>
-              </FontAwesome.Button>
-            )}
-
+          <View style={styles.iconContainer}>
             <FontAwesome.Button name="shopping-basket" backgroundColor="#415f63" iconStyle={styles.icon}>
               <Text style={styles.iconText}></Text>
             </FontAwesome.Button>
 
-            <FontAwesome.Button name="user" backgroundColor="#415f63" iconStyle={styles.icon}>
-              <Text style={styles.iconText}></Text>
-            </FontAwesome.Button>
+            {selfUser?.role == 'C' && (< GoodButton
+              className="pl-4 bg-[#415f63] rounded w-auto"
+              variant="link"
+              onPress={() => router.push("/ordersCook")}
+            >
+              <ButtonIcon as={ScrollText} size="md" color="white" className="w-auto pr-4"></ButtonIcon>
+            </GoodButton>)
+            }
+
             {selfUser?.role == 'D' && (< GoodButton
               className="pl-4 bg-[#415f63] rounded w-auto"
               variant="link"
               onPress={() => router.push("/DelivererOrders")}
             >
-              <ButtonIcon as={Truck} size="md" color='white' className="w-auto pr-4" />
+              <ButtonIcon as={Truck} size="md" color="white" className="w-auto pr-4" />
             </GoodButton>)}
           </View>
 
