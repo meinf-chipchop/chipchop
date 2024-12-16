@@ -1,127 +1,279 @@
-import React from "react";
-import { SafeAreaView, FlatList, Text } from "react-native";
-import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
-import { useCart } from "@/context/cartContext";
-import { VStack } from "@/components/ui/vstack";
+import React, { useState } from "react";
 import {
-  Toast,
-  ToastDescription,
-  ToastTitle,
-  useToast,
-} from "@/components/ui/toast";
-import { Stack, useRouter } from "expo-router";
-import { ChevronLeftIcon, Delete, Plus } from "lucide-react-native";
-import { HStack } from "@/components/ui/hstack";
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+import { useCart } from "@/context/cartContext";
+import CartItem from "./CartItem";
 
 const Cart = () => {
-  const router = useRouter();
-  const { cart, addItem, removeItem, clearCart } = useCart();
+  const { cart, addItem, removeItem } = useCart();
+  const [userAddress, setUserAddress] = useState("Lleida 25001 5 15");
+  const [deliveryMethod, setDeliveryMethod] = useState("delivery");
+  const [paymentMethod, setPaymentMethod] = useState("card");
 
-  const toast = useToast();
-  const [toastId, setToastId] = React.useState(0);
-  const handleToast = (
-    title: string,
-    desc?: string,
-    action?: "error" | "warning" | "success" | "info" | "muted" | undefined
-  ) => {
-    if (!toast.isActive(String(toastId))) {
-      showNewToast(title, desc, action);
+  const handleQuantityChange = (id: number, delta: number) => {
+    const item = cart.find((item) => item.id === id);
+    if (!item) {
+      console.log(
+        "[cart] Can't find item with id: " + id + " to change units."
+      );
+      return;
+    }
+    if (item && delta > 0) {
+      addItem(item.dish);
+    } else {
+      removeItem(id, 1);
     }
   };
-  const showNewToast = (
-    title: string,
-    desc?: string,
-    action?: "error" | "warning" | "success" | "info" | "muted" | undefined
-  ) => {
-    const newId = Math.random();
-    setToastId(newId);
-    toast.show({
-      id: String(newId),
-      placement: "top",
-      duration: 3000,
-      render: ({ id }) => {
-        const uniqueToastId = "toast-" + id;
-        return (
-          <Toast nativeID={uniqueToastId} action={action} variant="solid">
-            <ToastTitle>{title}</ToastTitle>
-            {desc && <ToastDescription>{desc}</ToastDescription>}
-          </Toast>
-        );
-      },
-    });
-  };
-  const addMockItem = () => {
-    const added = addItem({
-      id: 0,
-      user_id: 0,
-      name: "Mock Item",
-      description: "Mock Description",
-      category: 0,
-      price: 0,
-    });
-    if (added) handleToast("Dish added!", "", "success");
-    else handleToast("Cant add the dish", "", "error");
+
+  const handleRemoveItem = (id: number) => {
+    removeItem(id);
   };
 
+  const totalAmount = cart.reduce(
+    (total, item) => total + item.dish.price * item.units,
+    0
+  );
+  const deliveryFees = 5.0;
+
   return (
-    <>
-      <Stack.Screen
-        options={{
-          headerTitle: "Cart",
-          headerLeft: () => (
-            <Button
-              className="pl-4"
-              variant="link"
-              onPress={() => router.back()}
-            >
-              <ButtonIcon as={ChevronLeftIcon} size="md" />
-            </Button>
-          ),
-          headerRight: () => (
-            <Button className="pr-4" variant="link" onPress={() => clearCart()}>
-              <ButtonIcon as={Delete} size="md" />
-            </Button>
-          ),
-        }}
-      />
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
-        <FlatList
-          data={cart}
-          renderItem={(item) => {
-            return (
-              <VStack className="p-4">
-                <Text>{item.item.dish.name}</Text>
-                <Text>{item.item.dish.description}</Text>
-                <Text>{item.item.units}</Text>
-                <HStack>
-                  <Button onPress={() => addItem(item.item.dish)}>
-                    <ButtonText>Add another</ButtonText>
-                    <ButtonIcon as={Plus} size="md" />
-                  </Button>
-                  <Button
-                    onPress={() => removeItem(item.item.id, 1)}
-                    className="rounded-full"
-                  >
-                    <ButtonIcon as={Delete} size="md" />
-                  </Button>
-                </HStack>
-              </VStack>
-            );
-          }}
-          ListEmptyComponent={
-            <Button onPress={addMockItem}>
-              <ButtonText>Add item</ButtonText>
-            </Button>
-          }
+    <ScrollView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>View Cart</Text>
+      </View>
+      {cart.map((item) => (
+        <CartItem
+          key={item.id}
+          title={item.dish.name}
+          estimatedTime={item.dish.estimated_time ?? ""}
+          imgSrc={item.dish.image_url}
+          {...item.dish}
+          quantity={item.units}
+          onQuantityChange={(delta) => handleQuantityChange(item.id, delta)}
+          onRemove={() => handleRemoveItem(item.id)}
         />
-        <VStack className="p-4">
-          <Button variant="outline" onPress={clearCart}>
-            <ButtonText>Clear Cart</ButtonText>
-          </Button>
-        </VStack>
-      </SafeAreaView>
-    </>
+      ))}
+      <View style={styles.deliveryMethod}>
+        <Text style={styles.text}>Delivery Method</Text>
+        <View style={styles.radioGroup}>
+          <TouchableOpacity
+            style={styles.radioButton}
+            onPress={() => setDeliveryMethod("delivery")}
+          >
+            <View
+              style={
+                deliveryMethod === "delivery"
+                  ? styles.radioSelected
+                  : styles.radioUnselected
+              }
+            />
+            <Text style={styles.text}>Delivery</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.radioButton}
+            onPress={() => setDeliveryMethod("pickup")}
+          >
+            <View
+              style={
+                deliveryMethod === "pickup"
+                  ? styles.radioSelected
+                  : styles.radioUnselected
+              }
+            />
+            <Text style={styles.text}>Pick Up</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.paymentMethod}>
+        <Text style={styles.text}>Payment Method</Text>
+        <View style={styles.radioGroup}>
+          <TouchableOpacity
+            style={styles.radioButton}
+            onPress={() => setPaymentMethod("card")}
+          >
+            <View
+              style={
+                paymentMethod === "card"
+                  ? styles.radioSelected
+                  : styles.radioUnselected
+              }
+            />
+            <Text style={styles.text}>By Card</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.radioButton}
+            onPress={() => setPaymentMethod("delivery")}
+          >
+            <View
+              style={
+                paymentMethod === "delivery"
+                  ? styles.radioSelected
+                  : styles.radioUnselected
+              }
+            />
+            <Text style={styles.text}>On Delivery</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.summary}>
+        <View style={styles.summaryRow}>
+          <Text style={styles.text}>Item Amount</Text>
+          <Text style={styles.text}>${totalAmount.toFixed(2)}</Text>
+        </View>
+        <View style={styles.summaryRow}>
+          <Text style={styles.text}>Discount</Text>
+          <Text style={styles.text}>$0.0</Text>
+        </View>
+        {deliveryMethod === "delivery" && (
+          <View style={styles.summaryRow}>
+            <Text style={styles.text}>Delivery Fees</Text>
+            <Text style={styles.text}>${deliveryFees.toFixed(2)}</Text>
+          </View>
+        )}
+        <View style={styles.summaryRow}>
+          <Text style={styles.boldText}>Total Amount</Text>
+          <Text style={styles.boldText}>
+            $
+            {(
+              totalAmount + (deliveryMethod === "delivery" ? deliveryFees : 0)
+            ).toFixed(2)}
+          </Text>
+        </View>
+        <View style={styles.addressContainer}>
+          <Text style={styles.text}>Address</Text>
+          <View style={styles.addressRow}>
+            <TextInput
+              style={styles.addressInput}
+              value={userAddress}
+              editable={false}
+              onChangeText={setUserAddress}
+              placeholder="No address"
+            />
+          </View>
+        </View>
+      </View>
+      <TouchableOpacity style={styles.confirmButton}>
+        <Text style={styles.buttonText}>Confirm Order</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 16,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#966d35",
+  },
+  deliveryMethod: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+  },
+  paymentMethod: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+    marginTop: 16,
+  },
+  text: {
+    fontSize: 16,
+    color: "#333",
+  },
+  summary: {
+    backgroundColor: "#f0f0f0",
+    padding: 16,
+    borderRadius: 8,
+    marginTop: 16,
+  },
+  summaryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  boldText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  confirmButton: {
+    backgroundColor: "#966d35",
+    paddingVertical: 16,
+    borderRadius: 8,
+    marginTop: 16,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  radioGroup: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  radioButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 16,
+  },
+  radioSelected: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: "#966d35",
+    marginRight: 8,
+  },
+  radioUnselected: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#966d35",
+    marginRight: 8,
+  },
+  addressContainer: {
+    marginTop: 16,
+  },
+  addressRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  addressInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 8,
+    fontSize: 16,
+    color: "#333",
+  },
+  editIcon: {
+    marginLeft: 8,
+  },
+});
 
 export default Cart;
