@@ -9,6 +9,9 @@ export interface NewCook {
 export interface Cook {
   public_name: string;
   user: User;
+  rating_average: number;
+  rating_count: number;
+  dishes: string;
 }
 
 export interface CookOverall {
@@ -16,6 +19,8 @@ export interface CookOverall {
   public_name: string;
   rating_average: number;
 }
+
+
 
 export interface CooksPage {
   count: number;
