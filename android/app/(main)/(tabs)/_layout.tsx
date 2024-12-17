@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { FileClockIcon, Settings } from "lucide-react-native";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import { useSession } from "@/context/authContext";
+import { Me, User, me } from "@/lib/auth";
 
 const TabIcon = ({
   icon,
@@ -17,14 +18,12 @@ const TabIcon = ({
   focused: boolean;
 }) => (
   <View
-    className={`flex flex-row justify-center items-center rounded-full ${
-      focused ? "bg-general-300" : ""
-    }`}
+    className={`flex flex-row justify-center items-center rounded-full ${focused ? "bg-general-300" : ""
+      }`}
   >
     <View
-      className={`rounded-full w-fit px-6 h-11 items-center justify-center ${
-        focused ? "bg-primary-700" : ""
-      }`}
+      className={`rounded-full w-fit px-6 h-11 items-center justify-center ${focused ? "bg-primary-700" : ""
+        }`}
     >
       {icon}
     </View>
@@ -32,9 +31,13 @@ const TabIcon = ({
 );
 
 export default function Layout() {
-  const { user } = useSession();
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const [user, setUser] = useState<Me>();
+
+  useEffect(() => {
+    me().then((user) => setUser(user));
+  }, []);
 
   useEffect(() => {
     navigation.setOptions({ headerShown: false });

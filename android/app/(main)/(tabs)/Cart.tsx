@@ -13,14 +13,53 @@ import { Button, ButtonIcon } from "@/components/ui/button";
 import { ChevronLeftIcon } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
 import CartItem from "@/components/CartItem";
+import {
+  Toast,
+  ToastDescription,
+  ToastTitle,
+  useToast,
+} from "@/components/ui/toast";
 
 const Cart = () => {
   const { t } = useTranslation();
-  const { cart, addItem, removeItem } = useCart();
+  const { cart, addItem, removeItem, clearCart } = useCart();
   const [userAddress, setUserAddress] = useState("Lleida 25001 5 15");
   const [deliveryMethod, setDeliveryMethod] = useState("delivery");
   const [paymentMethod, setPaymentMethod] = useState("card");
 
+  const toast = useToast();
+  const [toastId, setToastId] = React.useState(0);
+  const handleToast = (
+    title: string,
+    desc?: string,
+    action?: "error" | "warning" | "success" | "info" | "muted" | undefined
+  ) => {
+    if (!toast.isActive(String(toastId))) {
+      showNewToast(title, desc, action);
+    }
+  };
+  const showNewToast = (
+    title: string,
+    desc?: string,
+    action?: "error" | "warning" | "success" | "info" | "muted" | undefined
+  ) => {
+    const newId = Math.random();
+    setToastId(newId);
+    toast.show({
+      id: String(newId),
+      placement: "top",
+      duration: 2000,
+      render: ({ id }) => {
+        const uniqueToastId = "toast-" + id;
+        return (
+          <Toast nativeID={uniqueToastId} action={action} variant="solid">
+            <ToastTitle className="text-lg underline">{title}</ToastTitle>
+            {desc && <ToastDescription>{desc}</ToastDescription>}
+          </Toast>
+        );
+      },
+    });
+  };
   const handleQuantityChange = (id: number, delta: number) => {
     const item = cart.find((item) => item.id === id);
     if (!item) {
@@ -160,7 +199,14 @@ const Cart = () => {
             </View>
           </View>
         </View>
-        <TouchableOpacity style={styles.confirmButton}>
+        <TouchableOpacity
+          style={styles.confirmButton}
+          onPress={() => {
+            clearCart();
+            handleToast("Order in on your way!", "", "success");
+            router.push("/home");
+          }}
+        >
           <Text style={styles.buttonText}>Confirm Order</Text>
         </TouchableOpacity>
       </ScrollView>
