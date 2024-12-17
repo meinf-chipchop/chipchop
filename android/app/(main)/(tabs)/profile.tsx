@@ -10,19 +10,28 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { ScrollView } from "react-native";
 import { Divider } from "@/components/ui/divider";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
+import { Me, me } from "@/lib/auth";
 
 const Profile = () => {
-  const { user, signOut } = useSession();
+  const { signOut } = useSession();
   const { t } = useTranslation();
 
+  const [user, setSelfUser] = useState<Me | null>(null);
+  useEffect(() => {
+    me().then((user) => setSelfUser(user));
+  }, []);
+
   return (
-    <ScrollView className="px-12">
+    <ScrollView className="px-12 pt-[2rem]">
       <VStack space="md">
         <Avatar>
-          <AvatarFallbackText>{user?.first_name}</AvatarFallbackText>
+          <AvatarFallbackText>{user?.first_name || "?"}</AvatarFallbackText>
           <AvatarImage
             source={{
-              uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+              uri: `https://ui-avatars.com/api/?name=${
+                user?.first_name || "?"
+              }`,
             }}
           />
         </Avatar>
