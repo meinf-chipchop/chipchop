@@ -11,12 +11,7 @@ import { useCart } from "@/context/cartContext";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import CartItem from "@/components/CartItem";
-import {
-  Toast,
-  ToastDescription,
-  ToastTitle,
-  useToast,
-} from "@/components/ui/toast";
+import { useGlobalToast } from "@/hooks/Toast";
 
 const Cart = () => {
   // TODO: use translations for literals
@@ -27,39 +22,8 @@ const Cart = () => {
   const [deliveryMethod, setDeliveryMethod] = useState("delivery");
   const [paymentMethod, setPaymentMethod] = useState("card");
 
-  const toast = useToast();
-  const [toastId, setToastId] = React.useState(0);
-  const handleToast = (
-    title: string,
-    desc?: string,
-    action?: "error" | "warning" | "success" | "info" | "muted" | undefined
-  ) => {
-    if (!toast.isActive(String(toastId))) {
-      showNewToast(title, desc, action);
-    }
-  };
-  const showNewToast = (
-    title: string,
-    desc?: string,
-    action?: "error" | "warning" | "success" | "info" | "muted" | undefined
-  ) => {
-    const newId = Math.random();
-    setToastId(newId);
-    toast.show({
-      id: String(newId),
-      placement: "top",
-      duration: 2000,
-      render: ({ id }) => {
-        const uniqueToastId = "toast-" + id;
-        return (
-          <Toast nativeID={uniqueToastId} action={action} variant="solid">
-            <ToastTitle className="text-lg underline">{title}</ToastTitle>
-            {desc && <ToastDescription>{desc}</ToastDescription>}
-          </Toast>
-        );
-      },
-    });
-  };
+  const { handleToast } = useGlobalToast();
+
   const handleQuantityChange = (id: number, delta: number) => {
     const item = cart.find((item) => item.id === id);
     if (!item) {
@@ -203,7 +167,7 @@ const Cart = () => {
           style={styles.confirmButton}
           onPress={() => {
             clearCart();
-            handleToast("Order in on your way!", "", "success");
+            handleToast("Order on the way!", "", "success");
             router.push("/home");
           }}
         >

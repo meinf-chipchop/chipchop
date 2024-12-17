@@ -9,6 +9,7 @@ import { ArrowDown, ArrowUp, ShoppingCartIcon } from "lucide-react-native";
 import { HR } from "@expo/html-elements";
 import { useCart } from "@/context/cartContext";
 import { Toast, ToastDescription, ToastTitle, useToast } from "./ui/toast";
+import { useGlobalToast } from "@/hooks/Toast";
 
 export const CookProfileExpandableDishCard = ({ dish }: { dish: Dish }) => {
   const { addItem } = useCart();
@@ -16,40 +17,7 @@ export const CookProfileExpandableDishCard = ({ dish }: { dish: Dish }) => {
   const [isExpanded, setExpanded] = useState(false);
 
   const { t } = useTranslation();
-
-  const toast = useToast();
-  const [toastId, setToastId] = React.useState(0);
-  const handleToast = (
-    title: string,
-    desc?: string,
-    action?: "error" | "warning" | "success" | "info" | "muted" | undefined
-  ) => {
-    if (!toast.isActive(String(toastId))) {
-      showNewToast(title, desc, action);
-    }
-  };
-  const showNewToast = (
-    title: string,
-    desc?: string,
-    action?: "error" | "warning" | "success" | "info" | "muted" | undefined
-  ) => {
-    const newId = Math.random();
-    setToastId(newId);
-    toast.show({
-      id: String(newId),
-      placement: "top",
-      duration: 2000,
-      render: ({ id }) => {
-        const uniqueToastId = "toast-" + id;
-        return (
-          <Toast nativeID={uniqueToastId} action={action} variant="solid">
-            <ToastTitle className="text-lg underline">{title}</ToastTitle>
-            {desc && <ToastDescription>{desc}</ToastDescription>}
-          </Toast>
-        );
-      },
-    });
-  };
+  const { handleToast } = useGlobalToast();
 
   const handleAddItem = (dish: Dish) => {
     const added = addItem(dish);
