@@ -16,10 +16,10 @@ type ToastAction =
 
 export const useGlobalToast = () => {
   const toast = useToast();
-  const [toastId, setToastId] = React.useState<number | null>(null);
+  const [toastId, setToastId] = React.useState<string | null>(null);
 
   const showNewToast = (title: string, desc?: string, action?: ToastAction) => {
-    const newId = Math.random();
+    const newId = crypto.randomUUID();
     setToastId(newId);
 
     toast.show({
