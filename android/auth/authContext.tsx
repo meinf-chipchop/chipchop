@@ -81,6 +81,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
   }, [session]);
 
   const signIn = async (email: string, password: string): Promise<string> => {
+    setSession(null);
     const response = await login(email, password);
 
     if (!response.ok) {
@@ -97,14 +98,11 @@ export function SessionProvider({ children }: PropsWithChildren) {
         response.headers.get("set-cookie") || ""
       );
 
-      const csrfToken = await getCsrfToken();
-      if (!csrfToken) {
-        console.error("[signIn] CSRF token missing or invalid.");
-        return "Login failed: Unable to retrieve session token.";
-      }
-
-      setSession(csrfToken);
+      setSession("android");
+    } else {
+      setSession("web");
     }
+
     return ""; // Success, no error message
   };
 

@@ -119,17 +119,12 @@ class LoginViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LogoutViewSet(viewsets.ViewSet):
+class LogoutViewSet(viewsets.LogoutViewSet):
     permission_classes = [AllowAny]
 
     def list(self, request):
         logout(request)
-        response = Response(
-            {"Message": "Successfully logged out."}, status=status.HTTP_200_OK
-        )
-        response.delete_cookie("csrftoken")
-        response.delete_cookie("sessionid")
-        return response
+        return Response(status=status.HTTP_200_OK)
 
 
 class AddressViewSet(viewsets.ModelViewSet):
