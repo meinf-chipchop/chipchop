@@ -42,6 +42,7 @@ if DEV_MODE:
     CORS_ORIGIN_ALLOW_ALL = True
     CORS_ALLOW_CREDENTIALS = True
     CSRF_COOKIE_SECURE = False
+    CORS_EXPOSE_HEADERS = ['set-cookie']
     CSRF_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
     CSRF_COOKIE_SECURE = True  # Only HTTPS
 
