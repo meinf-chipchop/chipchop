@@ -91,11 +91,11 @@ export const CookProfileExpandableDishCard = ({ dish }: { dish: Dish }) => {
               $
               {discountedPrice
                 ? discountedPrice.toFixed(2)
-                : dish.price.toFixed(2)}
+                : dish.price?.toFixed(2)}
             </Text>
             {discountedPrice && (
               <Text className="line-through text-red-900 text-sm">
-                ${dish.price.toFixed(2)}
+                ${dish.price?.toFixed(2)}
               </Text>
             )}
           </View>
@@ -253,7 +253,7 @@ export const CookProfileDishCard = ({ dish }: { dish: Dish }) => {
                   ${discountedPrice.toFixed(2)}
                 </Text>
                 <Text className="line-through text-red-900 text-md">
-                  ${dish.price.toFixed(2)}
+                  ${dish.price?.toFixed(2)}
                 </Text>
               </View>
               <Text className="text-secondary-300 text-xs">
@@ -262,7 +262,7 @@ export const CookProfileDishCard = ({ dish }: { dish: Dish }) => {
             </View>
           ) : (
             <Text className="font-extrabold text-lg text-white">
-              ${dish.price.toFixed(2)}
+              ${dish.price?.toFixed(2)}
             </Text>
           )}
         </View>

@@ -4,7 +4,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 interface CartItemProps {
   imgSrc?: string;
   title: string;
-  price: number;
+  price: number | null;
   estimatedTime?: string;
   quantity: number;
   onQuantityChange: (amount: number) => void;
@@ -25,7 +25,7 @@ const CartItem: React.FC<CartItemProps> = ({
     <View style={styles.itemDetails}>
       <Text style={styles.itemTitle}>{title}</Text>
       <View style={styles.priceRow}>
-        <Text style={styles.price}>${price.toFixed(2)}</Text>
+        <Text style={styles.price}>${price?.toFixed(2)}</Text>
       </View>
       <Text style={styles.estimatedTime}>Estimated Time: {estimatedTime}</Text>
     </View>

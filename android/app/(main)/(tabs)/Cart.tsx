@@ -8,9 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useCart } from "@/context/cartContext";
-import { Stack, router } from "expo-router";
-import { Button, ButtonIcon } from "@/components/ui/button";
-import { ChevronLeftIcon } from "lucide-react-native";
+import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import CartItem from "@/components/CartItem";
 import {
@@ -21,6 +19,8 @@ import {
 } from "@/components/ui/toast";
 
 const Cart = () => {
+  // TODO: use translations for literals
+  // FIXME: Check dish prices. Why can be null
   const { t } = useTranslation();
   const { cart, addItem, removeItem, clearCart } = useCart();
   const [userAddress, setUserAddress] = useState("Lleida 25001 5 15");
@@ -80,7 +80,7 @@ const Cart = () => {
   };
 
   const totalAmount = cart.reduce(
-    (total, item) => total + item.dish.price * item.units,
+    (total, item) => total + (item.dish.price ?? 0) * item.units,
     0
   );
   const deliveryFees = 5.0;
