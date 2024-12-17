@@ -10,6 +10,7 @@
     "history": "History"
   },
   "labels": {
+    "cart": "Cart",
     "cook": "Cook",
     "chef": "Chef",
     "deliver": "Deliver",
@@ -124,12 +125,10 @@
     "F": "Finished",
     "M": "Missing"
   },
-  
   "order_type": {
     "D": "Delivery",
     "P": "Pickup"
   },
-  
   "order_status_description": {
     "Pending": "P",
     "Approved": "A",
@@ -143,13 +142,10 @@
     "Finished": "F",
     "Missing": "M"
   },
-  
   "order_type_description": {
     "Delivery": "D",
     "Pickup": "P"
   },
-  
-
   "order_text": {
     "order_title": "Orders",
     "order_status": "Order Status",

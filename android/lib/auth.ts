@@ -72,7 +72,15 @@ export function me(): Promise<Me> {
       "Content-Type": "application/json",
     },
     credentials: "include",
-  }).then((response) => response.json() as Promise<Me>);
+  })
+    .then((response) => {
+      console.log(response);
+      return response.json() as Promise<Me>;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return Promise.reject(error);
+    });
 }
 
 export async function login(email: string, password: string) {

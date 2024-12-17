@@ -7,6 +7,7 @@ import { Heading } from "@/components/ui/heading";
 import { useTranslation } from "react-i18next";
 import { FileClockIcon, Settings } from "lucide-react-native";
 import { Button, ButtonIcon } from "@/components/ui/button";
+import { useSession } from "@/context/authContext";
 
 const TabIcon = ({
   icon,
@@ -16,12 +17,14 @@ const TabIcon = ({
   focused: boolean;
 }) => (
   <View
-    className={`flex flex-row justify-center items-center rounded-full ${focused ? "bg-general-300" : ""
-      }`}
+    className={`flex flex-row justify-center items-center rounded-full ${
+      focused ? "bg-general-300" : ""
+    }`}
   >
     <View
-      className={`rounded-full w-fit px-6 h-11 items-center justify-center ${focused ? "bg-primary-700" : ""
-        }`}
+      className={`rounded-full w-fit px-6 h-11 items-center justify-center ${
+        focused ? "bg-primary-700" : ""
+      }`}
     >
       {icon}
     </View>
@@ -29,6 +32,7 @@ const TabIcon = ({
 );
 
 export default function Layout() {
+  const { user } = useSession();
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -77,10 +81,25 @@ export default function Layout() {
         name="dishes"
         options={{
           title: "Dishes",
+          href: user?.role == "C" ? undefined : null,
           headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
             <TabIcon
               icon={<Ionicons name="restaurant" color={color} size={size} />}
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="Cart"
+        options={{
+          headerTitle: "Cart",
+          href: user?.role != "U" ? null : undefined,
+          headerShown: true,
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabIcon
+              icon={<Ionicons name="cart" color={color} size={size} />}
               focused={focused}
             />
           ),
@@ -131,16 +150,14 @@ export default function Layout() {
           headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
             <TabIcon
-              icon={<Ionicons name="storefront-sharp" color={color} size={size} />}
+              icon={
+                <Ionicons name="storefront-sharp" color={color} size={size} />
+              }
               focused={focused}
             />
           ),
         }}
       />
     </Tabs>
-
-
-
   );
 }
-

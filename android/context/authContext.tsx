@@ -96,15 +96,15 @@ export function SessionProvider({ children }: PropsWithChildren) {
         process.env.EXPO_PUBLIC_API_URL,
         response.headers.get("set-cookie") || ""
       );
-
-      const csrfToken = await getCsrfToken();
-      if (!csrfToken) {
-        console.error("[signIn] CSRF token missing or invalid.");
-        return "Login failed: Unable to retrieve session token.";
-      }
-
-      setSession(csrfToken);
     }
+    const csrfToken = await getCsrfToken();
+    if (!csrfToken) {
+      console.error("[signIn] CSRF token missing or invalid.");
+      return "Login failed: Unable to retrieve session token.";
+    }
+
+    console.log(csrfToken);
+    setSession(csrfToken);
     return ""; // Success, no error message
   };
 
