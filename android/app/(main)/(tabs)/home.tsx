@@ -55,10 +55,6 @@ const Home = () => {
           </View>
 
           <View style={styles.iconContainer}>
-            <FontAwesome.Button name="shopping-basket" backgroundColor="#415f63" iconStyle={styles.icon}>
-              <Text style={styles.iconText}></Text>
-            </FontAwesome.Button>
-
             {selfUser?.role == 'C' && (< GoodButton
               className="pl-4 bg-[#415f63] rounded w-auto"
               variant="link"
