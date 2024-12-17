@@ -119,7 +119,7 @@ class LoginViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LogoutViewSet(viewsets.LogoutViewSet):
+class LogoutViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
     def list(self, request):
