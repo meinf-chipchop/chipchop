@@ -7,10 +7,10 @@ export default function fetchWrapper(
   if (Platform.OS !== "web")
     console.log("fetchWrapper called from Android", endpoint, options);
 
-  let finalOtions = {
+  let finalOptions = {
     ...options,
     headers: { ...options.headers, "Content-Type": "application/json" },
   };
 
-  return fetch(`${process.env.EXPO_PUBLIC_API_URL}${endpoint}`, finalOtions);
+  return fetch(`${process.env.EXPO_PUBLIC_API_URL}${endpoint}`, finalOptions);
 }
