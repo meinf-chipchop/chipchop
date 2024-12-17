@@ -43,7 +43,7 @@ if DEV_MODE:
     CSRF_USE_SESSIONS = False
     CSRF_COOKIE_HTTPONLY = False  # Not accessible by client (not important)
     CSRF_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
-    CSRF_COOKIE_SECURE = False  # Only HTTPS
+    CSRF_COOKIE_SECURE = True  # Only HTTPS
 
 
 USE_X_FORWARDED_HOST = True
