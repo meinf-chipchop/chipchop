@@ -3,8 +3,8 @@ import fetchWrapper from "./fetchWrapper";
 import { getByURL } from "./utils";
 
 export interface Dish {
-  id: number;
-  user_id: number;
+  id?: number;
+  user_id?: number;
   name: string;
   description: string;
   category: number;
@@ -12,8 +12,8 @@ export interface Dish {
   rating_average?: string;
   rating_count?: string;
   estimated_time?: string;
-  price: number;
-  discount?: number;
+  price: number | null;
+  discount?: number | null;
   created_at?: string;
   last_update_at?: string;
 }
@@ -104,5 +104,7 @@ export async function updateDish(
 }
 
 export function getDiscountedPrice(dish: Dish): number | null {
-  return dish.discount && dish.discount != 0 ? dish.price * (100 - dish.discount) / 100 : null;
+  return dish.discount && dish.discount != 0
+    ? (dish.price! * (100 - dish.discount)) / 100
+    : null;
 }
