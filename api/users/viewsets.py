@@ -124,12 +124,7 @@ class LogoutViewSet(viewsets.ViewSet):
 
     def list(self, request):
         logout(request)
-        response = Response(
-            {"Message": "Successfully logged out."}, status=status.HTTP_200_OK
-        )
-        response.delete_cookie("csrftoken")
-        response.delete_cookie("sessionid")
-        return response
+        return Response(status=status.HTTP_200_OK)
 
 
 class AddressViewSet(viewsets.ModelViewSet):
