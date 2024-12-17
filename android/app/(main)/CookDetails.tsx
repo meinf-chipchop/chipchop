@@ -1,5 +1,5 @@
 
-import { CookDetailed, getCookByURL } from "@/lib/cook";
+import { Cook, getCookByURL } from "@/lib/cook";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { ChevronLeftIcon } from "lucide-react-native";
 import { useEffect, useState } from "react";
@@ -15,7 +15,7 @@ import React from "react";
 function CookDetails() {
     const { cook_url } = useLocalSearchParams();
 
-    const [cook, setCook] = useState<CookDetailed>();
+    const [cook, setCook] = useState<Cook>();
     const [dishes, setDishes] = useState<Dish[]>();
     const [topDish, setTopDish] = useState<Dish>();
 
