@@ -171,7 +171,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
             );
           } else {
             setSession(null);
-            router.push("/");
+            router.push("/(auth)/");
           }
         },
         handleForgotPassword: () => null,

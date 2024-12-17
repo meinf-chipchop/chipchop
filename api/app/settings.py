@@ -36,12 +36,14 @@ DEBUG = True
 
 if DEV_MODE:
     print("Running in development mode")
+    CSRF_COOKIE_SAMESITE = 'None'
+    SESSION_COOKIE_SAMESITE = 'None'
+    SESSION_COOKIE_SECURE = True
     CORS_ORIGIN_ALLOW_ALL = True
     CORS_ALLOW_CREDENTIALS = True
-    CSRF_USE_SESSIONS = False
-    CSRF_COOKIE_HTTPONLY = False  # Not accessible by client (not important)
+    CSRF_COOKIE_SECURE = False
     CSRF_COOKIE_AGE = 8 * 3600  # Expires after 8 hr
-    CSRF_COOKIE_SECURE = False  # Only HTTPS
+    CSRF_COOKIE_SECURE = True  # Only HTTPS
 
 
 USE_X_FORWARDED_HOST = True

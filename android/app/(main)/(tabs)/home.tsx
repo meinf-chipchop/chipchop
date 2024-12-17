@@ -1,24 +1,13 @@
 import React, { useRef, useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  Image,
-  TextInput,
-  Button,
-  StyleSheet,
-  ScrollView,
-  Dimensions,
-  Animated,
-} from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { Button as GoodButton, ButtonIcon } from "@/components/ui/button";
-import { Truck } from "lucide-react-native";
-import { Me, me } from "@/lib/auth";
-import { useRouter } from "expo-router";
+import { SafeAreaView, View, Text, Image, TextInput, Button, StyleSheet, ScrollView, Dimensions, Animated } from "react-native";
+import { FontAwesome } from '@expo/vector-icons';
+import { Button as GoodButton, ButtonIcon } from '@/components/ui/button';
+import { Truck, ScrollText } from "lucide-react-native";
+import { Me, me } from '@/lib/auth';
+import { useRouter } from 'expo-router';
 import { useSession } from "@/context/authContext";
-import { CooksPage, getCooks } from "@/lib/cook";
-import CookList from "@/components/CooksList";
+import { CooksPage, getCooks } from '@/lib/cook';
+import CookList from '@/components/CooksList';
 
 const { width } = Dimensions.get("window");
 
@@ -34,11 +23,6 @@ const Home = () => {
       .then((res) => setSelfUser(res))
       .catch((error) => console.log(error));
   }, []);
-
-  const [showOrdersButton, setShowOrdersButton] = useState(false);
-  useEffect(() => {
-    setShowOrdersButton(user?.role == "C"); // ======= Set C to acess orders interface =======//
-  }, [user]);
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -70,71 +54,42 @@ const Home = () => {
             <Text style={styles.title}>Chip Chop</Text>
           </View>
 
-          <View
-            style={[
-              styles.iconContainer,
-              !showOrdersButton && {
-                justifyContent: "space-around",
-                flexDirection: "row",
-                alignItems: "center",
-              },
-            ]}
-          >
-            {showOrdersButton && (
-              <FontAwesome.Button
-                name="list"
-                backgroundColor="#415f63"
-                iconStyle={styles.icon}
-                onPress={() => router.push("/ordersCook")}
-              >
-                <Text style={styles.iconText}></Text>
-              </FontAwesome.Button>
-            )}
-
-            <FontAwesome.Button
-              name="shopping-basket"
-              backgroundColor="#415f63"
-              iconStyle={styles.icon}
-              onPress={() => router.push("/cart/Cart")}
-            >
+          <View style={styles.iconContainer}>
+            <FontAwesome.Button name="shopping-basket" backgroundColor="#415f63" iconStyle={styles.icon}>
               <Text style={styles.iconText}></Text>
             </FontAwesome.Button>
 
-            <FontAwesome.Button
-              name="user"
-              backgroundColor="#415f63"
-              iconStyle={styles.icon}
+            {selfUser?.role == 'C' && (< GoodButton
+              className="pl-4 bg-[#415f63] rounded w-auto"
+              variant="link"
+              onPress={() => router.push("/ordersCook")}
             >
-              <Text style={styles.iconText}></Text>
-            </FontAwesome.Button>
-            {selfUser?.role == "D" && (
-              <GoodButton
-                className="pl-4 bg-[#415f63] rounded w-auto"
-                variant="link"
-                onPress={() => router.push("/DelivererOrders")}
-              >
-                <ButtonIcon
-                  as={Truck}
-                  size="md"
-                  color="white"
-                  className="w-auto pr-4"
-                />
-              </GoodButton>
-            )}
+              <ButtonIcon as={ScrollText} size="md" color="white" className="w-auto pr-4"></ButtonIcon>
+            </GoodButton>)
+            }
+
+            {selfUser?.role == 'D' && (< GoodButton
+              className="pl-4 bg-[#415f63] rounded w-auto"
+              variant="link"
+              onPress={() => router.push("/DelivererOrders")}
+            >
+              <ButtonIcon as={Truck} size="md" color="white" className="w-auto pr-4" />
+            </GoodButton>)}
           </View>
         </View>
 
         <View style={styles.searchContainer}>
           <View style={styles.searchBox}>
             <FontAwesome name="search" size={20} color="gray" />
-            <TextInput placeholder="Search chef" style={styles.searchInput} />
+            <TextInput
+              placeholder="Search chef"
+              style={styles.searchInput}
+            />
           </View>
 
           <View style={styles.locationBox}>
             <FontAwesome name="map" size={20} color="gray" />
-            <Text style={styles.locationText}>
-              12530 Borriana, Castellón, Spain
-            </Text>
+            <Text style={styles.locationText}>12530 Borriana, Castellón, Spain</Text>
           </View>
 
           <View style={styles.categoryBox}>
@@ -148,37 +103,13 @@ const Home = () => {
           </View>
         </View>
         <Text style={styles.featuredTitle}>Featured Dishes</Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.featuredScroll}
-        >
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.featuredScroll}>
           {[
-            {
-              name: "Grilled Chicken",
-              image:
-                "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg",
-            },
-            {
-              name: "Pepperoni Pizza",
-              image:
-                "https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg",
-            },
-            {
-              name: "Cheeseburger",
-              image:
-                "https://images.pexels.com/photos/1639567/pexels-photo-1639567.jpeg",
-            },
-            {
-              name: "Caesar Salad",
-              image:
-                "https://images.pexels.com/photos/27603332/pexels-photo-27603332/free-photo-of-salad-with-shrimp-and-tomatoes.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-            },
-            {
-              name: "Chocolate Cake",
-              image:
-                "https://images.pexels.com/photos/4109998/pexels-photo-4109998.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-            },
+            { name: 'Grilled Chicken', image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg' },
+            { name: 'Pepperoni Pizza', image: 'https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg' },
+            { name: 'Cheeseburger', image: 'https://images.pexels.com/photos/1639567/pexels-photo-1639567.jpeg' },
+            { name: 'Caesar Salad', image: 'https://images.pexels.com/photos/27603332/pexels-photo-27603332/free-photo-of-salad-with-shrimp-and-tomatoes.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
+            { name: 'Chocolate Cake', image: 'https://images.pexels.com/photos/4109998/pexels-photo-4109998.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' }
           ].map((dish, index) => (
             <View key={index} style={styles.dishCard}>
               <Image source={{ uri: dish.image }} style={styles.dishImage} />
@@ -190,43 +121,20 @@ const Home = () => {
         </ScrollView>
 
         <Text style={styles.chefsTitle}>Top Chefs</Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.chefsScroll}
-        >
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chefsScroll}>
           {cooks && <CookList cooks={cooks} />}
         </ScrollView>
+
 
         <Animated.View style={{ opacity: fadeAnim }}>
           <Text style={styles.chipChopTitle}>New On Chip Chop</Text>
           <View style={styles.chipChopContainer}>
             {[
-              {
-                name: "Spaghetti Carbonara",
-                image:
-                  "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg",
-              },
-              {
-                name: "Tacos",
-                image:
-                  "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg",
-              },
-              {
-                name: "Sushi",
-                image:
-                  "https://images.pexels.com/photos/357756/pexels-photo-357756.jpeg",
-              },
-              {
-                name: "Pancakes",
-                image:
-                  "https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg",
-              },
-              {
-                name: "Ice Cream",
-                image:
-                  "https://images.pexels.com/photos/3311075/pexels-photo-3311075.jpeg",
-              },
+              { name: 'Spaghetti Carbonara', image: 'https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg' },
+              { name: 'Tacos', image: 'https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg' },
+              { name: 'Sushi', image: 'https://images.pexels.com/photos/357756/pexels-photo-357756.jpeg' },
+              { name: 'Pancakes', image: 'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg' },
+              { name: 'Ice Cream', image: 'https://images.pexels.com/photos/3311075/pexels-photo-3311075.jpeg' }
             ].map((dish, index) => (
               <View key={index} style={styles.dishCardVertical}>
                 <Image source={{ uri: dish.image }} style={styles.dishImage} />

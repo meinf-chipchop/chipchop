@@ -25,21 +25,28 @@ import { Stack, router } from "expo-router";
 import { z } from "zod";
 import { AlertCircleIcon, ChevronLeftIcon } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
+import { me, Me } from "@/lib/auth";
 
 const globalStyles = "pb-4";
 
 const DishForm = () => {
   const { t } = useTranslation();
-  const { user } = useSession();
+
+  const [selfUser, setSelfUser] = useState<Me | null>(null);
+
+  useEffect(() => {
+    me().then((user) => setSelfUser(user));
+  }, []);
+
   const [dish, setDish] = useState<Dish>({
     name: "",
     description: "",
     category: 0,
-    price: 0,
-    discount: 0,
+    price: null,
+    discount: null,
     estimated_time: "",
   });
-  
+
   const [errors, setErrors] = useState({
     name: "",
     description: "",
@@ -62,7 +69,10 @@ const DishForm = () => {
     fetchCategories();
   }, []);
 
-  const handleInputChange = (field: keyof Dish, value: string | number) => {
+  const handleInputChange = (
+    field: keyof Dish,
+    value: string | number | null
+  ) => {
     setDish({ ...dish, [field]: value });
   };
 
@@ -131,9 +141,9 @@ const DishForm = () => {
 
   const handleSubmit = () => {
     if (validate())
-      if (user) {
+      if (selfUser) {
         setLoading(true);
-        createCookDish(user.id, dish)
+        createCookDish(selfUser.id, dish)
           .then((response) => {
             console.log(response);
             setResponse({ ok: true, errors: "" });
@@ -217,22 +227,34 @@ const DishForm = () => {
           <InputField
             containerStyle={globalStyles}
             label={t("labels.price")}
+            inputMode="decimal"
             placeholder={t("dish.enter_price")}
-            value={dish.price.toString()}
-            onChangeText={(value) =>
-              handleInputChange("price", parseFloat(value))
-            }
+            value={dish.price?.toString() || ""}
+            onChangeText={(value) => {
+              if (value === "Na") {
+                handleInputChange("price", null);
+                return;
+              }
+
+              handleInputChange("price", parseFloat(value));
+            }}
             keyboardType="numeric"
             error={errors.price}
           />
           <InputField
             containerStyle={globalStyles}
             label={t("labels.discount")}
+            inputMode="decimal"
             placeholder={t("dish.enter_discount")}
-            value={dish.discount?.toString()}
-            onChangeText={(value) =>
-              handleInputChange("discount", parseFloat(value))
-            }
+            value={dish.discount?.toString() || ""}
+            onChangeText={(value) => {
+              if (value === "Na") {
+                handleInputChange("discount", null);
+                return;
+              }
+
+              handleInputChange("discount", parseFloat(value));
+            }}
             keyboardType="numeric"
           />
           <InputField

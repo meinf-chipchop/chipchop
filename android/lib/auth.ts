@@ -9,6 +9,7 @@ const CookieManager =
   Platform.OS !== "web" && require("@react-native-cookies/cookies");
 
 export interface User {
+  id: number;
   first_name: string;
   last_name: string;
   email: string;

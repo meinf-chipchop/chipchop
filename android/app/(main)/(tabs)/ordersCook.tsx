@@ -96,10 +96,18 @@ const OrdersCook = () => {
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case "d":
-        return "#4CAF50";
+      case "a":
+        return "#0F0"
       case "p":
         return "#FFC107";
+      case "r":
+        return "#FF5722";
+      case "c":
+        return "#F44336";
+      case "b":
+        return "#9C27B0";
+      case "k":
+        return "#2196F3";
       default:
         return "#9E9E9E";
     }
@@ -107,10 +115,18 @@ const OrdersCook = () => {
 
   const getName = (status: string) => {
     switch (status.toLowerCase()) {
-      case "d":
-        return t("order_status.D");
+      case "a":
+        return t("order_status.A");
       case "p":
         return t("order_status.P");
+      case "r":
+        return t("order_status.R");
+      case "c":
+        return t("order_status.C");
+      case "b":
+        return t("order_status.B");
+      case "k":
+        return t("order_status.K");
       default:
         return t("order_status.M");
     }
@@ -166,8 +182,11 @@ const OrdersCook = () => {
                     changeOrderStatus(selectedOrder.id, itemValue);
                   }}
                 >
-                  <Picker.Item label={t("order_status.P")} value= {t("order_type_description.Pickup")} />
-                  <Picker.Item label={t("order_status.D")} value= {t("order_type_description.Delivery")} />
+                  <Picker.Item label={t("order_status.A")} value="A" />
+                  <Picker.Item label={t("order_status.R")} value="R" />
+                  <Picker.Item label={t("order_status.C")} value="C" />
+                  <Picker.Item label={t("order_status.B")} value="B" />
+                  <Picker.Item label={t("order_status.K")} value="K" />
                 </Picker>
             </View>
           </>
