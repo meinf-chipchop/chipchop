@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model, authenticate, login, logout
+from django.middleware import csrf
 
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -111,7 +112,12 @@ class LoginViewSet(viewsets.ViewSet):
                             )
                 
                 login(request, user)
-                return Response(serializers.UserDetailSerializer(user).data)
+                response_data = serializers.UserDetailSerializer(user).data
+                csrf_token = csrf.get_token(request)
+                response_data['csrf_token'] = csrf_token
+
+                response = Response(response_data)
+                return response
             return Response(
                 {"Message": "Invalid Email and Password"},
                 status=status.HTTP_401_UNAUTHORIZED,
@@ -119,7 +125,7 @@ class LoginViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LogoutViewSet(viewsets.LogoutViewSet):
+class LogoutViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
     def list(self, request):

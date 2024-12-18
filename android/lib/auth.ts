@@ -47,6 +47,7 @@ function extractCsrfToken(cookies: string) {
 
 export async function getCsrfToken() {
   if (Platform.OS === "web") {
+    console.log("Cookies", document.cookie);
     return extractCsrfToken(document.cookie);
   }
   if (process.env.EXPO_PUBLIC_API_URL) {

@@ -83,6 +83,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
   const signIn = async (email: string, password: string): Promise<string> => {
     setSession(null);
     const response = await login(email, password);
+    const json = await response.json();
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
@@ -92,6 +93,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
       );
       return `Login failed: ${errorMessage}`;
     }
+
     if (process.env.EXPO_PUBLIC_API_URL && Platform.OS !== "web") {
       CookieManager.setFromResponse(
         process.env.EXPO_PUBLIC_API_URL,
@@ -100,6 +102,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
       setSession("android");
     } else {
+      document.cookie = `csrftoken=${json.csrf_token}`;
       setSession("web");
     }
 
