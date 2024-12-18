@@ -168,8 +168,23 @@ export function SessionProvider({ children }: PropsWithChildren) {
               `[signOut] Failed to log out with status ${response.status}`
             );
           } else {
+            if (Platform.OS !== "web") {
+              CookieManager.clearAll().then(() => {
+                console.log("[signOut] All cookies cleared.");
+              });
+            } else {
+              document.cookie.split(";").forEach((c) => {
+                document.cookie = c
+                  .replace(/^ +/, "")
+                  .replace(
+                    /=.*/,
+                    "=;expires=" + new Date().toUTCString() + ";path=/"
+                  );
+              });
+              console.log("[signOut] All cookies cleared.");
+            }
             setSession(null);
-            router.push("/(auth)/");
+            router.push("/(auth)");
           }
         },
         handleForgotPassword: () => null,

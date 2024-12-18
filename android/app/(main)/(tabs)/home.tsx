@@ -5,11 +5,11 @@ import { Button as GoodButton, ButtonIcon } from '@/components/ui/button';
 import { Truck, ScrollText } from "lucide-react-native";
 import { Me, me } from '@/lib/auth';
 import { useRouter } from 'expo-router';
-import { useSession } from "@/auth/authContext";
+import { useSession } from "@/context/authContext";
 import { CooksPage, getCooks } from '@/lib/cook';
 import CookList from '@/components/CooksList';
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const Home = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -19,12 +19,9 @@ const Home = () => {
   const [selfUser, setSelfUser] = React.useState<Me>();
 
   useEffect(() => {
-    const fetchSelfUser = async () => {
-      const user = await me();
-      setSelfUser(user);
-    };
-
-    fetchSelfUser();
+    me()
+      .then((res) => setSelfUser(res))
+      .catch((error) => console.log(error));
   }, []);
 
   useEffect(() => {
@@ -58,10 +55,6 @@ const Home = () => {
           </View>
 
           <View style={styles.iconContainer}>
-            <FontAwesome.Button name="shopping-basket" backgroundColor="#415f63" iconStyle={styles.icon}>
-              <Text style={styles.iconText}></Text>
-            </FontAwesome.Button>
-
             {selfUser?.role == 'C' && (< GoodButton
               className="pl-4 bg-[#415f63] rounded w-auto"
               variant="link"
@@ -79,7 +72,6 @@ const Home = () => {
               <ButtonIcon as={Truck} size="md" color="white" className="w-auto pr-4" />
             </GoodButton>)}
           </View>
-
         </View>
 
         <View style={styles.searchContainer}>
@@ -157,33 +149,33 @@ const Home = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   scrollContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     padding: 16,
     paddingBottom: 80, // Add bottom padding to ensure space from the tab bar
   },
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     padding: 16,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
     maxWidth: 400,
     paddingVertical: 10,
   },
   logoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   logoBackground: {
-    backgroundColor: '#966d35',
+    backgroundColor: "#966d35",
     padding: 8,
     borderRadius: 8,
     marginRight: 8,
@@ -194,33 +186,33 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
   },
   iconContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 'auto',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "auto",
     gap: 5,
   },
 
   icon: {
-    color: '#e3d6ab',
+    color: "#e3d6ab",
   },
   iconText: {
-    color: '#e3d6ab',
+    color: "#e3d6ab",
   },
   searchContainer: {
     marginTop: 16,
-    width: '100%',
+    width: "100%",
     maxWidth: 400,
     paddingHorizontal: 16,
   },
   searchBox: {
     color: "gray",
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#dfe1d5',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#dfe1d5",
     padding: 10,
     borderRadius: 8,
     marginBottom: 8,
@@ -231,42 +223,42 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   locationBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#dfe1d5',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#dfe1d5",
     padding: 10,
     borderRadius: 8,
     marginBottom: 8,
   },
   locationText: {
     marginLeft: 8,
-    color: 'gray',
+    color: "gray",
     fontSize: 16,
   },
   categoryBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#966d35',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#966d35",
     padding: 10,
     borderRadius: 8,
     marginBottom: 8,
   },
   categoryText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
   },
   featuredTitle: {
     marginTop: 16,
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    alignSelf: 'flex-start',
+    fontWeight: "bold",
+    color: "#333",
+    alignSelf: "flex-start",
     paddingHorizontal: 16,
   },
   featuredScroll: {
@@ -278,58 +270,58 @@ const styles = StyleSheet.create({
     width: width * 0.7, // 70% of the screen width
     height: width * 0.4, // Make it square by setting height equal to width
     borderRadius: 8,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
     borderWidth: 1, // Add border width
-    borderColor: '#966d35', // Set border color
+    borderColor: "#966d35", // Set border color
   },
   dishImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     padding: 10,
   },
   dishText: {
     fontSize: 16,
-    color: '#fff',
-    textAlign: 'center',
+    color: "#fff",
+    textAlign: "center",
   },
   chipChopTitle: {
     marginTop: 16,
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#415f63', // Change color to #415f63
-    textAlign: 'center', // Center the title
+    fontWeight: "bold",
+    color: "#415f63", // Change color to #415f63
+    textAlign: "center", // Center the title
     paddingHorizontal: 16,
     paddingBottom: 16, // Add bottom padding
   },
   chipChopContainer: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   dishCardVertical: {
     marginBottom: 16,
     width: width * 0.9, // 90% of the screen width for vertical layout
     height: width * 0.5, // Adjust height for vertical layout
     borderRadius: 8,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
     borderWidth: 1,
-    borderColor: '#966d35',
+    borderColor: "#966d35",
   },
   chipChopScroll: {
     marginTop: 8,
@@ -338,9 +330,9 @@ const styles = StyleSheet.create({
   chefsTitle: {
     marginTop: 16,
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    alignSelf: 'flex-start',
+    fontWeight: "bold",
+    color: "#333",
+    alignSelf: "flex-start",
     paddingHorizontal: 16,
   },
   chefsScroll: {
@@ -350,7 +342,7 @@ const styles = StyleSheet.create({
   chefCard: {
     marginRight: 16,
     width: 100,
-    alignItems: 'center',
+    alignItems: "center",
   },
   chefImage: {
     width: 80,
@@ -358,12 +350,12 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginBottom: 8,
     borderWidth: 1, // Add border width
-    borderColor: '#966d35', // Set border color
+    borderColor: "#966d35", // Set border color
   },
   chefText: {
     fontSize: 14,
-    color: '#333',
-    textAlign: 'center',
+    color: "#333",
+    textAlign: "center",
   },
 });
 

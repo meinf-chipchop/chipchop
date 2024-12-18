@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { router } from "expo-router";
-import { useSession } from "@/auth/authContext";
+import { useSession } from "@/context/authContext";
 import { NewUser } from "@/lib/auth";
 import SignUpForm from "@/components/SignUpForm";
 
-const CUstomerSignUp = () => {
+const CustomerSignUp = () => {
   const [form, setForm] = useState<NewUser>({
     first_name: "",
     last_name: "",
@@ -47,4 +47,4 @@ const CUstomerSignUp = () => {
   );
 };
 
-export default CUstomerSignUp;
+export default CustomerSignUp;

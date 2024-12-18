@@ -6,7 +6,7 @@ import { Slot, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
-import { SessionProvider } from "@/auth/authContext";
+import { SessionProvider } from "@/context/authContext";
 import "@/i18n";
 import { initI18n } from "@/i18n";
 import { initOneSignal } from "@/lib/onesignal/main";
@@ -37,20 +37,6 @@ export default function RootLayout() {
     initOneSignal();
   }, []);
 
-  const router = useRouter();
-
-  // Check if me works, if error go to auth page
-  useEffect(() => {
-    if (!router) return;
-
-    me()
-      .then((user) => {
-        console.log("User->", user);
-        console.log("Redirecting to home, user is logged in");
-        router?.push("/(main)/(tabs)/home");
-      })
-      .catch(() => router?.push("/(auth)/"));
-  }, [router]);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {

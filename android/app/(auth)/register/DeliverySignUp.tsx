@@ -26,7 +26,7 @@ import {
 import { AlertCircleIcon, Bike, ChevronDownIcon } from "lucide-react-native";
 import { NewDeliver, Vehicle } from "@/lib/delivery";
 import { router } from "expo-router";
-import { useSession } from "@/auth/authContext";
+import { useSession } from "@/context/authContext";
 import SignUpForm from "@/components/SignUpForm";
 
 const DeliverySignUp = () => {

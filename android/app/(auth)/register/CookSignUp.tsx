@@ -4,7 +4,7 @@ import { z } from "zod";
 import InputField from "@/components/InputField";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useSession } from "@/auth/authContext";
+import { useSession } from "@/context/authContext";
 import { useTranslation } from "react-i18next";
 import { NewCook } from "@/lib/cook";
 import { Heading } from "@/components/ui/heading";

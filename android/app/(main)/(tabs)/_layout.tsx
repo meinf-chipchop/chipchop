@@ -7,6 +7,8 @@ import { Heading } from "@/components/ui/heading";
 import { useTranslation } from "react-i18next";
 import { FileClockIcon, Settings } from "lucide-react-native";
 import { Button, ButtonIcon } from "@/components/ui/button";
+import { useSession } from "@/context/authContext";
+import { Me, User, me } from "@/lib/auth";
 
 const TabIcon = ({
   icon,
@@ -31,6 +33,11 @@ const TabIcon = ({
 export default function Layout() {
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const [user, setUser] = useState<Me>();
+
+  useEffect(() => {
+    me().then((user) => setUser(user));
+  }, []);
 
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -38,7 +45,7 @@ export default function Layout() {
 
   return (
     <Tabs
-      initialRouteName="index"
+      initialRouteName="home"
       screenOptions={{
         tabBarActiveTintColor: Colors.chestnut[100],
         tabBarInactiveTintColor: Colors.chestnut[900],
@@ -77,10 +84,25 @@ export default function Layout() {
         name="dishes"
         options={{
           title: "Dishes",
+          href: user?.role == "C" ? undefined : null,
           headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
             <TabIcon
               icon={<Ionicons name="restaurant" color={color} size={size} />}
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="Cart"
+        options={{
+          headerTitle: "Cart",
+          href: user?.role != "U" ? null : undefined,
+          headerShown: true,
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabIcon
+              icon={<Ionicons name="cart" color={color} size={size} />}
               focused={focused}
             />
           ),
@@ -131,16 +153,14 @@ export default function Layout() {
           headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
             <TabIcon
-              icon={<Ionicons name="storefront-sharp" color={color} size={size} />}
+              icon={
+                <Ionicons name="storefront-sharp" color={color} size={size} />
+              }
               focused={focused}
             />
           ),
         }}
       />
     </Tabs>
-
-
-
   );
 }
-
