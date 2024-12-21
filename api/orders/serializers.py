@@ -115,16 +115,21 @@ class OrderDetailSerializer(serializers.ModelSerializer):
         lookup_url_kwarg="order_pk",
     )
 
-    address = serializers.HyperlinkedRelatedField(
-        view_name="address-detail",
-        read_only=True,
-    )
+    dish_count = serializers.SerializerMethodField()
+
+    address = serializers.CharField()
+
+    first_name = serializers.CharField(source="user.first_name")
+
+    last_name = serializers.CharField(source="user.last_name")
 
     class Meta:
         model = models.Order
         fields = [
             "id",
             "user",
+            "first_name",
+            "last_name",
             "deliverer",
             "address",
             "dishes",
@@ -133,6 +138,9 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             "created_at",
             "last_updated",
         ]
+
+    def get_dish_count(self, obj):
+        return obj.dishes.count()
 
 
 class OrderListSerializer(serializers.ModelSerializer):
@@ -149,11 +157,6 @@ class OrderListSerializer(serializers.ModelSerializer):
         lookup_url_kwarg="order_pk",
     )
 
-    address = serializers.HyperlinkedRelatedField(
-        view_name="address-detail",
-        read_only=True,
-    )
-
     deliverer = serializers.HyperlinkedRelatedField(
         view_name="deliverer-detail",
         read_only=True,
@@ -166,7 +169,6 @@ class OrderListSerializer(serializers.ModelSerializer):
         fields = [
             "url",
             "dishes",
-            "address",
             "deliverer",
             "first_name",
             "order_type",
