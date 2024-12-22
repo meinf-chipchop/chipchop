@@ -1,5 +1,4 @@
 import { getCsrfToken } from "./auth";
-import fetchWrapper from "./fetchWrapper";
 
 export interface BaseHyperlinkedModel {
     url: string;
@@ -20,8 +19,15 @@ export interface UrlPaging extends GenericPaging<BaseHyperlinkedModel> { }
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
+function nginxUrl(url: string): string {
+    if (!url.startsWith('http')) {
+        return `${process.env.EXPO_PUBLIC_API_URL}${url}`;
+    }
+    return url;
+}
+
 export async function request<T>(url: string, method: HttpMethod, body?: any): Promise<T> {
-    return fetch(url, {
+    return fetch(nginxUrl(url), {
         method,
         body: JSON.stringify(body),
         credentials: 'include',
@@ -38,7 +44,7 @@ export async function request<T>(url: string, method: HttpMethod, body?: any): P
 }
 
 export async function requestResponse(url: string, method: HttpMethod, body?: any): Promise<Response> {
-    return fetch(url, {
+    return fetch(nginxUrl(url), {
         method,
         body: JSON.stringify(body),
         credentials: 'include',

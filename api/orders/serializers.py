@@ -8,6 +8,7 @@ from rest_framework.exceptions import ValidationError
 
 from . import models
 from users.models import Address, UserRoles
+from users.serializers import UserDetailSerializer
 
 
 class OrderDishCreationSerializer(serializers.ModelSerializer):
@@ -99,15 +100,14 @@ class OrderDishListSerializer(NestedHyperlinkedModelSerializer):
 
 class OrderDetailSerializer(serializers.ModelSerializer):
 
-    user = serializers.HyperlinkedRelatedField(
-        view_name="user-detail",
-        read_only=True,
-    )
+    user = UserDetailSerializer()
 
     deliverer = serializers.HyperlinkedRelatedField(
         view_name="deliverer-detail",
         read_only=True,
     )
+
+    deliverer_id = serializers.IntegerField(source="deliverer.user.id", read_only=True)
 
     dishes = serializers.HyperlinkedIdentityField(
         view_name="order-dish-list",
@@ -119,28 +119,24 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 
     address = serializers.CharField()
 
-    first_name = serializers.CharField(source="user.first_name")
-
-    last_name = serializers.CharField(source="user.last_name")
-
     class Meta:
         model = models.Order
         fields = [
             "id",
             "user",
-            "first_name",
-            "last_name",
             "deliverer",
+            "deliverer_id",
             "address",
             "dishes",
+            "dish_count",
             "order_type",
             "order_status",
             "created_at",
             "last_updated",
         ]
 
-    def get_dish_count(self, obj):
-        return obj.dishes.count()
+    def get_dish_count(self, obj: models.Order):
+        return sum([dish.amount for dish in obj.orderdish_set.all()])
 
 
 class OrderListSerializer(serializers.ModelSerializer):

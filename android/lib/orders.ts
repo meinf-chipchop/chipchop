@@ -1,16 +1,16 @@
 import { BaseHyperlinkedModel, BaseIdentifiedModel, GenericPaging, get, getDetailed, patch, put, requestResponse } from "./rest";
 
+import { UserDetail } from "./users";
 
 export type OrderStatus = "P" | "A" | "R" | "C" | "B" | "K" | "D" | "T" | "S" | "F";
 export type OrderType = "D" | "P";
 
 export interface OrderDetail extends BaseIdentifiedModel {
-  user: string;
-  first_name: string;
-  last_name: string;
+  user: UserDetail;
   deliverer: string | null;
-  deliverer_id: number | null;
+  deliverer_id?: number;
   dishes: string;
+  dish_count: number;
   address: string;
   order_type: OrderType;
   order_status: OrderStatus;
@@ -65,7 +65,7 @@ export async function getOrders(): Promise<OrderList> {
   return get<OrderList>('api/orders/');
 }
 
-export async function getFullOrders(): Promise<Array<OrderDetail>> {
+export async function getOrdersDetailed(): Promise<Array<OrderDetail>> {
   return await getDetailed<OrderOverall, OrderDetail>('/api/orders/');
 }
 

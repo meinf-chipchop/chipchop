@@ -1,37 +1,27 @@
 import { me, Me } from "@/lib/auth";
-import { acceptOrder, getFullOrders, Order, updateStatus } from "@/lib/orders";
-import { useEffect, useRef, useState } from "react";
+import { acceptOrder, getOrdersDetailed, OrderDetail, updateStatus } from "@/lib/orders";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Animated, View, Text, Pressable, Button } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { OrderListItem } from "@/components/OrderListItem";
-import { HR } from "@expo/html-elements";
+import { OrderList } from "@/components/OrderListItem";
 import { Stack, useRouter } from "expo-router";
 import { ButtonIcon, Button as GoodButton } from "@/components/ui/button";
 import { ChevronLeftIcon } from "@/components/ui/icon";
 import React from "react";
+import { CircleCheckBig, Package, Truck } from "lucide-react-native";
 
 const DelivererOrders = () => {
-    const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity value of 0
 
     const router = useRouter();
     const { t } = useTranslation();
 
     const [selfUser, setSelfUser] = useState<Me>();
-    const [orders, setOrders] = useState<Order[]>();
-    const [pickedUpOrders, setPickedUpOrders] = useState<Order[]>();
-    const [assignedOrders, setAssignedOrders] = useState<Order[]>();
-    const [freeOrders, setFreeOrders] = useState<Order[]>();
+    const [orders, setOrders] = useState<OrderDetail[]>();
+    const [pickedUpOrders, setPickedUpOrders] = useState<OrderDetail[]>();
+    const [assignedOrders, setAssignedOrders] = useState<OrderDetail[]>();
+    const [freeOrders, setFreeOrders] = useState<OrderDetail[]>();
 
-    const notFinished = (order: Order) => { return order.order_status !== 'F' };
-
-    useEffect(() => {
-        Animated.timing(fadeAnim, {
-            toValue: 1, // Animate to opacity value of 1
-            duration: 1000, // Duration of the animation
-            useNativeDriver: true, // Use native driver for better performance
-        }).start();
-    }, [fadeAnim]);
+    const notFinished = (order: OrderDetail) => { return order.order_status !== 'F' };
 
     useEffect(() => {
         const fetchSelfUser = async () => {
@@ -67,26 +57,26 @@ const DelivererOrders = () => {
 
     useEffect(() => {
         const fetchOrders = async () => {
-            setOrders(await getFullOrders());
+            setOrders(await getOrdersDetailed());
         }
         fetchOrders();
     }, []);
 
-    // Could be abstracted, but won't :))
-    const assignOrder = async (orderId: number) => {
-        freeOrders?.filter((order) => order.id === orderId).map(async (order) => {
-            acceptOrder(order.id, selfUser!).then(res => {
+    // Could be abstracted
+    const assignOrder = async (o: OrderDetail) => {
+        freeOrders?.filter((order) => order.id === o.id).map(async (order) => {
+            acceptOrder(order.id).then(res => {
                 if (!res) return;
                 order.deliverer_id = selfUser!.id;
                 const newAssigned = assignedOrders ? [...assignedOrders, order] : [order];
-                const newFree = freeOrders?.filter((order) => order.id !== orderId);
+                const newFree = freeOrders?.filter((order) => order.id !== o.id);
                 setAssignedOrders(newAssigned);
                 setFreeOrders(newFree);
             });
         });
     }
 
-    const pickUpOrder = async (order: Order) => {
+    const pickUpOrder = async (order: OrderDetail) => {
         const state = newState(order.order_status);
         updateStatus(order, state).then((newOrder) => {
             const newPickedUp = pickedUpOrders ? [...pickedUpOrders, newOrder] : [newOrder];
@@ -95,7 +85,7 @@ const DelivererOrders = () => {
         });
     }
 
-    const finishOrder = async (order: Order) => {
+    const finishOrder = async (order: OrderDetail) => {
         const state = newState(order.order_status);
         updateStatus(order, state).then((newOrder) => {
             setPickedUpOrders(pickedUpOrders?.filter((o) => o.id !== newOrder.id));
@@ -131,57 +121,10 @@ const DelivererOrders = () => {
                 }}
             />
 
-            {/* This could be refactored into a more general component */}
-            <ScrollView className="bg-general-500 flex-1 w-full pb-40">
-                <View className="my-4 items-center flex flex-col gap-y-2 w-full">
-                    <Text className="text-3xl my-4">{t('orders.picked_up_title')}</Text>
-                    {pickedUpOrders && pickedUpOrders.length > 0
-                        ? (pickedUpOrders.map((order, index) => (
-                            <View key={"pickedup-" + index} className="w-full">
-                                <HR className="pt-2" />
-                                <Pressable key={"press-" + index}>
-                                    <OrderListItem key={"order-" + index} order={order} callback={() => finishOrder(order)}></OrderListItem>
-                                </Pressable>
-                            </View>)
-                        )) : (
-                            <View className="w-75 h-25 items-center">
-                                <Text className="text-md italic">{t('orders.no_picked_up_orders')}</Text>
-                            </View>
-                        )}
-                </View>
-
-                <View className="my-4 items-center flex flex-col gap-y-2 w-full">
-                    <Text className="text-3xl my-4">{t("orders.assigned")}</Text>
-                    {assignedOrders && assignedOrders.length > 0
-                        ? (assignedOrders.map((order, index) => (
-                            <View key={"assigned-" + index} className="w-full">
-                                <HR className="pt-2" />
-                                <Pressable key={"press-" + index}>
-                                    <OrderListItem key={"order-" + index} order={order} callback={() => pickUpOrder(order)}></OrderListItem>
-                                </Pressable>
-                            </View>)
-                        )) : (
-                            <View className="w-75 h-25 items-center">
-                                <Text className="text-md italic">{t('orders.no_assigned_orders')}</Text>
-                            </View>
-                        )}
-                </View>
-                <View className="px-4 items-center pb-50 w-full">
-                    <Text className="text-3xl my-4">{t("orders.unassigned")}</Text>
-                    {freeOrders && freeOrders.length > 0
-                        ? (freeOrders.map((order, index) => (
-                            <View key={"free-" + index} className="w-full">
-                                <HR className="pt-2" />
-                                <Pressable key={"press-" + index}>
-                                    <OrderListItem key={"order-" + index} order={order} callback={() => assignOrder(order.id)}></OrderListItem>
-                                </Pressable>
-                            </View>)
-                        )) : (
-                            <View className="w-75 h-25 items-center">
-                                <Text className="text-md italic">{t('orders.no_unassigned_orders')}</Text>
-                            </View>
-                        )}
-                </View>
+            <ScrollView className="flex flex-col w-full pb-40">
+                <OrderList icon={<Truck color="green" />} title={t("orders.picked_up_title")} empty={t("orders.no_picked_up_orders")} orders={pickedUpOrders} callback={finishOrder} />
+                <OrderList icon={<Package color="blue" />} title={t("orders.assigned")} empty={t("orders.no_assigned_orders")} orders={assignedOrders} callback={pickUpOrder} />
+                <OrderList icon={<CircleCheckBig color="orange" />} title={t("orders.unassigned")} empty={t("orders.no_unassigned_orders")} orders={freeOrders} callback={assignOrder} />
             </ScrollView>
         </>
     );

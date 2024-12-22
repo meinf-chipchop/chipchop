@@ -21,11 +21,11 @@ User = get_user_model()
 class OrderDishesViewSet(viewsets.ModelViewSet):
     queryset = models.OrderDish.objects.all()
     serializer_class = serializers.OrderDishDetailSerializer
-    
+
     def dispatch(self, *args, **kwargs):
         response = super().dispatch(*args, **kwargs)
         if isinstance(response, Response):
-            response['Cache-Control'] = "max-age=3600"
+            response["Cache-Control"] = "max-age=3600"
         return response
 
     def get_serializer_class(self):
@@ -45,14 +45,14 @@ class OrderDishesViewSet(viewsets.ModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = models.Order.objects.all()
     serializer_class = serializers.OrderDetailSerializer
-    
+
     def dispatch(self, *args, **kwargs):
         response = super().dispatch(*args, **kwargs)
         if isinstance(response, Response):
-            response['Cache-Control'] = "max-age=3600"
+            response["Cache-Control"] = "max-age=30"
             if self.action == "retrieve":
                 response["Last-Modified"] = self.get_object().last_updated
-                
+
         return response
 
     def get_queryset(self):
