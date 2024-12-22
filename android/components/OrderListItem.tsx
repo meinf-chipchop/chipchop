@@ -21,10 +21,10 @@ interface OrderListItemProps {
     callback: () => void;
 }
 
-export const OrderList = ({ icon, title, empty, orders, callback }: Readonly<OrderListProps>) => {
+export const OrderList = ({ icon, title, empty, orders, callback }: OrderListProps) => {
     return (
         <View className="flex flex-col w-[90%] mx-auto h-25 bg-white rounded-md shadow-md my-2 py-4">
-            <View className="flex-row gap-x-4 mx-4 pb-2 text-center">
+            <View className="flex-row gap-x-4 mx-4 pb-2 items-center text-center align-middle">
                 {icon}
                 <Text className="text-xl font-bold color-grey-700 opacity-80">{title}</Text>
             </View>
@@ -46,7 +46,7 @@ export const OrderList = ({ icon, title, empty, orders, callback }: Readonly<Ord
     );
 }
 
-export const OrderListItem = ({ order, callback }: Readonly<OrderListItemProps>) => {
+export const OrderListItem = ({ order, callback }: OrderListItemProps) => {
     const { t } = useTranslation();
 
     const orderButton = (): React.JSX.Element => {

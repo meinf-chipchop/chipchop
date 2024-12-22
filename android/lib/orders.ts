@@ -73,6 +73,6 @@ export async function acceptOrder(order_id: number): Promise<Boolean> {
   return await requestResponse(`/api/orders/${order_id}/accept`, 'GET').then((response) => response.ok);
 }
 
-export async function updateStatus(order: OrderDetail, order_status: string): Promise<OrderDetail> {
+export async function updateStatus(order: OrderDetail, order_status: string): Promise<{ order_status: OrderStatus }> {
   return await put<OrderDetail>(`/api/orders/${order.id}/`, { order_status });
 }

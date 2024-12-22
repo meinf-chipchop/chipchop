@@ -1,5 +1,5 @@
 import { me, Me } from "@/lib/auth";
-import { acceptOrder, getOrdersDetailed, OrderDetail, updateStatus } from "@/lib/orders";
+import { acceptOrder, getOrdersDetailed, OrderDetail, updateStatus, OrderStatus } from "@/lib/orders";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView } from "react-native-gesture-handler";
@@ -37,7 +37,7 @@ const DelivererOrders = () => {
     }, [orders, selfUser]);
 
     useEffect(() => {
-        const assignedOrders = orders?.filter((order) => order.deliverer_id === selfUser?.id && notFinished(order));
+        const assignedOrders = orders?.filter((order) => order.deliverer_id === selfUser?.id && order.order_status !== 'D');
         // Sort by cooked and then the rest
         assignedOrders?.sort((a, b) => {
             if (a.order_status === 'K' && b.order_status !== 'K') {
@@ -52,12 +52,12 @@ const DelivererOrders = () => {
     }, [orders, selfUser]);
 
     useEffect(() => {
-        setFreeOrders(orders?.filter((order) => !order.deliverer && notFinished(order)));
+        setFreeOrders(orders?.filter((order) => !order.deliverer));
     }, [orders]);
 
     useEffect(() => {
         const fetchOrders = async () => {
-            setOrders(await getOrdersDetailed());
+            setOrders((await getOrdersDetailed()).filter(notFinished));
         }
         fetchOrders();
     }, []);
@@ -78,17 +78,19 @@ const DelivererOrders = () => {
 
     const pickUpOrder = async (order: OrderDetail) => {
         const state = newState(order.order_status);
-        updateStatus(order, state).then((newOrder) => {
-            const newPickedUp = pickedUpOrders ? [...pickedUpOrders, newOrder] : [newOrder];
+        updateStatus(order, state).then((new_status) => {
+            order.order_status = new_status.order_status;
+            const newPickedUp = pickedUpOrders ? [...pickedUpOrders, order] : [order];
             setPickedUpOrders(newPickedUp);
-            setAssignedOrders(assignedOrders?.filter((o) => o.id !== newOrder.id));
+            setAssignedOrders(assignedOrders?.filter((o) => o.id !== order.id));
         });
     }
 
     const finishOrder = async (order: OrderDetail) => {
         const state = newState(order.order_status);
-        updateStatus(order, state).then((newOrder) => {
-            setPickedUpOrders(pickedUpOrders?.filter((o) => o.id !== newOrder.id));
+        updateStatus(order, state).then((new_status) => {
+            order.order_status = new_status.order_status;
+            setPickedUpOrders(pickedUpOrders?.filter((o) => o.id !== order.id));
         });
     }
 
