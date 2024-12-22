@@ -5,7 +5,6 @@ import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import OrderStatus from "./OrderStatus";
 import React, { ReactNode } from "react";
 import { Package, Boxes } from "lucide-react-native";
-import { HR } from "@expo/html-elements";
 
 
 interface OrderListProps {

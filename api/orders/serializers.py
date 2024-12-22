@@ -117,6 +117,8 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 
     dish_count = serializers.SerializerMethodField()
 
+    total_price = serializers.SerializerMethodField()
+
     address = serializers.CharField()
 
     class Meta:
@@ -129,6 +131,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             "address",
             "dishes",
             "dish_count",
+            "total_price",
             "order_type",
             "order_status",
             "created_at",
@@ -137,6 +140,9 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 
     def get_dish_count(self, obj: models.Order):
         return sum([dish.amount for dish in obj.orderdish_set.all()])
+
+    def get_total_price(self, obj: models.Order):
+        return sum([dish.price for dish in obj.orderdish_set.all()])
 
 
 class OrderListSerializer(serializers.ModelSerializer):

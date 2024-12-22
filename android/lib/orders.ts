@@ -11,6 +11,7 @@ export interface OrderDetail extends BaseIdentifiedModel {
   deliverer_id?: number;
   dishes: string;
   dish_count: number;
+  total_price: number;
   address: string;
   order_type: OrderType;
   order_status: OrderStatus;
