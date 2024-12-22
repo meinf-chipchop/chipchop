@@ -8,6 +8,7 @@ from rest_framework.exceptions import ValidationError
 
 from . import models
 from users.models import Address, UserRoles
+from users.serializers import UserDetailSerializer
 
 
 class OrderDishCreationSerializer(serializers.ModelSerializer):
@@ -99,15 +100,14 @@ class OrderDishListSerializer(NestedHyperlinkedModelSerializer):
 
 class OrderDetailSerializer(serializers.ModelSerializer):
 
-    user = serializers.HyperlinkedRelatedField(
-        view_name="user-detail",
-        read_only=True,
-    )
+    user = UserDetailSerializer()
 
     deliverer = serializers.HyperlinkedRelatedField(
         view_name="deliverer-detail",
         read_only=True,
     )
+
+    deliverer_id = serializers.IntegerField(source="deliverer.user.id", read_only=True)
 
     dishes = serializers.HyperlinkedIdentityField(
         view_name="order-dish-list",
@@ -115,10 +115,11 @@ class OrderDetailSerializer(serializers.ModelSerializer):
         lookup_url_kwarg="order_pk",
     )
 
-    address = serializers.HyperlinkedRelatedField(
-        view_name="address-detail",
-        read_only=True,
-    )
+    dish_count = serializers.SerializerMethodField()
+
+    total_price = serializers.SerializerMethodField()
+
+    address = serializers.CharField()
 
     class Meta:
         model = models.Order
@@ -126,13 +127,22 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             "id",
             "user",
             "deliverer",
+            "deliverer_id",
             "address",
             "dishes",
+            "dish_count",
+            "total_price",
             "order_type",
             "order_status",
             "created_at",
             "last_updated",
         ]
+
+    def get_dish_count(self, obj: models.Order):
+        return sum([dish.amount for dish in obj.orderdish_set.all()])
+
+    def get_total_price(self, obj: models.Order):
+        return sum([dish.price for dish in obj.orderdish_set.all()])
 
 
 class OrderListSerializer(serializers.ModelSerializer):
@@ -149,11 +159,6 @@ class OrderListSerializer(serializers.ModelSerializer):
         lookup_url_kwarg="order_pk",
     )
 
-    address = serializers.HyperlinkedRelatedField(
-        view_name="address-detail",
-        read_only=True,
-    )
-
     deliverer = serializers.HyperlinkedRelatedField(
         view_name="deliverer-detail",
         read_only=True,
@@ -166,7 +171,6 @@ class OrderListSerializer(serializers.ModelSerializer):
         fields = [
             "url",
             "dishes",
-            "address",
             "deliverer",
             "first_name",
             "order_type",

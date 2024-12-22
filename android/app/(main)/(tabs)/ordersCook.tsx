@@ -134,46 +134,46 @@ const OrdersCook = () => {
 
   const renderOrderModal = () => (
     <Modal
-    animationType="slide"
-    transparent={true}
-    visible={modalVisible}
-    onRequestClose={closeModal}
-  >
-    <View style={styles.modalOverlay}>
-      <View style={styles.modalContent}>
-        <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>{t("order_text.order_details")}</Text>
-          <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-            <FontAwesome name="close" size={24} color="#333" />
-          </TouchableOpacity>
-        </View>
-        {selectedOrder && (
-          <>
-            <View style={styles.customerInfo}>
-              <Text style={styles.customerName}>{selectedOrder.firstName}</Text>
-              <Text style={styles.orderDate}>
-                {t("order_text.order_date")}: {new Date(selectedOrder.created_at).toLocaleDateString()}
-              </Text>
-            </View>
-            <ScrollView style={styles.modalScrollView}>
-              {selectedOrder.dishesDetails.map((dish: { dishDetails: { name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }; amount: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined; price: number; }, index: React.Key | null | undefined) => (
-                <View key={index} style={styles.dishItem}>
-                  <View style={styles.dishInfo}>
-                    <Text style={styles.dishName}>{dish.dishDetails?.name}</Text>
-                    <Text style={styles.dishQuantity}>  x{dish.amount}</Text>
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={closeModal}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>{t("order_text.order_details")}</Text>
+            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+              <FontAwesome name="close" size={24} color="#333" />
+            </TouchableOpacity>
+          </View>
+          {selectedOrder && (
+            <>
+              <View style={styles.customerInfo}>
+                <Text style={styles.customerName}>{selectedOrder.firstName}</Text>
+                <Text style={styles.orderDate}>
+                  {t("order_text.order_date")}: {new Date(selectedOrder.created_at).toLocaleDateString()}
+                </Text>
+              </View>
+              <ScrollView style={styles.modalScrollView}>
+                {selectedOrder.dishesDetails.map((dish: { dishDetails: { name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }; amount: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined; price: number; }, index: React.Key | null | undefined) => (
+                  <View key={index} style={styles.dishItem}>
+                    <View style={styles.dishInfo}>
+                      <Text style={styles.dishName}>{dish.dishDetails?.name}</Text>
+                      <Text style={styles.dishQuantity}>  x{dish.amount}</Text>
+                    </View>
+                    <Text style={styles.dishPrice}>${(dish.price * Number(dish.amount)).toFixed(2)}</Text>
                   </View>
-                  <Text style={styles.dishPrice}>${(dish.price * Number(dish.amount)).toFixed(2)}</Text>
-                </View>
-              ))}
-            </ScrollView>
-            <View style={styles.totalContainer}>
-              <Text style={styles.totalText}>Total:</Text>
-              <Text style={styles.totalAmount}>
-                ${selectedOrder.dishesDetails.reduce((sum: number, dish: { price: number; amount: number; }) => sum + dish.price * dish.amount, 0).toFixed(2)}
-              </Text>
-            </View>
-            <View style={styles.statusSituation}>
-              <Text style={styles.statusLabel}>{t("order_text.order_status")}:</Text>
+                ))}
+              </ScrollView>
+              <View style={styles.totalContainer}>
+                <Text style={styles.totalText}>Total:</Text>
+                <Text style={styles.totalAmount}>
+                  ${selectedOrder.dishesDetails.reduce((sum: number, dish: { price: number; amount: number; }) => sum + dish.price * dish.amount, 0).toFixed(2)}
+                </Text>
+              </View>
+              <View style={styles.statusSituation}>
+                <Text style={styles.statusLabel}>{t("order_text.order_status")}:</Text>
                 <Picker
                   selectedValue={selectedStatus}
                   style={styles.statusPicker}
@@ -188,13 +188,13 @@ const OrdersCook = () => {
                   <Picker.Item label={t("order_status.B")} value="B" />
                   <Picker.Item label={t("order_status.K")} value="K" />
                 </Picker>
-            </View>
-          </>
-        )}
+              </View>
+            </>
+          )}
+        </View>
       </View>
-    </View>
-  </Modal>
-);
+    </Modal>
+  );
 
   const renderStatusUpdateModal = () => (
     <Modal
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around'
   },
 
-  statusSituation:{
+  statusSituation: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
@@ -426,7 +426,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
-    justifyContent: 'space-around'  
+    justifyContent: 'space-around'
   },
 
 

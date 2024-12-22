@@ -7,10 +7,10 @@ import { SafeAreaView, ScrollView, Text, View } from "react-native";
 
 import { useEffect, useState } from "react";
 
-import { getOrderHistory, Order } from "@/lib/orders";
+import { getOrderHistory, OrderDetail } from "@/lib/orders";
 
 export default function DetailsScreen() {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<OrderDetail[]>([]);
 
   useEffect(() => {
     getOrderHistory().then((orders) => setOrders(orders));
@@ -50,7 +50,7 @@ export default function DetailsScreen() {
   );
 }
 
-function OrderComponent({ order }: { order: Order }) {
+function OrderComponent({ order }: { order: OrderDetail }) {
   const orderStatusDict = {
     P: { text: t("order_status.P"), color: "bg-yellow-500" },
     A: { text: t("order_status.A"), color: "bg-green-500" },
