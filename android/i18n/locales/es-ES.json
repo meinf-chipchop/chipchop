@@ -86,7 +86,9 @@
     "assigned": "Pedidos asignados",
     "no_assigned_orders": "Todavía no te has asignado pedidos",
     "unassigned": "Pedidos sin asignar",
+    "finished": "Pedidos finalizados",
     "no_unassigned_orders": "Todavía no hay pedidos",
+    "no_finished_orders": "Todavía no has hecho pedidos",
     "waiting_cook": "Esperando al chef",
     "waiting_deliverer": "Recoger",
     "no_picked_up_orders": "Todavía no has recogido pedidos",
@@ -133,5 +135,8 @@
     "order_details": "Detalles del pedido",
     "order_positive_feedback": "Estado del pedido actualizado con éxito",
     "order_negative_feedback": "No se pudo actualizar el estado del pedido"
+  },
+  "scroll": {
+    "to_top": "Volver arriba"
   }
 }
