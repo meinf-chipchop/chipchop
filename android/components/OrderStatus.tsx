@@ -1,9 +1,9 @@
-import { Order } from '@/lib/orders';
+import { OrderDetail } from '@/lib/orders';
 import { useTranslation } from 'react-i18next';
 import { View, Text } from 'react-native';
 
 interface OrderStatusProps {
-    order: Order;
+    order: OrderDetail;
 }
 
 const OrderStatus = ({ order }: OrderStatusProps) => {
@@ -30,7 +30,7 @@ const OrderStatus = ({ order }: OrderStatusProps) => {
     const orderStatusColor = orderStatus ? orderStatus.color : "bg-gray-500";
 
     return (
-        <View className={`${orderStatusColor}  p-2 rounded-lg  font-bold`} >
+        <View className={`${orderStatusColor} p-2 rounded-lg font-bold shadow-sm`} >
             <Text>{orderStatus?.text}</Text>
         </View >
     );
