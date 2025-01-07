@@ -1,10 +1,10 @@
 import { OrderDetail } from "@/lib/orders";
 import { useTranslation } from "react-i18next";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import OrderStatus from "./OrderStatus";
 import React, { ReactNode, useEffect } from "react";
-import { Package, Boxes, ArrowUp, ArrowDown } from "lucide-react-native";
+import { Package, Boxes, ArrowUp, ArrowDown, Map } from "lucide-react-native";
 import { HR } from "@expo/html-elements";
 
 interface OrderListProps {
@@ -116,6 +116,10 @@ export const OrderExpandableList = ({ icon, title, empty, orders, callback, isAl
 export const OrderListItem = ({ order, callback }: OrderListItemProps) => {
     const { t } = useTranslation();
 
+    const showMap = (address: string) => {
+        console.log(address);
+    }
+
     const orderButton = (): React.JSX.Element => {
         const buttonActive = !order.deliverer_id || order.order_status == 'K' || order.order_status == 'D';
         const buttonColor = order.order_status == 'D' ? 'bg-green-500' : 'bg-secondary-500';
@@ -174,7 +178,10 @@ export const OrderListItem = ({ order, callback }: OrderListItemProps) => {
                 <View className="flex flex-row justify-between gap-y-2">
                     <View className="flex flex-col text-wrap gap-y-2">
                         {order && order.user && <Text className="font-bold text-lg">{`${order.user.first_name} ${order.user.last_name}`}</Text>}
-                        <Text className="opacity-80">{order.address}</Text>
+                        <TouchableOpacity className="flex flex-row items-center gap-x-2" onPress={() => showMap(order.address)}>
+                            <Map className="size-4" />
+                            <Text className="opacity-80 text-pretty underline underline-offset-2">{order.address}</Text>
+                        </TouchableOpacity>
                     </View>
                     <View className="flex flex-col items-end w-auto gap-y-2">
                         <OrderStatus order={order} />

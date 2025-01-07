@@ -137,7 +137,7 @@ const DelivererOrders = () => {
                 <OrderExpandableList icon={<CircleCheckBig color="orange" />} title={t("orders.unassigned")} empty={t("orders.no_unassigned_orders")} orders={freeOrders} callback={assignOrder} isAllExpanded={isAllExpanded} />
                 <OrderExpandableList icon={<CircleCheck color="gray" />} title={t("orders.finished")} empty={t("orders.no_finished_orders")} orders={finishedOrders} isAllExpanded={isAllExpanded} />
             </ScrollView>
-            <View className="absolute left-1/2 w-full items-center flex flex-row justify-center bottom-0 mb-10 gap-x-2">
+            <View className="absolute w-full items-center flex flex-row justify-center bottom-0 mb-10 gap-x-2">
                 <TouchableOpacity onPress={() => setIsAllExpanded(!isAllExpanded)} className="p-2 shadow-md flex flex-row items-center gap-x-2 bg-primary-300 rounded-lg">
                     <ArrowDownUp color="white" width={24} height={24} className="drop-shadow-lg" />
                 </TouchableOpacity>
