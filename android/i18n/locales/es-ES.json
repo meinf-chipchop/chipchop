@@ -10,6 +10,10 @@
   },
   "labels": {
     "chef": "Chef",
+    "chef_search_field": "Buscar platos o chefs",
+    "featured_dishes": "Platos Destacados",
+    "top_chefs": "Mejores cocineros",
+    "new_chipchop": "¿Nuevo en Chip Chop? ¿Qué tal una sugerencia?",
     "deliver": "Repartidor",
     "settings": "Ajustes",
     "language": "Idioma",
