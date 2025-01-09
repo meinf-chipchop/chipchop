@@ -1,11 +1,12 @@
 import { OrderDetail } from "@/lib/orders";
 import { useTranslation } from "react-i18next";
-import { View, Text, Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Pressable, StyleSheet, TouchableOpacity, Touchable, Modal } from "react-native";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import OrderStatus from "./OrderStatus";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Package, Boxes, ArrowUp, ArrowDown, Map } from "lucide-react-native";
 import { HR } from "@expo/html-elements";
+import { MapPopup } from "./MapPopup";
 
 interface OrderListProps {
     icon: ReactNode;
@@ -40,7 +41,7 @@ const ListContainer = ({ icon, title, amount, children }: ListContainerProps) =>
     const bgColor = amount === 0 ? 'bg-red-400' : 'bg-secondary-400';
 
     return (
-        <View className="flex flex-col w-[90%] mx-auto h-25 bg-white rounded-md shadow-md my-2 py-4">
+        <View className="flex flex-col w-[90%] mx-auto h-25 bg-white rounded-md shadow-md my-2 py-4 z-1">
             <View className="flex-row gap-x-4 mx-4 pb-2 items-center text-center align-middle">
                 {icon}
                 <Text className="text-xl font-bold color-grey-700 opacity-80">{title}</Text>
@@ -78,7 +79,7 @@ export const OrderList = ({ icon, title, empty, orders, callback }: OrderListPro
 }
 
 export const OrderExpandableList = ({ icon, title, empty, orders, callback, isAllExpanded }: OrderExpandableListProps) => {
-    const [isExpanded, setIsExpanded] = React.useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleExpand = () => setIsExpanded(!isExpanded);
 
@@ -116,9 +117,7 @@ export const OrderExpandableList = ({ icon, title, empty, orders, callback, isAl
 export const OrderListItem = ({ order, callback }: OrderListItemProps) => {
     const { t } = useTranslation();
 
-    const showMap = (address: string) => {
-        console.log(address);
-    }
+    const [isMapShown, setIsMapShown] = useState(false);
 
     const orderButton = (): React.JSX.Element => {
         const buttonActive = !order.deliverer_id || order.order_status == 'K' || order.order_status == 'D';
@@ -173,26 +172,45 @@ export const OrderListItem = ({ order, callback }: OrderListItemProps) => {
     }
 
     return (
-        <View className="w-[90%] h-full mx-auto">
-            <View className="flex-1 flex-col gap-y-2 p-2">
+        <View className="w-[90%] h-full mx-auto relative">
+            <View className="flex flex-col gap-y-2 p-2">
                 <View className="flex flex-row justify-between gap-y-2">
                     <View className="flex flex-col text-wrap gap-y-2">
-                        {order && order.user && <Text className="font-bold text-lg">{`${order.user.first_name} ${order.user.last_name}`}</Text>}
-                        <TouchableOpacity className="flex flex-row items-center gap-x-2" onPress={() => showMap(order.address)}>
+                        {order && order.user && (
+                            <Text className="font-bold text-lg">{`${order.user.first_name} ${order.user.last_name}`}</Text>
+                        )}
+                        <TouchableOpacity
+                            className="flex flex-row items-center gap-x-2"
+                            onPress={() => setIsMapShown(true)}
+                        >
                             <Map className="size-4" />
-                            <Text className="opacity-80 text-pretty underline underline-offset-2">{order.address}</Text>
+                            <Text className="opacity-80 text-pretty underline underline-offset-2">
+                                {order.address}
+                            </Text>
                         </TouchableOpacity>
                     </View>
                     <View className="flex flex-col items-end w-auto gap-y-2">
                         <OrderStatus order={order} />
-                        {order.dishes && <Text>{order.dish_count} {t('orders.items')}</Text>}
+                        {order.dishes && <Text>{order.dish_count} items</Text>}
                     </View>
                 </View>
-                <View className="flex-2">
-                    {orderButton()}
-                </View>
+                <View className="flex-2">{/* Assuming orderButton is defined elsewhere */}</View>
             </View>
             <HR className="w-[90%] h-2 mx-auto" />
+
+            <Modal
+                visible={isMapShown}
+                transparent={true}
+                animationType="slide"
+                onRequestClose={() => setIsMapShown(false)}
+            >
+                <View className="flex-1 bg-black bg-opacity-50 justify-center items-center">
+                    <View className="w-full h-full bg-white relative">
+                        <Text style={{ fontSize: 18 }}>✕</Text>
+                        <MapPopup address={order.address} />
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };

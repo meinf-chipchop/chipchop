@@ -3,9 +3,15 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": ["./*", "./lib/*"],
-      "tailwind.config": ["./tailwind.config.js"]
-    }
+      "@/*": [
+        "./*",
+        "./lib/*"
+      ],
+      "tailwind.config": [
+        "./tailwind.config.js"
+      ]
+    },
+    "module": "esnext"
   },
   "include": [
     "**/*.ts",
