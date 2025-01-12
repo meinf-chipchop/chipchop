@@ -14,8 +14,9 @@ import {
   Pressable,
 } from "react-native";
 
+import { FontAwesome } from '@expo/vector-icons';
 import { Button as GoodButton, ButtonIcon } from "@/components/ui/button";
-import { Truck, ScrollText, Search } from "lucide-react-native";
+import { Truck, ScrollText, Search, MapPin, ChevronDown, Star } from "lucide-react-native";
 import { Me, me } from "@/lib/auth";
 import { useRouter } from "expo-router";
 import { useSession } from "@/context/authContext";
@@ -24,6 +25,8 @@ import CookList from "@/components/CooksList";
 import { t } from "i18next";
 import { Dish, getAllDishes } from "@/lib/dishes";
 import { DishCategory, getDishCategories } from "@/lib/dishCategories";
+
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -192,6 +195,19 @@ const Home = () => {
                 />
               </GoodButton>
             )}
+
+            {/* <GoodButton
+              className="pl-4 bg-[#415f63] rounded w-auto"
+              variant="link"
+              onPress={() => router.push("/rating")}
+            >
+              <ButtonIcon as={Star} size="md" color="white" className="w-auto pr-4" />
+            </GoodButton> */}
+
+
+
+
+
           </View>
         </Animated.View>
         <Animated.View

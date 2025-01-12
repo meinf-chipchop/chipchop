@@ -142,5 +142,21 @@
   },
   "scroll": {
     "to_top": "Volver arriba"
+  },
+  "rating_system": {
+    "title": "Valora tu experiencia",
+    "thank_you": "Gracias",
+    "close": "Cerrar",
+    "submit": "Enviar",
+    "sucess": "Éxito"
+
+  },
+  "rating_options": {
+    "select_option": "Selecciona una reseña",
+    "option_one_star": "Muy mala, necesita mejorar mucho",
+    "option_two_star": "Mala, hay mucho margen de mejora",
+    "option_three_star": "Regular, cumple con las expectativas básicas",
+    "option_four_star": "Buena, estoy satisfecho",
+    "option_five_star": "Excelente, superó mis expectativas!"
   }
 }

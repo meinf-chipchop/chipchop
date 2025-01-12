@@ -162,5 +162,20 @@
   },
   "scroll": {
     "to_top": "Back to top"
+  },
+  "rating_system": {
+    "title": "Rate your experience",
+    "thank_you": "Thank you",
+    "close": "Close",
+    "submit": "Submit",
+    "success": "Sucess"
+  },
+  "rating_options": {
+    "select_option": "Select a review",
+    "option_one_star": "Very bad, needs to improve a lot",
+    "option_two_star": "Poor, there is a lot of room for improvement",
+    "option_three_star": "Average, meets basic expectations",
+    "option_four_star": "Good, I'm satisfied",
+    "option_five_star": "Excellent, exceeded my expectations!"
   }
 }
