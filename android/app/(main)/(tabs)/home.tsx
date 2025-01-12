@@ -1,36 +1,47 @@
 import React, { useRef, useEffect, useState } from "react";
-import { SafeAreaView, View, Text, Image, TextInput, Button, StyleSheet, ScrollView, Dimensions, Animated } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  Image,
+  TextInput,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+  Animated,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
 import { Button as GoodButton, ButtonIcon } from '@/components/ui/button';
-import { Truck, ScrollText } from "lucide-react-native";
+import { Truck, ScrollText, Search, MapPin, ChevronDown, Star } from "lucide-react-native";
 import { Me, me } from '@/lib/auth';
 import { useRouter } from 'expo-router';
 import { useSession } from "@/context/authContext";
 import { CooksPage, getCooks } from '@/lib/cook';
 import CookList from '@/components/CooksList';
+import { t } from "i18next";
 
-const { width } = Dimensions.get("window");
+
+
+const { width, height } = Dimensions.get("window");
+
+const HEADER_MAX_HEIGHT = 200;
+const HEADER_MIN_HEIGHT = 60;
+const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 const Home = () => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scrollY = useRef(new Animated.Value(0)).current;
   const { user } = useSession();
   const router = useRouter();
-  const [cooks, setCooks] = React.useState<CooksPage>();
-  const [selfUser, setSelfUser] = React.useState<Me>();
+  const [cooks, setCooks] = useState<CooksPage>();
+  const [selfUser, setSelfUser] = useState<Me>();
 
   useEffect(() => {
     me()
       .then((res) => setSelfUser(res))
       .catch((error) => console.log(error));
   }, []);
-
-  useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-  }, [fadeAnim]);
 
   useEffect(() => {
     const fetchCooks = async () => {
@@ -40,108 +51,192 @@ const Home = () => {
     fetchCooks();
   }, []);
 
+  const headerHeight = scrollY.interpolate({
+    inputRange: [0, HEADER_SCROLL_DISTANCE],
+    outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
+    extrapolate: 'clamp',
+  });
+
+  const headerTitleOpacity = scrollY.interpolate({
+    inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+    outputRange: [0, 0, 1],
+    extrapolate: 'clamp',
+  });
+
+  const headerContentOpacity = scrollY.interpolate({
+    inputRange: [0, HEADER_SCROLL_DISTANCE / 2],
+    outputRange: [1, 0],
+    extrapolate: 'clamp',
+  });
+
+  const renderFeaturedDish = ({ item }: { item: any }) => (
+    <Animated.View
+      style={[styles.dishCard, {
+        transform: [{
+          scale: scrollY.interpolate({
+            inputRange: [0, 150],
+            outputRange: [1, 0.95],
+            extrapolate: 'clamp',
+          }),
+        }],
+      }]}
+    >
+      <Image source={{ uri: item.image }} style={styles.dishImage} />
+      <View style={styles.overlay}>
+        <Text style={styles.dishText}>{item.name}</Text>
+      </View>
+    </Animated.View>
+  );
+
+  const renderCategory = ({ item }: { item: any }) => (
+    <TouchableOpacity style={styles.categoryButton}>
+      <Text style={styles.categoryButtonText}>{item}</Text>
+    </TouchableOpacity>
+  );
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.header}>
+      <Animated.View style={[styles.header, { height: headerHeight, zIndex: 10 }]}>
+        <Animated.View style={[styles.headerContent, { opacity: headerContentOpacity }]}>
+
           <View style={styles.logoContainer}>
-            <View style={styles.logoBackground}>
+            <View style={[styles.logoBackground, { flexDirection: 'column', alignItems: 'flex-start' }]}>
               <Image
-                source={{ uri: "https://placehold.co/40x40" }}
+                source={require('../../../assets/images/adaptive-icon.png')}
                 style={styles.logo}
               />
+              <Text style={styles.titleApp}>Chip Chop</Text>
             </View>
-            <Text style={styles.title}>Chip Chop</Text>
           </View>
+
+
 
           <View style={styles.iconContainer}>
-            {selfUser?.role == 'C' && (< GoodButton
-              className="pl-4 bg-[#415f63] rounded w-auto"
-              variant="link"
-              onPress={() => router.push("/ordersCook")}
-            >
-              <ButtonIcon as={ScrollText} size="md" color="white" className="w-auto pr-4"></ButtonIcon>
-            </GoodButton>)
-            }
+            {selfUser?.role === 'C' && (
+              <GoodButton
+                className="pl-4 bg-[#415f63] rounded w-auto"
+                variant="link"
+                onPress={() => router.push("/ordersCook")}
+              >
+                <ButtonIcon as={ScrollText} size="md" color="white" className="w-auto pr-4" />
+              </GoodButton>
+            )}
+            {selfUser?.role === 'D' && (
+              <GoodButton
+                className="pl-4 bg-[#415f63] rounded w-auto"
+                variant="link"
+                onPress={() => router.push("/DelivererOrders")}
+              >
+                <ButtonIcon as={Truck} size="md" color="white" className="w-auto pr-4" />
+              </GoodButton>
+            )}
 
-            {selfUser?.role == 'D' && (< GoodButton
+            {/* <GoodButton
               className="pl-4 bg-[#415f63] rounded w-auto"
               variant="link"
-              onPress={() => router.push("/DelivererOrders")}
+              onPress={() => router.push("/rating")}
             >
-              <ButtonIcon as={Truck} size="md" color="white" className="w-auto pr-4" />
-            </GoodButton>)}
+              <ButtonIcon as={Star} size="md" color="white" className="w-auto pr-4" />
+            </GoodButton> */}
+
+
+
+
+
           </View>
-        </View>
+        </Animated.View>
+        <Animated.View style={[styles.headerTitle, { opacity: headerTitleOpacity }]}>
+          <Text style={styles.headerTitleText}>Chip Chop</Text>
+        </Animated.View>
+      </Animated.View>
 
+      <Animated.ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}
+      >
         <View style={styles.searchContainer}>
-          <View style={styles.searchBox}>
-            <FontAwesome name="search" size={20} color="gray" />
+          <View style={styles.locationBox}>
+            <Search size={20} color="gray" />
             <TextInput
-              placeholder="Search chef"
+              placeholder={t("labels.chef_search_field")}
               style={styles.searchInput}
             />
           </View>
-
-          <View style={styles.locationBox}>
-            <FontAwesome name="map" size={20} color="gray" />
+          {/* <View style={styles.locationBox}>
+            <MapPin size={20} color="gray" />
             <Text style={styles.locationText}>12530 Borriana, Castellón, Spain</Text>
-          </View>
-
-          <View style={styles.categoryBox}>
-            <Text style={styles.categoryText}>Categories</Text>
-            <FontAwesome name="chevron-down" size={20} />
-          </View>
-          <View style={styles.buttonContainer}>
-            <Button title="Barbeque" color="#966d35" />
-            <Button title="Breakfast" color="#966d35" />
-            <Button title="Dessert" color="#966d35" />
-          </View>
+          </View> */}
         </View>
-        <Text style={styles.featuredTitle}>Featured Dishes</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.featuredScroll}>
-          {[
+
+        <View style={styles.categoriesContainer}>
+          <View style={styles.categoryHeader}>
+            <Text style={styles.categoryHeaderText}>{t("labels.category")}</Text>
+          </View>
+          <FlatList
+            data={["All", "Barbeque", "Breakfast", "Dessert", "Vegan", "Italian"]}
+            renderItem={renderCategory}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoriesList}
+          />
+        </View>
+
+        <Text style={styles.sectionTitle}>{t("labels.featured_dishes")}</Text>
+        <FlatList
+          data={[
             { name: 'Grilled Chicken', image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg' },
             { name: 'Pepperoni Pizza', image: 'https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg' },
             { name: 'Cheeseburger', image: 'https://images.pexels.com/photos/1639567/pexels-photo-1639567.jpeg' },
-            { name: 'Caesar Salad', image: 'https://images.pexels.com/photos/27603332/pexels-photo-27603332/free-photo-of-salad-with-shrimp-and-tomatoes.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
-            { name: 'Chocolate Cake', image: 'https://images.pexels.com/photos/4109998/pexels-photo-4109998.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' }
-          ].map((dish, index) => (
-            <View key={index} style={styles.dishCard}>
-              <Image source={{ uri: dish.image }} style={styles.dishImage} />
-              <View style={styles.overlay}>
-                <Text style={styles.dishText}>{dish.name}</Text>
-              </View>
-            </View>
-          ))}
-        </ScrollView>
+            { name: 'Caesar Salad', image: 'https://images.pexels.com/photos/27603332/pexels-photo-27603332/free-photo-of-salad-with-shrimp-and-tomatoes.jpeg' },
+            { name: 'Chocolate Cake', image: 'https://images.pexels.com/photos/4109998/pexels-photo-4109998.jpeg' }
+          ]}
+          renderItem={renderFeaturedDish}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.featuredScroll}
+        />
 
-        <Text style={styles.chefsTitle}>Top Chefs</Text>
+        <Text style={styles.sectionTitle}>{t("labels.top_chefs")}</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chefsScroll}>
           {cooks && <CookList cooks={cooks} />}
         </ScrollView>
 
-
-        <Animated.View style={{ opacity: fadeAnim }}>
-          <Text style={styles.chipChopTitle}>New On Chip Chop</Text>
-          <View style={styles.chipChopContainer}>
-            {[
-              { name: 'Spaghetti Carbonara', image: 'https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg' },
-              { name: 'Tacos', image: 'https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg' },
-              { name: 'Sushi', image: 'https://images.pexels.com/photos/357756/pexels-photo-357756.jpeg' },
-              { name: 'Pancakes', image: 'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg' },
-              { name: 'Ice Cream', image: 'https://images.pexels.com/photos/3311075/pexels-photo-3311075.jpeg' }
-            ].map((dish, index) => (
-              <View key={index} style={styles.dishCardVertical}>
-                <Image source={{ uri: dish.image }} style={styles.dishImage} />
-                <View style={styles.overlay}>
-                  <Text style={styles.dishText}>{dish.name}</Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        </Animated.View>
-      </ScrollView>
+        <Text style={styles.sectionSubTitle}>{t("labels.new_chipchop")}</Text>
+        <View style={styles.newDishesContainer}>
+          {[
+            { name: 'Spaghetti Carbonara', image: 'https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg' },
+            { name: 'Tacos', image: 'https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg' },
+            { name: 'Sushi', image: 'https://images.pexels.com/photos/357756/pexels-photo-357756.jpeg' },
+            { name: 'Pancakes', image: 'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg' },
+            { name: 'Ice Cream', image: 'https://images.pexels.com/photos/3311075/pexels-photo-3311075.jpeg' }
+          ].map((dish, index) => (
+            <Animated.View
+              key={index}
+              style={[styles.newDishCard, {
+                transform: [{
+                  translateY: scrollY.interpolate({
+                    inputRange: [0, 400 + index * 100],
+                    outputRange: [100, 0],
+                    extrapolate: 'clamp',
+                  }),
+                }],
+                opacity: scrollY.interpolate({
+                  inputRange: [0, 400 + index * 100],
+                  outputRange: [0, 1],
+                  extrapolate: 'clamp',
+                }),
+              }]}
+            >
+              <Image source={{ uri: dish.image }} style={styles.newDishImage} />
+              <Text style={styles.newDishText}>{dish.name}</Text>
+            </Animated.View>
+          ))}
+        </View>
+      </Animated.ScrollView>
     </SafeAreaView>
   );
 };
@@ -151,43 +246,68 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f5f5f5",
   },
-  scrollContainer: {
-    alignItems: "center",
-    padding: 16,
-    paddingBottom: 80, // Add bottom padding to ensure space from the tab bar
-  },
-  container: {
-    flex: 1,
-    alignItems: "center",
-    padding: 16,
-    backgroundColor: "#f5f5f5",
-  },
   header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-    maxWidth: 400,
-    paddingVertical: 10,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    overflow: 'hidden',
+    elevation: 4,
+    zIndex: 10, // Garante que o cabeçalho fique acima
   },
+
+  headerContent: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+  },
+  headerTitle: {
+    position: 'absolute',
+    bottom: 16,
+    left: 16,
+    right: 16,
+  },
+  headerTitleText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  scrollContainer: {
+    paddingTop: HEADER_MAX_HEIGHT,
+    paddingBottom: 80,
+  },
+
+
   logoContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
   logoBackground: {
-    backgroundColor: "#966d35",
     padding: 8,
     borderRadius: 8,
     marginRight: 8,
   },
   logo: {
-    width: 40,
-    height: 40,
+    width: 80,
+    height: 80,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     color: "#333",
+  },
+
+  titleApp: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#000",
   },
   iconContainer: {
     flexDirection: "row",
@@ -196,26 +316,18 @@ const styles = StyleSheet.create({
     gap: 5,
   },
 
-  icon: {
-    color: "#e3d6ab",
-  },
-  iconText: {
-    color: "#e3d6ab",
-  },
   searchContainer: {
     marginTop: 16,
-    width: "100%",
-    maxWidth: 400,
     paddingHorizontal: 16,
   },
   searchBox: {
-    color: "gray",
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#dfe1d5",
-    padding: 10,
+    backgroundColor: "#fff",
+    padding: 12,
     borderRadius: 8,
     marginBottom: 8,
+    elevation: 2,
   },
   searchInput: {
     marginLeft: 8,
@@ -225,138 +337,117 @@ const styles = StyleSheet.create({
   locationBox: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#dfe1d5",
-    padding: 10,
+    backgroundColor: "#fff",
+    padding: 12,
     borderRadius: 8,
     marginBottom: 8,
+    elevation: 2,
   },
   locationText: {
     marginLeft: 8,
     color: "gray",
-    fontSize: 16,
+    fontSize: 14,
   },
-  categoryBox: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#966d35",
-    padding: 10,
-    borderRadius: 8,
+  categoriesContainer: {
+    marginTop: 16,
+    paddingHorizontal: 16,
+  },
+  categoryHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 8,
   },
-  categoryText: {
-    color: "#fff",
-    fontSize: 16,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-  },
-  featuredTitle: {
-    marginTop: 16,
+  categoryHeaderText: {
     fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  categoriesList: {
+    paddingVertical: 8,
+  },
+  categoryButton: {
+    backgroundColor: '#966d35',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginRight: 8,
+  },
+  categoryButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  sectionTitle: {
+    marginTop: 30,
+    marginBottom: 6,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#333",
-    alignSelf: "flex-start",
     paddingHorizontal: 16,
   },
+
+  sectionSubTitle: {
+    marginTop: 40,
+    marginBottom: 20,
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+    paddingHorizontal: 16,
+  },
+
   featuredScroll: {
-    marginTop: 8,
     paddingHorizontal: 16,
   },
   dishCard: {
     marginRight: 16,
-    width: width * 0.7, // 70% of the screen width
-    height: width * 0.4, // Make it square by setting height equal to width
+    width: width * 0.7,
+    height: width * 0.4,
     borderRadius: 8,
     overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-    borderWidth: 1, // Add border width
-    borderColor: "#966d35", // Set border color
+    elevation: 4,
   },
   dishImage: {
     width: "100%",
     height: "100%",
   },
   overlay: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    padding: 10,
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    justifyContent: 'flex-end',
+    padding: 16,
   },
   dishText: {
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: 'bold',
     color: "#fff",
-    textAlign: "center",
-  },
-  chipChopTitle: {
-    marginTop: 16,
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#415f63", // Change color to #415f63
-    textAlign: "center", // Center the title
-    paddingHorizontal: 16,
-    paddingBottom: 16, // Add bottom padding
-  },
-  chipChopContainer: {
-    width: "100%",
-    alignItems: "center",
-  },
-  dishCardVertical: {
-    marginBottom: 16,
-    width: width * 0.9, // 90% of the screen width for vertical layout
-    height: width * 0.5, // Adjust height for vertical layout
-    borderRadius: 8,
-    overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-    borderWidth: 1,
-    borderColor: "#966d35",
-  },
-  chipChopScroll: {
-    marginTop: 8,
-    paddingHorizontal: 16,
-  },
-  chefsTitle: {
-    marginTop: 16,
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-    alignSelf: "flex-start",
-    paddingHorizontal: 16,
   },
   chefsScroll: {
-    marginTop: 8,
     paddingHorizontal: 16,
   },
-  chefCard: {
-    marginRight: 16,
-    width: 100,
-    alignItems: "center",
+  newDishesContainer: {
+    paddingHorizontal: 16,
   },
-  chefImage: {
+  newDishCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginBottom: 16,
+    elevation: 2,
+    overflow: 'hidden',
+  },
+  newDishImage: {
     width: 80,
     height: 80,
-    borderRadius: 40,
-    marginBottom: 8,
-    borderWidth: 1, // Add border width
-    borderColor: "#966d35", // Set border color
   },
-  chefText: {
-    fontSize: 14,
-    color: "#333",
-    textAlign: "center",
+  newDishText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: 'bold',
+    paddingHorizontal: 16,
+    color: '#333',
   },
 });
 
 export default Home;
+

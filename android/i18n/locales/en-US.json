@@ -13,6 +13,10 @@
     "cart": "Cart",
     "cook": "Cook",
     "chef": "Chef",
+    "chef_search_field": "Search for dishes or chefs",
+    "featured_dishes": "Featured Dishes",
+    "top_chefs": "Top chefs",
+    "new_chipchop": "New to Chip chop ? How about a suggestion",
     "deliver": "Deliver",
     "settings": "Settings",
     "language": "Language",
@@ -106,7 +110,9 @@
     "assigned": "Assigned orders",
     "no_assigned_orders": "You have no orders assigned yet",
     "unassigned": "Unassigned orders",
+    "finished": "Delivered orders",
     "no_unassigned_orders": "There are no orders yet",
+    "no_finished_orders": "You have not delivered any orders yet",
     "waiting_cook": "Waiting for cook to finish",
     "waiting_deliverer": "Pickup",
     "no_picked_up_orders": "You have not picked up any orders yet",
@@ -153,5 +159,23 @@
     "order_details": "Order Details",
     "order_positive_feedback": "Order status updated successfully",
     "order_negative_feedback": "Failed to update order status"
+  },
+  "scroll": {
+    "to_top": "Back to top"
+  },
+  "rating_system": {
+    "title": "Rate your experience",
+    "thank_you": "Thank you",
+    "close": "Close",
+    "submit": "Submit",
+    "success": "Sucess"
+  },
+  "rating_options": {
+    "select_option": "Select a review",
+    "option_one_star": "Very bad, needs to improve a lot",
+    "option_two_star": "Poor, there is a lot of room for improvement",
+    "option_three_star": "Average, meets basic expectations",
+    "option_four_star": "Good, I'm satisfied",
+    "option_five_star": "Excellent, exceeded my expectations!"
   }
 }

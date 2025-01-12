@@ -10,6 +10,10 @@
   },
   "labels": {
     "chef": "Chef",
+    "chef_search_field": "Buscar platos o chefs",
+    "featured_dishes": "Platos Destacados",
+    "top_chefs": "Mejores cocineros",
+    "new_chipchop": "¿Nuevo en Chip Chop? ¿Qué tal una sugerencia?",
     "deliver": "Repartidor",
     "settings": "Ajustes",
     "language": "Idioma",
@@ -83,13 +87,15 @@
     "items": "artículo(s)",
     "mark_pickup": "Marcar como recogido",
     "assign_deliverer": "Asignarme como repartidor",
-    "assigned": "Órdenes asignadas",
-    "no_assigned_orders": "Todavía no te has asignado órdenes",
-    "unassigned": "Órdenes sin asignar",
-    "no_unassigned_orders": "Todavía no hay órdenes",
+    "assigned": "Pedidos asignados",
+    "no_assigned_orders": "Todavía no te has asignado pedidos",
+    "unassigned": "Pedidos sin asignar",
+    "finished": "Pedidos finalizados",
+    "no_unassigned_orders": "Todavía no hay pedidos",
+    "no_finished_orders": "Todavía no has hecho pedidos",
     "waiting_cook": "Esperando al chef",
     "waiting_deliverer": "Recoger",
-    "no_picked_up_orders": "Todavía no has recogido órdenes",
+    "no_picked_up_orders": "Todavía no has recogido pedidos",
     "delivered": "Marcar como entregado"
   },
   "order_status": {
@@ -122,12 +128,10 @@
     "Finished": "F",
     "Missing": "M"
   },
-
   "order_type_description": {
     "Delivery": "D",
     "Pickup": "P"
   },
-
   "order_text": {
     "order_title": "Orden",
     "order_status": "Orden Status",
@@ -135,5 +139,24 @@
     "order_details": "Detalles del pedido",
     "order_positive_feedback": "Estado del pedido actualizado con éxito",
     "order_negative_feedback": "No se pudo actualizar el estado del pedido"
+  },
+  "scroll": {
+    "to_top": "Volver arriba"
+  },
+  "rating_system": {
+    "title": "Valora tu experiencia",
+    "thank_you": "Gracias",
+    "close": "Cerrar",
+    "submit": "Enviar",
+    "sucess": "Éxito"
+
+  },
+  "rating_options": {
+    "select_option": "Selecciona una reseña",
+    "option_one_star": "Muy mala, necesita mejorar mucho",
+    "option_two_star": "Mala, hay mucho margen de mejora",
+    "option_three_star": "Regular, cumple con las expectativas básicas",
+    "option_four_star": "Buena, estoy satisfecho",
+    "option_five_star": "Excelente, superó mis expectativas!"
   }
 }

@@ -1,37 +1,36 @@
-import { me, Me } from "@/lib/auth";
-import { acceptOrder, getFullOrders, Order, updateStatus } from "@/lib/orders";
+import { me, Me, register } from "@/lib/auth";
+import { acceptOrder, getOrdersDetailed, OrderDetail, updateStatus } from "@/lib/orders";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Animated, View, Text, Pressable, Button } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { OrderListItem } from "@/components/OrderListItem";
-import { HR } from "@expo/html-elements";
+import { OrderExpandableList, OrderList } from "@/components/OrderListItem";
 import { Stack, useRouter } from "expo-router";
 import { ButtonIcon, Button as GoodButton } from "@/components/ui/button";
 import { ChevronLeftIcon } from "@/components/ui/icon";
 import React from "react";
+import { ArrowDownUp, ChevronUpIcon, CircleCheck, CircleCheckBig, Package, Truck } from "lucide-react-native";
+import { TouchableOpacity, Text, View, StyleSheet, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 
 const DelivererOrders = () => {
-    const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity value of 0
 
     const router = useRouter();
     const { t } = useTranslation();
 
     const [selfUser, setSelfUser] = useState<Me>();
-    const [orders, setOrders] = useState<Order[]>();
-    const [pickedUpOrders, setPickedUpOrders] = useState<Order[]>();
-    const [assignedOrders, setAssignedOrders] = useState<Order[]>();
-    const [freeOrders, setFreeOrders] = useState<Order[]>();
+    const [orders, setOrders] = useState<OrderDetail[]>();
+    const [pickedUpOrders, setPickedUpOrders] = useState<OrderDetail[]>();
+    const [assignedOrders, setAssignedOrders] = useState<OrderDetail[]>();
+    const [freeOrders, setFreeOrders] = useState<OrderDetail[]>();
+    const [finishedOrders, setFinishedOrders] = useState<OrderDetail[]>();
 
-    const notFinished = (order: Order) => { return order.order_status !== 'F' };
+    const [isEnabledScrollToTop, setIsEnabledScrollToTop] = useState(false);
+    const [isAllExpanded, setIsAllExpanded] = useState(false);
 
-    useEffect(() => {
-        Animated.timing(fadeAnim, {
-            toValue: 1, // Animate to opacity value of 1
-            duration: 1000, // Duration of the animation
-            useNativeDriver: true, // Use native driver for better performance
-        }).start();
-    }, [fadeAnim]);
+    const scrollRef = useRef<ScrollView>(null);
+
+    const scrollToTop = () => {
+        scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+    }
 
     useEffect(() => {
         const fetchSelfUser = async () => {
@@ -43,11 +42,7 @@ const DelivererOrders = () => {
     }, []);
 
     useEffect(() => {
-        setPickedUpOrders(orders?.filter((order) => order.deliverer_id === selfUser?.id && order.order_status === 'D'));
-    }, [orders, selfUser]);
-
-    useEffect(() => {
-        const assignedOrders = orders?.filter((order) => order.deliverer_id === selfUser?.id && notFinished(order));
+        const assignedOrders = orders?.filter((order) => order.deliverer_id === selfUser?.id && order.order_status !== 'D' && order.order_status !== 'F');
         // Sort by cooked and then the rest
         assignedOrders?.sort((a, b) => {
             if (a.order_status === 'K' && b.order_status !== 'K') {
@@ -59,46 +54,51 @@ const DelivererOrders = () => {
             }
         });
         setAssignedOrders(assignedOrders);
-    }, [orders, selfUser]);
+    }, [orders]);
 
     useEffect(() => {
-        setFreeOrders(orders?.filter((order) => !order.deliverer && notFinished(order)));
+        setPickedUpOrders(orders?.filter((order) => order.deliverer_id === selfUser?.id && order.order_status === 'D'));
+        setFinishedOrders(orders?.filter((order) => order.deliverer_id === selfUser?.id && order.order_status === 'F'));
+        setFreeOrders(orders?.filter((order) => !order.deliverer && order.order_status !== 'F'));
     }, [orders]);
 
     useEffect(() => {
         const fetchOrders = async () => {
-            setOrders(await getFullOrders());
+            setOrders(await getOrdersDetailed());
         }
         fetchOrders();
-    }, []);
+    }, [selfUser]);
 
-    // Could be abstracted, but won't :))
-    const assignOrder = async (orderId: number) => {
-        freeOrders?.filter((order) => order.id === orderId).map(async (order) => {
-            acceptOrder(order.id, selfUser!).then(res => {
+    // Could be abstracted
+    const assignOrder = async (o: OrderDetail) => {
+        freeOrders?.filter((order) => order.id === o.id).map(async (order) => {
+            acceptOrder(order.id).then(res => {
                 if (!res) return;
                 order.deliverer_id = selfUser!.id;
                 const newAssigned = assignedOrders ? [...assignedOrders, order] : [order];
-                const newFree = freeOrders?.filter((order) => order.id !== orderId);
+                const newFree = freeOrders?.filter((order) => order.id !== o.id);
                 setAssignedOrders(newAssigned);
                 setFreeOrders(newFree);
             });
         });
     }
 
-    const pickUpOrder = async (order: Order) => {
+    const pickUpOrder = async (order: OrderDetail) => {
         const state = newState(order.order_status);
-        updateStatus(order, state).then((newOrder) => {
-            const newPickedUp = pickedUpOrders ? [...pickedUpOrders, newOrder] : [newOrder];
+        updateStatus(order, state).then((new_status) => {
+            order.order_status = new_status.order_status;
+            const newPickedUp = pickedUpOrders ? [...pickedUpOrders, order] : [order];
             setPickedUpOrders(newPickedUp);
-            setAssignedOrders(assignedOrders?.filter((o) => o.id !== newOrder.id));
+            setAssignedOrders(assignedOrders?.filter((o) => o.id !== order.id));
         });
     }
 
-    const finishOrder = async (order: Order) => {
+    const finishOrder = async (order: OrderDetail) => {
         const state = newState(order.order_status);
-        updateStatus(order, state).then((newOrder) => {
-            setPickedUpOrders(pickedUpOrders?.filter((o) => o.id !== newOrder.id));
+        updateStatus(order, state).then((new_status) => {
+            order.order_status = new_status.order_status;
+            setPickedUpOrders(pickedUpOrders?.filter((o) => o.id !== order.id));
+            setFinishedOrders(finishedOrders ? [...finishedOrders, order] : [order]);
         });
     }
 
@@ -121,7 +121,7 @@ const DelivererOrders = () => {
                     headerTitle: t("orders.title"),
                     headerLeft: () => (
                         <GoodButton
-                            className="pl-4"
+                            className="px-4"
                             variant="link"
                             onPress={() => router.back()}
                         >
@@ -131,60 +131,33 @@ const DelivererOrders = () => {
                 }}
             />
 
-            {/* This could be refactored into a more general component */}
-            <ScrollView className="bg-general-500 flex-1 w-full pb-40">
-                <View className="my-4 items-center flex flex-col gap-y-2 w-full">
-                    <Text className="text-3xl my-4">{t('orders.picked_up_title')}</Text>
-                    {pickedUpOrders && pickedUpOrders.length > 0
-                        ? (pickedUpOrders.map((order, index) => (
-                            <View key={"pickedup-" + index} className="w-full">
-                                <HR className="pt-2" />
-                                <Pressable key={"press-" + index}>
-                                    <OrderListItem key={"order-" + index} order={order} callback={() => finishOrder(order)}></OrderListItem>
-                                </Pressable>
-                            </View>)
-                        )) : (
-                            <View className="w-75 h-25 items-center">
-                                <Text className="text-md italic">{t('orders.no_picked_up_orders')}</Text>
-                            </View>
-                        )}
-                </View>
-
-                <View className="my-4 items-center flex flex-col gap-y-2 w-full">
-                    <Text className="text-3xl my-4">{t("orders.assigned")}</Text>
-                    {assignedOrders && assignedOrders.length > 0
-                        ? (assignedOrders.map((order, index) => (
-                            <View key={"assigned-" + index} className="w-full">
-                                <HR className="pt-2" />
-                                <Pressable key={"press-" + index}>
-                                    <OrderListItem key={"order-" + index} order={order} callback={() => pickUpOrder(order)}></OrderListItem>
-                                </Pressable>
-                            </View>)
-                        )) : (
-                            <View className="w-75 h-25 items-center">
-                                <Text className="text-md italic">{t('orders.no_assigned_orders')}</Text>
-                            </View>
-                        )}
-                </View>
-                <View className="px-4 items-center pb-50 w-full">
-                    <Text className="text-3xl my-4">{t("orders.unassigned")}</Text>
-                    {freeOrders && freeOrders.length > 0
-                        ? (freeOrders.map((order, index) => (
-                            <View key={"free-" + index} className="w-full">
-                                <HR className="pt-2" />
-                                <Pressable key={"press-" + index}>
-                                    <OrderListItem key={"order-" + index} order={order} callback={() => assignOrder(order.id)}></OrderListItem>
-                                </Pressable>
-                            </View>)
-                        )) : (
-                            <View className="w-75 h-25 items-center">
-                                <Text className="text-md italic">{t('orders.no_unassigned_orders')}</Text>
-                            </View>
-                        )}
-                </View>
+            <ScrollView ref={scrollRef} className="flex flex-col w-full pb-40">
+                <OrderList icon={<Truck color="green" />} title={t("orders.picked_up_title")} empty={t("orders.no_picked_up_orders")} orders={pickedUpOrders} callback={finishOrder} />
+                <OrderList icon={<Package color="blue" />} title={t("orders.assigned")} empty={t("orders.no_assigned_orders")} orders={assignedOrders} callback={pickUpOrder} />
+                <OrderExpandableList icon={<CircleCheckBig color="orange" />} title={t("orders.unassigned")} empty={t("orders.no_unassigned_orders")} orders={freeOrders} callback={assignOrder} isAllExpanded={isAllExpanded} />
+                <OrderExpandableList icon={<CircleCheck color="gray" />} title={t("orders.finished")} empty={t("orders.no_finished_orders")} orders={finishedOrders} isAllExpanded={isAllExpanded} />
             </ScrollView>
+            <View className="absolute w-full items-center flex flex-row justify-center bottom-0 mb-10 gap-x-2">
+                <TouchableOpacity onPress={() => setIsAllExpanded(!isAllExpanded)} className="p-2 shadow-md flex flex-row items-center gap-x-2 bg-primary-300 rounded-lg">
+                    <ArrowDownUp color="white" width={24} height={24} className="drop-shadow-lg" />
+                </TouchableOpacity>
+                <View className={`transition-opacity duration-300 opacity-${isEnabledScrollToTop ? 100 : 0}`}>
+                    <TouchableOpacity onPress={scrollToTop} className="p-2 shadow-md flex flex-row items-center gap-x-2 bg-primary-300 rounded-lg">
+                        <ChevronUpIcon color="white" width={24} height={24} className="drop-shadow-lg" />
+                        <Text className="font-semibold text-white" style={styles.shadowedText}>{t('scroll.to_top')}</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         </>
     );
 }
+
+const styles = StyleSheet.create({
+    shadowedText: {
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: 0, height: 0 },
+        textShadowRadius: 5,
+    },
+})
 
 export default DelivererOrders;
