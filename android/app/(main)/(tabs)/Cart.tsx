@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   ScrollView,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
 } from "react-native";
 import { useCart } from "@/context/cartContext";
@@ -12,17 +11,62 @@ import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import CartItem from "@/components/CartItem";
 import { useGlobalToast } from "@/hooks/Toast";
+import { OrderType, newOrder } from "@/lib/orders";
+import { Colors } from "@/constants/Colors";
+import { Address, formatAddress, getAddresses } from "@/lib/users";
+import {
+  Select,
+  SelectBackdrop,
+  SelectContent,
+  SelectDragIndicator,
+  SelectDragIndicatorWrapper,
+  SelectIcon,
+  SelectInput,
+  SelectItem,
+  SelectPortal,
+  SelectTrigger,
+} from "@/components/ui/select";
+import { ChevronDownIcon } from "lucide-react-native";
 
 const Cart = () => {
   // TODO: use translations for literals
   // FIXME: Check dish prices. Why can be null
   const { t } = useTranslation();
   const { cart, addItem, removeItem, clearCart } = useCart();
-  const [userAddress, setUserAddress] = useState("Lleida 25001 5 15");
-  const [deliveryMethod, setDeliveryMethod] = useState("delivery");
+  const [selectedAddress, setSelecedAddress] = useState<Address>();
+  const [allAddresses, setAllAddress] = useState<Address[]>();
+  const [deliveryMethod, setDeliveryMethod] = useState<OrderType>("D");
   const [paymentMethod, setPaymentMethod] = useState("card");
+  const [error, setError] = useState("");
 
   const { handleToast } = useGlobalToast();
+
+  useEffect(() => {
+    getAddresses().then((address: Address[]) => {
+      if (address.length === 0) {
+        setAllAddress([
+          {
+            url: "https://chipchop.mooo.com/api/adresses/6/",
+            user: "",
+            street: "1234 Main St",
+            city: "Springfield",
+            zip_code: 12345,
+            country_iso2: "US",
+          },
+          {
+            url: "https://chipchop.mooo.com/api/adresses/6/",
+            user: "",
+            street: "5678 Elm St",
+            city: "Shelbyville",
+            zip_code: 54321,
+            country_iso2: "US",
+          },
+        ]);
+      } else {
+        setAllAddress(address);
+      }
+    });
+  }, []);
 
   const handleQuantityChange = (id: number, delta: number) => {
     const item = cart.find((item) => item.id === id);
@@ -69,11 +113,11 @@ const Cart = () => {
           <View style={styles.radioGroup}>
             <TouchableOpacity
               style={styles.radioButton}
-              onPress={() => setDeliveryMethod("delivery")}
+              onPress={() => setDeliveryMethod("D")}
             >
               <View
                 style={
-                  deliveryMethod === "delivery"
+                  deliveryMethod === "D"
                     ? styles.radioSelected
                     : styles.radioUnselected
                 }
@@ -82,11 +126,11 @@ const Cart = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.radioButton}
-              onPress={() => setDeliveryMethod("pickup")}
+              onPress={() => setDeliveryMethod("P")}
             >
               <View
                 style={
-                  deliveryMethod === "pickup"
+                  deliveryMethod === "P"
                     ? styles.radioSelected
                     : styles.radioUnselected
                 }
@@ -135,7 +179,7 @@ const Cart = () => {
             <Text style={styles.text}>Discount</Text>
             <Text style={styles.text}>$0.0</Text>
           </View>
-          {deliveryMethod === "delivery" && (
+          {deliveryMethod === "D" && (
             <View style={styles.summaryRow}>
               <Text style={styles.text}>Delivery Fees</Text>
               <Text style={styles.text}>${deliveryFees.toFixed(2)}</Text>
@@ -146,29 +190,69 @@ const Cart = () => {
             <Text style={styles.boldText}>
               $
               {(
-                totalAmount + (deliveryMethod === "delivery" ? deliveryFees : 0)
+                totalAmount + (deliveryMethod === "D" ? deliveryFees : 0)
               ).toFixed(2)}
             </Text>
           </View>
           <View style={styles.addressContainer}>
             <Text style={styles.text}>Address</Text>
             <View style={styles.addressRow}>
-              <TextInput
+              <Select
+                initialLabel={"Select an address"}
+                selectedValue={formatAddress(selectedAddress)}
+                onValueChange={(value) => {
+                  console.log(value);
+                  setSelecedAddress(
+                    allAddresses?.find(
+                      (address) => formatAddress(address) === value
+                    )
+                  );
+                  console.log(selectedAddress);
+                }}
                 style={styles.addressInput}
-                value={userAddress}
-                editable={false}
-                onChangeText={setUserAddress}
-                placeholder="No address"
-              />
+              >
+                <SelectTrigger variant="rounded">
+                  <SelectInput placeholder="Select an address" />
+                  <SelectIcon as={ChevronDownIcon} className="mr-3" />
+                </SelectTrigger>
+                <SelectPortal>
+                  <SelectBackdrop />
+                  <SelectContent>
+                    <SelectDragIndicatorWrapper>
+                      <SelectDragIndicator />
+                    </SelectDragIndicatorWrapper>
+                    {allAddresses?.map((address: Address) => (
+                      <SelectItem
+                        key={address.street}
+                        label={formatAddress(address)}
+                        value={formatAddress(address)}
+                      />
+                    ))}
+                  </SelectContent>
+                </SelectPortal>
+              </Select>
             </View>
           </View>
         </View>
         <TouchableOpacity
           style={styles.confirmButton}
           onPress={() => {
-            clearCart();
-            handleToast("Order on the way!", "", "success");
-            router.push("/home");
+            newOrder({
+              url: "",
+              order_type: "P",
+              address: selectedAddress,
+              cartItems: cart,
+            })
+              .then(() => {
+                setError("");
+                clearCart();
+                handleToast("Order on the way!", "", "success");
+                router.push("/home");
+              })
+              .catch((e) => {
+                console.log(e);
+                setError(e);
+              });
           }}
         >
           <Text style={styles.buttonText}>Confirm Order</Text>
@@ -183,16 +267,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     padding: 16,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  headerText: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#966d35",
   },
   deliveryMethod: {
     flexDirection: "row",
@@ -234,7 +308,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   confirmButton: {
-    backgroundColor: "#966d35",
+    backgroundColor: Colors.chestnut[400],
     paddingVertical: 16,
     borderRadius: 8,
     marginTop: 16,
@@ -258,7 +332,7 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: "#966d35",
+    backgroundColor: Colors.chestnut[400],
     marginRight: 8,
   },
   radioUnselected: {
@@ -266,7 +340,7 @@ const styles = StyleSheet.create({
     height: 16,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#966d35",
+    borderColor: Colors.chestnut[400],
     marginRight: 8,
   },
   addressContainer: {
@@ -278,12 +352,7 @@ const styles = StyleSheet.create({
   },
   addressInput: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
     padding: 8,
-    fontSize: 16,
-    color: "#333",
   },
   editIcon: {
     marginLeft: 8,
