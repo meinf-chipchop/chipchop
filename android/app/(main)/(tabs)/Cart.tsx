@@ -26,11 +26,12 @@ import {
   SelectPortal,
   SelectTrigger,
 } from "@/components/ui/select";
-import { ChevronDownIcon } from "lucide-react-native";
+import { ChevronDownIcon, ShoppingBasket } from "lucide-react-native";
+import { VStack } from "@/components/ui/vstack";
+import { Center } from "@/components/ui/center";
+import { Button, ButtonText } from "@/components/ui/button";
 
 const Cart = () => {
-  // TODO: use translations for literals
-  // FIXME: Check dish prices. Why can be null
   const { t } = useTranslation();
   const { cart, addItem, removeItem, clearCart } = useCart();
   const [selectedAddress, setSelecedAddress] = useState<Address>();
@@ -92,6 +93,30 @@ const Cart = () => {
     0
   );
   const deliveryFees = 5.0;
+
+  if (cart.length === 0) {
+    return (
+      <View className="flex-1 flex-grow w-full items-center justify-center">
+        <VStack className="justify-items-center" space="xl">
+          <Center>
+            <ShoppingBasket size={128} color={Colors.botticelli[300]} />
+            <Text className="text-lg color-primary-500 py-8">
+              {t("cart.empty_cart")}
+            </Text>
+            <Button
+              className="rounded-full p-6 bg-primary-500"
+              variant="solid"
+              onPress={() => {
+                router.push("/home");
+              }}
+            >
+              <ButtonText>{t("cart.find_delicious") + " 👈"}</ButtonText>
+            </Button>
+          </Center>
+        </VStack>
+      </View>
+    );
+  }
 
   return (
     <>
@@ -239,7 +264,7 @@ const Cart = () => {
           onPress={() => {
             newOrder({
               url: "",
-              order_type: "P",
+              order_type: deliveryMethod,
               address: selectedAddress,
               cartItems: cart,
             })

@@ -6,42 +6,49 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  Dimensions,
   Animated,
-  LayoutAnimation,
   Platform,
   UIManager,
   Modal,
-  Alert
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { Order, getOrdersWithDishesAndUser, updateOrderStatus } from "@/lib/orders";
+import {
+  OrderDetailWithDishes,
+  OrderDishesFullDetail,
+  OrderStatus,
+  getOrderHistory,
+  updateOrderStatus,
+} from "@/lib/orders";
 import { useTranslation } from "react-i18next";
 import { Picker } from "@react-native-picker/picker";
 
-const { width } = Dimensions.get("window");
-
 // Enable LayoutAnimation for Android
-if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
 const OrdersCook = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [orders, setOrders] = useState<OrderDetailWithDishes[]>([]);
+  const [selectedOrder, setSelectedOrder] =
+    useState<OrderDetailWithDishes | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const [statusUpdateModal, setStatusUpdateModal] = useState({ visible: false, success: false, message: "" });
-
+  const [selectedStatus, setSelectedStatus] = useState<OrderStatus>();
+  const [statusUpdateModal, setStatusUpdateModal] = useState({
+    visible: false,
+    success: false,
+    message: "",
+  });
 
   const { t } = useTranslation();
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const ordersResponse = await getOrdersWithDishesAndUser();
+        const ordersResponse = await getOrderHistory();
         setOrders(ordersResponse);
         // console.log(ordersResponse)
       } catch (error) {
@@ -60,7 +67,7 @@ const OrdersCook = () => {
     }).start();
   }, [fadeAnim]);
 
-  const openOrderDetails = (order: Order) => {
+  const openOrderDetails = (order: OrderDetailWithDishes) => {
     setSelectedOrder(order);
     setSelectedStatus(order.order_status);
     setModalVisible(true);
@@ -76,14 +83,13 @@ const OrdersCook = () => {
     setTimeout(() => {
       setStatusUpdateModal({ visible: false, success: false, message: "" });
       setModalVisible(false);
-
     }, 1200);
   };
 
-  const changeOrderStatus = async (orderId: number, newStatus: string) => {
+  const changeOrderStatus = async (orderId: number, newStatus: OrderStatus) => {
     try {
       await updateOrderStatus(orderId, newStatus.toUpperCase());
-      const updatedOrders = orders.map(order =>
+      const updatedOrders = orders.map((order) =>
         order.id === orderId ? { ...order, order_status: newStatus } : order
       );
       setOrders(updatedOrders);
@@ -97,7 +103,7 @@ const OrdersCook = () => {
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "a":
-        return "#0F0"
+        return "#0F0";
       case "p":
         return "#FFC107";
       case "r":
@@ -142,7 +148,9 @@ const OrdersCook = () => {
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>{t("order_text.order_details")}</Text>
+            <Text style={styles.modalTitle}>
+              {t("order_text.order_details")}
+            </Text>
             <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
               <FontAwesome name="close" size={24} color="#333" />
             </TouchableOpacity>
@@ -150,30 +158,51 @@ const OrdersCook = () => {
           {selectedOrder && (
             <>
               <View style={styles.customerInfo}>
-                <Text style={styles.customerName}>{selectedOrder.firstName}</Text>
+                <Text style={styles.customerName}>
+                  {selectedOrder.user.first_name}
+                </Text>
                 <Text style={styles.orderDate}>
-                  {t("order_text.order_date")}: {new Date(selectedOrder.created_at).toLocaleDateString()}
+                  {t("order_text.order_date")}:{" "}
+                  {new Date(selectedOrder.created_at).toLocaleDateString()}
                 </Text>
               </View>
               <ScrollView style={styles.modalScrollView}>
-                {selectedOrder.dishesDetails.map((dish: { dishDetails: { name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }; amount: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined; price: number; }, index: React.Key | null | undefined) => (
-                  <View key={index} style={styles.dishItem}>
-                    <View style={styles.dishInfo}>
-                      <Text style={styles.dishName}>{dish.dishDetails?.name}</Text>
-                      <Text style={styles.dishQuantity}>  x{dish.amount}</Text>
+                {selectedOrder.dishesDetails.map(
+                  (
+                    dish: OrderDishesFullDetail,
+                    index: React.Key | null | undefined
+                  ) => (
+                    <View key={index} style={styles.dishItem}>
+                      <View style={styles.dishInfo}>
+                        <Text style={styles.dishName}>
+                          {dish.dishDetails.name}
+                        </Text>
+                        <Text style={styles.dishQuantity}> x{dish.amount}</Text>
+                      </View>
+                      <Text style={styles.dishPrice}>
+                        ${(dish.price * Number(dish.amount)).toFixed(2)}
+                      </Text>
                     </View>
-                    <Text style={styles.dishPrice}>${(dish.price * Number(dish.amount)).toFixed(2)}</Text>
-                  </View>
-                ))}
+                  )
+                )}
               </ScrollView>
               <View style={styles.totalContainer}>
                 <Text style={styles.totalText}>Total:</Text>
                 <Text style={styles.totalAmount}>
-                  ${selectedOrder.dishesDetails.reduce((sum: number, dish: { price: number; amount: number; }) => sum + dish.price * dish.amount, 0).toFixed(2)}
+                  $
+                  {selectedOrder.dishesDetails
+                    .reduce(
+                      (sum: number, dish: { price: number; amount: number }) =>
+                        sum + dish.price * dish.amount,
+                      0
+                    )
+                    .toFixed(2)}
                 </Text>
               </View>
               <View style={styles.statusSituation}>
-                <Text style={styles.statusLabel}>{t("order_text.order_status")}:</Text>
+                <Text style={styles.statusLabel}>
+                  {t("order_text.order_status")}:
+                </Text>
                 <Picker
                   selectedValue={selectedStatus}
                   style={styles.statusPicker}
@@ -203,11 +232,19 @@ const OrdersCook = () => {
       visible={statusUpdateModal.visible}
     >
       <View style={styles.statusUpdateModalOverlay}>
-        <View style={[
-          styles.statusUpdateModalContent,
-          { backgroundColor: statusUpdateModal.success ? '#4CAF50' : '#F44336' }
-        ]}>
-          <Text style={styles.statusUpdateModalText}>{statusUpdateModal.message}</Text>
+        <View
+          style={[
+            styles.statusUpdateModalContent,
+            {
+              backgroundColor: statusUpdateModal.success
+                ? "#4CAF50"
+                : "#F44336",
+            },
+          ]}
+        >
+          <Text style={styles.statusUpdateModalText}>
+            {statusUpdateModal.message}
+          </Text>
         </View>
       </View>
     </Modal>
@@ -226,16 +263,34 @@ const OrdersCook = () => {
                 activeOpacity={0.7}
               >
                 <View style={styles.orderInfo}>
-                  <Text style={styles.customerName}>{order.firstName}</Text>
+                  <Text style={styles.customerName}>
+                    {order.user.first_name}
+                  </Text>
                   <Text style={styles.orderDate}>
                     {new Date(order.created_at).toLocaleDateString()}
                   </Text>
                   <Text style={styles.orderTotal}>
-                    Total: ${order.dishesDetails.reduce((sum: number, dish: { price: number; amount: number; }) => sum + dish.price * dish.amount, 0).toFixed(2)}
+                    Total: $
+                    {order.dishesDetails
+                      .reduce(
+                        (
+                          sum: number,
+                          dish: { price: number; amount: number }
+                        ) => sum + dish.price * dish.amount,
+                        0
+                      )
+                      .toFixed(2)}
                   </Text>
                   <View style={[styles.statusContainer]}>
-                    <View style={[styles.statusDot, { backgroundColor: getStatusColor(order.order_status) }]} />
-                    <Text style={styles.statusText}>{getName(order.order_status)}</Text>
+                    <View
+                      style={[
+                        styles.statusDot,
+                        { backgroundColor: getStatusColor(order.order_status) },
+                      ]}
+                    />
+                    <Text style={styles.statusText}>
+                      {getName(order.order_status)}
+                    </Text>
                   </View>
                 </View>
                 <FontAwesome name="chevron-right" size={16} color="#333" />
@@ -308,13 +363,13 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   statusContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 16,
     paddingTop: 8,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: "#e0e0e0",
   },
   statusDot: {
     width: 8,
@@ -345,8 +400,7 @@ const styles = StyleSheet.create({
   dishInfo: {
     flexDirection: "row",
     alignItems: "center",
-    paddingTop: 2
-
+    paddingTop: 2,
   },
   dishName: {
     fontSize: 16,
@@ -382,30 +436,30 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalContent: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 12,
-    width: '90%',
-    maxHeight: '80%',
+    width: "90%",
+    maxHeight: "80%",
   },
   modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: "#e0e0e0",
   },
   closeButton: {
     padding: 5,
   },
   modalTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   modalScrollView: {
     maxHeight: 300,
@@ -413,28 +467,27 @@ const styles = StyleSheet.create({
   },
   statusLabel: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginRight: 8,
-    justifyContent: 'space-around'
+    justifyContent: "space-around",
   },
 
   statusSituation: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 16,
     paddingTop: 8,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    justifyContent: 'space-around'
+    borderBottomColor: "#e0e0e0",
+    justifyContent: "space-around",
   },
-
 
   pickerContainer: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 8,
-    overflow: 'hidden',
+    overflow: "hidden",
     width: 150,
   },
   statusPicker: {
@@ -444,25 +497,24 @@ const styles = StyleSheet.create({
   customerInfo: {
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: "#e0e0e0",
   },
   statusUpdateModalOverlay: {
     flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "flex-end",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   statusUpdateModalContent: {
-    width: '100%',
+    width: "100%",
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   statusUpdateModalText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 
 export default OrdersCook;
-

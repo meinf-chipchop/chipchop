@@ -12,6 +12,7 @@ import {
 } from "./rest";
 
 import { Address, UserDetail } from "./users";
+import { Dish } from "./dishes";
 
 export type OrderStatus =
   | "P"
@@ -68,7 +69,11 @@ export interface OrderList extends GenericPaging<OrderOverall> {}
 export interface OrderDishesList extends GenericPaging<OrderDishesOverall> {}
 
 export interface OrderDetailWithDishes extends OrderDetail {
-  dishesDetails: Array<OrderDishesDetail>;
+  dishesDetails: Array<OrderDishesFullDetail>;
+}
+
+export interface OrderDishesFullDetail extends OrderDishesDetail {
+  dishDetails: Dish;
 }
 
 export async function newOrder(
@@ -90,7 +95,7 @@ export async function newOrder(
     const results = Promise.all(
       newOrder.cartItems.map(async (item) => {
         return await post<OrderDishesDetail>(orderWithDishes.dishes, {
-          dish: item.dish,
+          dish: item.dish.id,
           amount: item.units,
           note: "",
         });
@@ -124,8 +129,19 @@ export async function updateOrderStatus(
 
 export async function getOrderDishesByUrl(
   dishes_url: string
-): Promise<OrderDishesDetail[]> {
-  return await getDetailed<OrderDishesOverall, OrderDishesDetail>(dishes_url);
+): Promise<OrderDishesFullDetail[]> {
+  const detail = await getDetailed<OrderDishesOverall, OrderDishesDetail>(
+    dishes_url
+  );
+
+  return Promise.all(
+    detail.map(async (dish) => {
+      return {
+        ...dish,
+        dishDetails: await get<Dish>(dish.dish),
+      };
+    })
+  );
 }
 
 export async function getOrders(): Promise<OrderList> {
