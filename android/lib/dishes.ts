@@ -7,7 +7,7 @@ export interface Dish {
   user_id?: number;
   name: string;
   description: string;
-  category: number;
+  category: string;
   image_url?: string;
   rating_average?: string;
   rating_count?: string;
@@ -107,4 +107,24 @@ export function getDiscountedPrice(dish: Dish): number | null {
   return dish.discount && dish.discount != 0
     ? (dish.price! * (100 - dish.discount)) / 100
     : null;
+}
+
+export async function getAllDishes(): Promise<Dish[]> {
+  let dishList = await fetchWrapper(`/api/dishes/`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  }).then((response) => response.json() as Promise<DishList>);
+
+  let dishes = await Promise.all(
+    dishList.results.map((dish) => getByURL(dish.url)) as Promise<Dish>[]
+  );
+
+  dishes.forEach((dish) => {
+    dish.price = Number(dish.price);
+  });
+
+  return dishes;
 }

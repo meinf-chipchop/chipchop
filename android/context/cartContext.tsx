@@ -8,7 +8,7 @@ import React, {
 } from "react";
 
 // Define types for state and actions
-interface CartItem {
+export interface CartItem {
   id: number;
   dish: Dish;
   units: number;
