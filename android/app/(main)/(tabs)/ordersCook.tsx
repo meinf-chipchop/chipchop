@@ -14,7 +14,6 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import {
   OrderDetailWithDishes,
-  OrderDishesDetail,
   OrderDishesFullDetail,
   OrderStatus,
   getOrderHistory,
@@ -43,8 +42,6 @@ const OrdersCook = () => {
     success: false,
     message: "",
   });
-
-  selectedOrder?.dishes;
 
   const { t } = useTranslation();
 
