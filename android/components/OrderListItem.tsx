@@ -194,7 +194,7 @@ export const OrderListItem = ({ order, callback }: OrderListItemProps) => {
                         {order.dishes && <Text>{order.dish_count} items</Text>}
                     </View>
                 </View>
-                <View className="flex-2">{/* Assuming orderButton is defined elsewhere */}</View>
+                <View className="flex-2">{orderButton()}</View>
             </View>
             <HR className="w-[90%] h-2 mx-auto" />
 
