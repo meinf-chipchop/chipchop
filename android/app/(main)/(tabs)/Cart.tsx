@@ -38,7 +38,7 @@ const Cart = () => {
   const [allAddresses, setAllAddress] = useState<Address[]>();
   const [deliveryMethod, setDeliveryMethod] = useState<OrderType>("D");
   const [paymentMethod, setPaymentMethod] = useState("card");
-  const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
 
   const { handleToast } = useGlobalToast();
 
@@ -262,6 +262,9 @@ const Cart = () => {
         <TouchableOpacity
           style={styles.confirmButton}
           onPress={() => {
+            if (sending) return;
+
+            setSending(true);
             newOrder({
               url: "",
               order_type: deliveryMethod,
@@ -269,15 +272,18 @@ const Cart = () => {
               cartItems: cart,
             })
               .then(() => {
-                setError("");
                 clearCart();
-                handleToast("Order on the way!", "", "success");
+                handleToast(
+                  "Thank you!",
+                  "The cook will start preparing the dishes as soon as posible",
+                  "success"
+                );
                 router.push("/home");
               })
               .catch((e) => {
                 console.log(e);
-                setError(e);
-              });
+              })
+              .finally(() => setSending(false));
           }}
         >
           <Text style={styles.buttonText}>Confirm Order</Text>
