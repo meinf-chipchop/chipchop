@@ -272,7 +272,7 @@ const Home = () => {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.featuredScroll}
-          className="w-screen"
+          className="!w-screen"
         />
 
         <Text style={styles.sectionTitle}>{t("labels.top_chefs")}</Text>
