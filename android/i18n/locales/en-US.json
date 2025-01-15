@@ -85,7 +85,9 @@
     "uncategorized": "Uncategorized"
   },
   "cart": {
-    "add": "Add to cart"
+    "add": "Add to cart",
+    "empty_cart": "Your cart is empty!",
+    "find_delicious": "Find something delicious"
   },
   "rating": {
     "ratings": "Rating(s)",
