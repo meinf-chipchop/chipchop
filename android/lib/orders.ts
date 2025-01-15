@@ -81,7 +81,7 @@ export async function newOrder(
 ): Promise<OrderDishesDetail[]> {
   let orderWithDishes: OrderDetailWithDishes;
   try {
-    const order = await post<NewOrder>("api/orders/", {
+    const order = await post<NewOrder>("/api/orders/", {
       order_type: newOrder.order_type,
       address: newOrder.address?.url,
     });
@@ -109,7 +109,7 @@ export async function newOrder(
 }
 
 export async function getOrderHistory(): Promise<OrderDetailWithDishes[]> {
-  const orders = await getDetailed<OrderOverall, OrderDetail>("api/orders/");
+  const orders = await getDetailed<OrderOverall, OrderDetail>("/api/orders/");
   return Promise.all(
     orders.map(async (order) => {
       return {
@@ -124,7 +124,7 @@ export async function updateOrderStatus(
   id: number,
   order_status: string
 ): Promise<OrderDetail> {
-  return await patch<OrderDetail>(`api/orders/${id}/`, { order_status });
+  return await patch<OrderDetail>(`/api/orders/${id}/`, { order_status });
 }
 
 export async function getOrderDishesByUrl(
@@ -145,15 +145,15 @@ export async function getOrderDishesByUrl(
 }
 
 export async function getOrders(): Promise<OrderList> {
-  return get<OrderList>("api/orders/");
+  return get<OrderList>("/api/orders/");
 }
 
 export async function getOrdersDetailed(): Promise<Array<OrderDetail>> {
-  return await getDetailed<OrderOverall, OrderDetail>("api/orders/");
+  return await getDetailed<OrderOverall, OrderDetail>("/api/orders/");
 }
 
 export async function acceptOrder(order_id: number): Promise<Boolean> {
-  return await requestResponse(`api/orders/${order_id}/accept`, "GET").then(
+  return await requestResponse(`/api/orders/${order_id}/accept`, "GET").then(
     (response) => response.ok
   );
 }
@@ -162,5 +162,5 @@ export async function updateStatus(
   order: OrderDetail,
   order_status: string
 ): Promise<{ order_status: OrderStatus }> {
-  return await put<OrderDetail>(`api/orders/${order.id}/`, { order_status });
+  return await put<OrderDetail>(`/api/orders/${order.id}/`, { order_status });
 }
