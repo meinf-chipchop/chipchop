@@ -50,31 +50,31 @@ const Home = () => {
   const [dishes, setDishes] = useState<Dish[]>([]);
   const [dishCategories, setDishCategories] = useState<DishCategory[]>([]);
   const [activeCategory, setActiveCategory] = useState<DishCategory | null>();
-  const [dishSearch, setDishSearch] = useState<string>("");
 
   const filteredDishes: Dish[] = useMemo(() => {
-    if (!dishSearch && !activeCategory) return dishes;
+    if (!activeCategory) return dishes;
 
     return dishes.filter((dish) => {
       if (activeCategory && dish.category !== activeCategory.name) {
         return false;
       }
-      if (
-        dishSearch &&
-        !dish.name.toLowerCase().includes(dishSearch.toLowerCase())
-      ) {
-        return false;
-      }
+
       return true;
     });
-  }, [dishes, activeCategory, dishSearch]);
+  }, [dishes, activeCategory]);
 
   const [topDishes, otherDishes] = useMemo(() => {
-    let ordered = filteredDishes.toSorted((a, b) => {
-      return (Number(b.rating_average) || 0) - (Number(a.rating_average) || 0);
+    const withRating = filteredDishes.filter((dish) => dish.rating_average);
+    const withoutRating = filteredDishes.filter((dish) => !dish.rating_average);
+
+    const ordered = withRating.toSorted((a, b) => {
+      const ratingA = Number(a.rating_average || 0);
+      const ratingB = Number(b.rating_average || 0);
+
+      return ratingB - ratingA;
     });
 
-    return [ordered.slice(0, 3), ordered.slice(3)];
+    return [ordered, withoutRating];
   }, [filteredDishes]);
 
   useEffect(() => {
@@ -249,7 +249,9 @@ const Home = () => {
                   key={cat.id}
                   style={styles.categoryButton}
                   onPress={() => {
-                    setActiveCategory(cat);
+                    setActiveCategory(
+                      activeCategory?.id === cat.id ? null : cat
+                    );
                   }}
                 >
                   <Text style={styles.categoryButtonText}>{cat.name}</Text>
